@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (isset($data['title']) ? $data['title'] . ' - ' : '') . SITENAME; ?> (Admin)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tiny.cloud/1/f5ki7g32fbz5dvwyewmebby06c18z1eictmhgmftkwkhehmi/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
         :root {
@@ -325,16 +326,30 @@
         .admin-sidebar::-webkit-scrollbar-thumb:hover {
             background: rgba(102, 126, 234, 0.7);
         }
+
+        /* Icon styling */
+        .admin-sidebar i,
+        .admin-header i {
+            margin-right: 10px;
+            width: 18px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .menu-toggle i,
+        .submenu i {
+            font-size: 0.9em;
+        }
     </style>
 </head>
 
 <body>
 
     <header class="admin-header">
-        <strong>🎯 Trang Quản Trị</strong>
+        <strong><i class="fas fa-shield-halved"></i> Trang Quản Trị</strong>
         <div>
-            <a href="<?php echo URLROOT; ?>/" target="_blank">🌐 Xem Website</a> |
-            <a href="<?php echo URLROOT; ?>/user/logout">🚪 Đăng Xuất (<?php echo $_SESSION['user_name']; ?>)</a>
+            <a href="<?php echo URLROOT; ?>/" target="_blank"><i class="fas fa-globe"></i> Xem Website</a> |
+            <a href="<?php echo URLROOT; ?>/user/logout"><i class="fas fa-right-from-bracket"></i> Đăng Xuất (<?php echo $_SESSION['user_name']; ?>)</a>
         </div>
     </header>
 
@@ -342,36 +357,36 @@
         <aside class="admin-sidebar">
             <h3>Menu</h3>
             <ul>
-                <li><a href="<?php echo URLROOT; ?>/admin">📊 Dashboard</a></li>
+                <li><a href="<?php echo URLROOT; ?>/admin"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                 
                 <!-- Products Dropdown -->
                 <li>
                     <div class="menu-toggle" onclick="toggleSubmenu(this)">
-                        <span>📦 Sản phẩm</span>
+                        <span><i class="fas fa-box"></i> Sản phẩm</span>
                     </div>
                     <ul class="submenu">
-                        <li><a href="<?php echo URLROOT; ?>/admin/products">Quản lý Sản phẩm</a></li>
-                        <li><a href="<?php echo URLROOT; ?>/admin/product_categories">Danh mục Sản phẩm</a></li>
-                        <li><a href="<?php echo URLROOT; ?>/admin/attributes">Quản lý Thuộc tính</a></li>
+                        <li><a href="<?php echo URLROOT; ?>/admin/products"><i class="fas fa-mobile-alt"></i> Quản lý Sản phẩm</a></li>
+                        <li><a href="<?php echo URLROOT; ?>/admin/product_categories"><i class="fas fa-layer-group"></i> Danh mục Sản phẩm</a></li>
+                        <li><a href="<?php echo URLROOT; ?>/admin/attributes"><i class="fas fa-tags"></i> Quản lý Thuộc tính</a></li>
                     </ul>
                 </li>
 
-                <li><a href="<?php echo URLROOT; ?>/admin/orders">🛒 Quản lý Đơn hàng</a></li>
-                <li><a href="<?php echo URLROOT; ?>/admin/users">👥 Quản lý Người dùng</a></li>
-                <li><a href="<?php echo URLROOT; ?>/admin/vouchers">🎟️ Quản lý Voucher</a></li>
+                <li><a href="<?php echo URLROOT; ?>/admin/orders"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
+                <li><a href="<?php echo URLROOT; ?>/admin/users"><i class="fas fa-users"></i> Quản lý Người dùng</a></li>
+                <li><a href="<?php echo URLROOT; ?>/admin/vouchers"><i class="fas fa-ticket-alt"></i> Quản lý Voucher</a></li>
                 
                 <!-- News Dropdown -->
                 <li>
                     <div class="menu-toggle" onclick="toggleSubmenu(this)">
-                        <span>📰 Tin tức</span>
+                        <span><i class="fas fa-newspaper"></i> Tin tức</span>
                     </div>
                     <ul class="submenu">
-                        <li><a href="<?php echo URLROOT; ?>/admin/posts">Quản lý Tin tức</a></li>
-                        <li><a href="<?php echo URLROOT; ?>/admin/post_categories">Danh mục Tin tức</a></li>
+                        <li><a href="<?php echo URLROOT; ?>/admin/posts"><i class="fas fa-file-alt"></i> Quản lý Tin tức</a></li>
+                        <li><a href="<?php echo URLROOT; ?>/admin/post_categories"><i class="fas fa-folder-open"></i> Danh mục Tin tức</a></li>
                     </ul>
                 </li>
 
-                <li><a href="<?php echo URLROOT; ?>/admin/reviews">⭐ Quản lý Đánh giá</a></li>
+                <li><a href="<?php echo URLROOT; ?>/admin/reviews"><i class="fas fa-star"></i> Quản lý Đánh giá</a></li>
             </ul>
         </aside>
 
