@@ -22,28 +22,25 @@
                 <h5>Danh mục</h5>
                 <ul>
                     <li>
-                        <a href="<?php echo URLROOT; ?>/product/all"
-                            class="<?php echo empty($data['filters']['category_id']) ? 'active' : ''; ?>">
+                        <a href="<?php echo URLROOT; ?>/product/all" class="<?php echo !isset($_GET['category_filter']) ? 'active' : ''; ?>">
                             Tất cả
                         </a>
+                        <span>(<?php echo $this->model('ProductModel')->countVariants(); ?>)</span>
                     </li>
 
                     <?php if (!empty($data['categories'])) : ?>
                         <?php foreach ($data['categories'] as $cat) : ?>
                             <li>
                                 <a href="<?php echo URLROOT; ?>/product/all?category_filter=<?php echo $cat['id']; ?>"
-                                    class="<?php echo ($data['filters']['category_id'] == $cat['id']) ? 'active' : ''; ?>">
+                                    class="<?php echo (isset($_GET['category_filter']) && $_GET['category_filter'] == $cat['id']) ? 'active' : ''; ?>">
                                     <?php echo htmlspecialchars($cat['name']); ?>
                                 </a>
+
                                 <span>(<?php echo $cat['product_count']; ?>)</span>
                             </li>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </ul>
-
-                <?php if (!empty($data['filters']['category_id'])) : ?>
-                    <input type="hidden" name="category_filter" value="<?php echo $data['filters']['category_id']; ?>">
-                <?php endif; ?>
             </div>
 
             <div class="filter-widget">

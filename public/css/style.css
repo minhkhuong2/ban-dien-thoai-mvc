@@ -2043,140 +2043,6 @@ body {
   align-items: center;
   font-weight: 600;
 }
-/* 16. CSS CHO NÚT SỐ LƯỢNG TRONG GIỎ HÀNG */
-.cart-item-info .quantity-selector {
-  margin-top: 15px;
-  width: 100px; /* Nhỏ hơn 1 chút */
-  height: 30px;
-}
-.cart-item-info .quantity-selector button,
-.cart-item-info .quantity-selector input {
-  width: 30px;
-  font-size: 1rem;
-  height: 30px;
-}
-.cart-item-actions .cart-item-price {
-  font-size: 1.1rem; /* Điều chỉnh lại font */
-}
-.cart-item-actions .price-original {
-  font-size: 0.85rem;
-}
-.cart-item-actions .remove-from-cart-link {
-  font-size: 0.9em;
-  margin-top: 15px; /* Tách nút xóa ra */
-  display: inline-block;
-  color: red;
-  text-decoration: none;
-}
-/* 16. CSS CHO TRANG THANH TOÁN (MỚI) */
-.checkout-page-layout {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr; /* Cột form 1.5, Cột tóm tắt 1 */
-  gap: 30px;
-  align-items: flex-start; /* Giữ 2 cột align top */
-}
-
-/* 16.1. Cột Trái: Form */
-.checkout-form-section {
-  background: var(--white-color);
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: var(--shadow);
-}
-.checkout-form-section h3 {
-  font-size: 1.5rem;
-  color: var(--dark-color);
-  margin-top: 0;
-  margin-bottom: 25px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-}
-.form-grid-half {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* 16.2. Cột Phải: Tóm tắt đơn hàng */
-/* (Chúng ta đã có class .order-summary-box từ trang giỏ hàng,
-   giờ chúng ta thêm style cho sản phẩm bên trong) */
-.order-summary-box .summary-item-list {
-  max-height: 300px; /* Giới hạn chiều cao, cho phép cuộn */
-  overflow-y: auto;
-  padding-right: 10px;
-  margin-bottom: 15px;
-}
-.summary-item-in-cart {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
-}
-.summary-item-in-cart:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-.summary-item-in-cart img {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  border-radius: 5px;
-  border: 1px solid var(--border-color);
-  flex-shrink: 0;
-}
-.summary-item-info {
-  flex-grow: 1;
-  font-size: 0.9rem;
-}
-.summary-item-info span {
-  display: block;
-  font-weight: 600;
-}
-.summary-item-info small {
-  color: #555;
-}
-.summary-item-price {
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-/* 16.3. CSS cho các ô chọn Vận chuyển / Thanh toán */
-.radio-group {
-  margin-bottom: 20px;
-}
-.radio-option {
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  padding: 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-/* Dùng :has() để style khi radio bên trong được chọn */
-.radio-option:has(input[type="radio"]:checked) {
-  border-color: var(--primary-color);
-  background: #f0f7ff;
-}
-.radio-option label {
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  cursor: pointer;
-}
-.radio-option input[type="radio"] {
-  margin: 0;
-}
-.radio-option .option-price {
-  font-weight: 500;
-  color: #555;
-}
 /* 16. CSS CHO TRANG SẢN PHẨM (CÓ SIDEBAR) */
 .page-title-header {
   text-align: center;
@@ -2209,21 +2075,25 @@ body {
   position: sticky; /* Giữ cố định khi cuộn */
   top: 90px; /* 70px (header) + 20px (margin) */
 }
+
 .filter-widget {
   margin-bottom: 25px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 25px;
 }
+
 .filter-widget:last-child {
   border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
 }
+
 .filter-widget h4 {
   font-size: 1.2rem;
   color: var(--dark-color);
   margin: 0 0 15px 0;
 }
+
 .filter-widget .search-filter input {
   width: 100%;
   padding: 10px;
@@ -2231,32 +2101,65 @@ body {
   border-radius: 5px;
   box-sizing: border-box;
 }
+
 .filter-widget ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  max-height: 200px;
+  max-height: 300px; /* Giới hạn chiều cao và cho phép cuộn */
   overflow-y: auto;
 }
-.filter-widget li a {
-  display: block;
-  padding: 8px 10px;
-  text-decoration: none;
-  color: #555;
+
+/* --- SỬA LỖI DANH MỤC (Quan trọng: Flex ở thẻ LI) --- */
+.filter-widget li {
+  display: flex; /* Xếp thẻ A và SPAN nằm ngang hàng */
+  justify-content: space-between; /* Đẩy ra 2 đầu trái phải */
+  align-items: center; /* Căn giữa dọc */
+  margin-bottom: 8px;
   border-radius: 5px;
   transition: background 0.2s ease;
 }
-.filter-widget li a:hover,
-.filter-widget li a.active {
+
+.filter-widget li:hover {
   background: #f0f7ff;
+}
+
+/* Style cho thẻ A (Tên danh mục) */
+.filter-widget li a {
+  text-decoration: none;
+  color: #555;
+  padding: 8px 12px;
+  flex-grow: 1; /* Chiếm hết khoảng trống để dễ bấm */
+  display: block;
+  white-space: nowrap; /* Không xuống dòng */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-widget li a.active {
   color: var(--primary-color);
-  font-weight: 500;
+  font-weight: bold;
 }
+
+/* Style cho thẻ SPAN (Số lượng) */
 .filter-widget li span {
-  float: right;
-  color: #999;
-  font-size: 0.9em;
+  font-size: 0.85em;
+  color: #777;
+  background: #f4f4f4;
+  padding: 2px 8px;
+  border-radius: 10px;
+  min-width: 24px;
+  text-align: center;
+  margin-right: 10px; /* Cách lề phải một chút */
+  flex-shrink: 0; /* Không bị co lại nếu tên dài */
 }
+
+/* Đổi màu số lượng nếu dòng đó đang active */
+.filter-widget li:has(a.active) span {
+  background: #dbeafe;
+  color: var(--primary-color);
+}
+
 .filter-widget select {
   width: 100%;
   padding: 10px;
@@ -2264,6 +2167,7 @@ body {
   border-radius: 5px;
   background: var(--white-color);
 }
+
 .btn-clear-filters {
   width: 100%;
   padding: 10px;
@@ -2273,12 +2177,21 @@ body {
   border-radius: 5px;
   font-weight: 500;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  box-sizing: border-box;
+}
+
+.btn-clear-filters:hover {
+  background: #fff5f5;
 }
 
 /* 16.2. Khu vực sản phẩm chính */
 .main-product-grid {
   /* (Không cần style gì thêm, sẽ tự động co giãn) */
 }
+
 .product-grid-header {
   display: flex;
   justify-content: space-between;
@@ -2289,43 +2202,82 @@ body {
   border-radius: 5px;
   box-shadow: var(--shadow);
 }
+
 .product-grid-header .sort-by select {
   padding: 8px;
   border-radius: 5px;
   border: 1px solid var(--border-color);
 }
+
 /* Sửa lại .product-grid để có 3 cột */
 .main-product-grid .product-grid {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
+  gap: 20px;
 }
-/* Sửa lại product-card cho nhỏ hơn */
+
+/* Sửa lại product-card cho nhỏ gọn */
 .main-product-grid .product-card-image {
   height: 200px;
+  object-fit: contain;
+  padding: 15px;
 }
+
 .main-product-grid .product-card-content {
   padding: 15px;
 }
+
 .main-product-grid .product-card-content h3 {
   font-size: 1rem;
-  height: 2.2em; /* Giảm chiều cao */
+  height: 2.8em; /* Giới hạn 2 dòng */
+  line-height: 1.4;
+  overflow: hidden;
+  margin-bottom: 5px;
 }
+
 .main-product-grid .product-price {
   font-size: 1.1rem;
+  font-weight: bold;
+  color: #e74c3c;
 }
+
 .main-product-grid .product-specs {
-  font-size: 0.8rem;
-  margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 15px;
 }
+
 .main-product-grid .btn-add-to-cart {
-  padding: 8px; /* Thu nhỏ nút */
+  padding: 10px 0;
   font-size: 0.9rem;
+  width: 100%;
+  display: block;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
-/* Ẩn nút "Chi tiết" (vì mẫu không có) */
+
+.main-product-grid .btn-add-to-cart:hover {
+  background: #0056b3;
+}
+
+/* Ẩn nút "Chi tiết" cũ */
 .main-product-grid .btn-detail {
   display: none;
 }
 
+/* Responsive cho trang sản phẩm */
+@media (max-width: 992px) {
+  .product-page-layout {
+    grid-template-columns: 1fr; /* Chuyển thành 1 cột trên mobile */
+  }
+
+  .sidebar-filters {
+    position: static; /* Bỏ sticky trên mobile */
+    margin-bottom: 30px;
+  }
+}
 /* 17. CSS CHO TRANG HỖ TRỢ KHÁCH HÀNG (MỚI) */
 .support-header-banner {
   background: linear-gradient(

@@ -67,10 +67,14 @@
             </div>
             <div class="form-group">
                 <label>Danh mục <sup>*</sup></label>
-                <select name="category_id" required>
+                <select name="category_id" class="form-control" required>
                     <option value="">-- Chọn danh mục --</option>
                     <?php foreach ($data['categories'] as $cat): ?>
-                        <option value="<?php echo $cat['id']; ?>" <?php echo ($cat['id'] == $product['category_id']) ? 'selected' : ''; ?>>
+                        <option value="<?php echo $cat['id']; ?>"
+                            <?php
+                            // Kiểm tra nếu ID danh mục trùng với ID danh mục của sản phẩm thì chọn (selected)
+                            echo (isset($data['product']) && $data['product']['category_id'] == $cat['id']) ? 'selected' : '';
+                            ?>>
                             <?php echo htmlspecialchars($cat['name']); ?>
                         </option>
                     <?php endforeach; ?>

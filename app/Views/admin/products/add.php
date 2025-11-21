@@ -60,10 +60,12 @@
             </div>
             <div class="form-group">
                 <label>Danh mục <sup>*</sup></label>
-                <select name="category_id" required>
+                <select name="category_id" class="form-control" required>
                     <option value="">-- Chọn danh mục --</option>
                     <?php foreach ($data['categories'] as $cat): ?>
-                        <option value="<?php echo $cat['id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                        <option value="<?php echo $cat['id']; ?>">
+                            <?php echo htmlspecialchars($cat['name']); ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
