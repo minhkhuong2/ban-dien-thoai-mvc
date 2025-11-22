@@ -297,7 +297,14 @@ class AdminController extends Controller
     public function editUser($id = 0)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Lấy giá trị từ checkbox (nếu tick là 1, không tick là 0)
             $is_admin = isset($_POST['is_admin']) ? 1 : 0;
+
+            // Không cho phép bỏ quyền admin của chính mình
+            if ($id == $_SESSION['user_id'] && $is_admin == 0) {
+                die('Bạn không thể gỡ quyền Admin của chính mình!');
+            }
+
             if ($this->userModel->updateUserRole($id, $is_admin)) {
                 header('Location: ' . URLROOT . '/admin/users');
                 exit();
@@ -305,16 +312,33 @@ class AdminController extends Controller
                 die('Cập nhật vai trò thất bại');
             }
         }
+
+        // GET: Hiển thị form
         $user = $this->userModel->getUserById($id);
         if (!$user) {
             header('Location: ' . URLROOT . '/admin/users');
             exit();
         }
         $data = [
-            'title' => 'Sửa vai trò cho: ' . $user['full_name'],
+            'title' => 'Phân quyền người dùng',
             'user' => $user
         ];
         $this->view('admin/users/edit', $data);
+    }
+    public function deleteUser($id)
+    {
+        // Bảo mật: Không cho phép xóa chính mình
+        if ($id == $_SESSION['user_id']) {
+            echo "<script>alert('Bạn không thể xóa tài khoản đang đăng nhập!'); window.location.href='" . URLROOT . "/admin/users';</script>";
+            exit();
+        }
+
+        if ($this->userModel->deleteUser($id)) {
+            header('Location: ' . URLROOT . '/admin/users');
+            exit();
+        } else {
+            die('Xóa người dùng thất bại');
+        }
     }
 
     // ----------------------------------------------------

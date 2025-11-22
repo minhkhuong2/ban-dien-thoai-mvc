@@ -150,4 +150,10 @@ class UserModel
 
         return $this->db->execute();
     }
+    public function deleteUser($id)
+    {
+        $this->db->query('DELETE FROM users WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
 }
