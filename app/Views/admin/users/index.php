@@ -1,54 +1,50 @@
 <h2><?php echo $data['title']; ?></h2>
 
-<div class="attribute-box" style="background: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background: #f9f9f9; border-bottom: 2px solid #eee;">
-                <th style="padding: 12px; text-align: left;">ID</th>
-                <th style="padding: 12px; text-align: left;">Họ và Tên</th>
-                <th style="padding: 12px; text-align: left;">Email / SĐT</th>
-                <th style="padding: 12px; text-align: center;">Vai trò</th>
-                <th style="padding: 12px; text-align: right;">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($data['users'] as $user) : ?>
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 12px;"><?php echo $user['id']; ?></td>
-
-                    <td style="padding: 12px;">
-                        <strong><?php echo htmlspecialchars($user['full_name']); ?></strong>
-                    </td>
-
-                    <td style="padding: 12px; color: #555;">
-                        <?php echo htmlspecialchars($user['email']); ?><br>
-                        <small><?php echo htmlspecialchars($user['phone']); ?></small>
-                    </td>
-
-                    <td style="padding: 12px; text-align: center;">
-                        <?php if ($user['is_admin'] == 1) : ?>
-                            <span style="background: #e74c3c; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold;">ADMIN</span>
-                        <?php else : ?>
-                            <span style="background: #3498db; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.85em;">Khách hàng</span>
-                        <?php endif; ?>
-                    </td>
-
-                    <td style="padding: 12px; text-align: right;">
-                        <a href="<?php echo URLROOT; ?>/admin/editUser/<?php echo $user['id']; ?>"
-                            style="color: #3498db; text-decoration: none; font-weight: bold; margin-right: 10px;">
-                            Phân quyền
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Họ và Tên</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Vai trò</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($data['users'] as $user) : ?>
+            <tr>
+                <td>#<?php echo $user['id']; ?></td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 30px; height: 30px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                        </div>
+                        <?php echo htmlspecialchars($user['full_name']); ?>
+                    </div>
+                </td>
+                <td><?php echo htmlspecialchars($user['email']); ?></td>
+                <td><?php echo htmlspecialchars($user['phone'] ?? 'Chưa cập nhật'); ?></td>
+                <td>
+                    <?php if ($user['is_admin'] == 1) : ?>
+                        <span style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.85em;">Admin</span>
+                    <?php else : ?>
+                        <span style="background: #2ecc71; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.85em;">Khách hàng</span>
+                    <?php endif; ?>
+                </td>
+                <td class="action-links">
+                    <a href="<?php echo URLROOT; ?>/admin/editUser/<?php echo $user['id']; ?>">
+                        <i class="fas fa-user-cog"></i> Phân quyền
+                    </a>
+                    <?php if ($user['id'] != $_SESSION['user_id']) : ?>
+                        <a href="<?php echo URLROOT; ?>/admin/deleteUser/<?php echo $user['id']; ?>"
+                            class="delete"
+                            onclick="return confirm('Xóa người dùng này? Hành động không thể hoàn tác.');">
+                            <i class="fas fa-trash"></i> Xóa
                         </a>
-
-                        <?php if ($user['id'] != $_SESSION['user_id']) : ?>
-                            <a href="<?php echo URLROOT; ?>/admin/deleteUser/<?php echo $user['id']; ?>"
-                                style="color: #e74c3c; text-decoration: none;"
-                                onclick="return confirm('CẢNH BÁO: Xóa người dùng này sẽ xóa toàn bộ Đơn hàng và Đánh giá của họ.\nBạn có chắc chắn muốn xóa?');">
-                                Xóa
-                            </a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
