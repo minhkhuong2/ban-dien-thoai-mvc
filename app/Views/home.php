@@ -47,49 +47,45 @@
 <p style="color: #555; text-align: center; margin-top: -20px; margin-bottom: 30px;">Những chiếc điện thoại được yêu thích nhất với công nghệ tiên tiến và giá cả hợp lý</p>
 
 <div class="product-grid">
-    <?php if (empty($data['variants'])) : ?> <p style="text-align: center; grid-column: 1 / -1;">Không có sản phẩm nào để hiển thị.</p>
+    <?php if (empty($data['products'])) : ?>
+        <p style="text-align: center; grid-column: 1 / -1;">Không có sản phẩm nào để hiển thị.</p>
     <?php else : ?>
-        <?php foreach ($data['variants'] as $variant) : ?> <div class="product-card">
+        <?php foreach ($data['products'] as $product) : ?>
+            <div class="product-card">
                 <?php
-                if (isset($variant['price_sale']) && $variant['price_sale'] > 0) {
-                    $discount_percent = round((($variant['price'] - $variant['price_sale']) / $variant['price']) * 100);
-                    echo '<div class="discount-badge">-' . $discount_percent . '%</div>';
+                // Logic này cần tinh chỉnh lại tùy vào logic giá của bạn, ở đây demo đơn giản
+                if ($product['max_sale'] > 0 && $product['max_sale'] < $product['min_price']) {
+                    echo '<div class="discount-badge">Giảm giá</div>';
                 }
                 ?>
 
-                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>">
-                    <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($variant['image']); ?>"
-                        alt="<?php echo htmlspecialchars($variant['product_name']); ?>"
+                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                    <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($product['image']); ?>"
+                        alt="<?php echo htmlspecialchars($product['product_name']); ?>"
                         class="product-card-image">
                 </a>
+
                 <div class="product-card-content">
                     <h3>
-                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>">
-                            <?php echo htmlspecialchars($variant['product_name']); ?>
-                            (<?php echo htmlspecialchars($variant['storage']); ?>)
+                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                            <?php echo htmlspecialchars($product['product_name']); ?>
                         </a>
                     </h3>
+
                     <div class="product-price">
-                        <?php if (isset($variant['price_sale']) && $variant['price_sale'] > 0) : ?>
-                            <?php echo number_format($variant['price_sale']); ?> VNĐ
-                            <span class="product-price-old"><?php echo number_format($variant['price']); ?> VNĐ</span>
-                        <?php else : ?>
-                            <?php echo number_format($variant['price']); ?> VNĐ
-                        <?php endif; ?>
-                    </div>
-                    <div class="product-specs">
-                        <span><?php echo htmlspecialchars($variant['ram']); ?></span> |
-                        <span><?php echo htmlspecialchars($variant['storage']); ?></span> |
-                        <span><?php echo htmlspecialchars($variant['cpu']); ?></span>
+                        Từ <?php echo number_format($product['min_price']); ?> VNĐ
                     </div>
 
-                    <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $variant['variant_id']; ?>" method="POST" class="add-to-cart-form">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="btn-add-to-cart">Thêm vào giỏ</button>
-                    </form>
+                    <div class="product-specs">
+                        <span><?php echo htmlspecialchars($product['ram']); ?></span> |
+                        <span><?php echo htmlspecialchars($product['cpu']); ?></span>
+                    </div>
+
+                    <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="btn-add-to-cart">
+                        Xem chi tiết
+                    </a>
                 </div>
             </div>
-
         <?php endforeach; ?>
     <?php endif; ?>
 </div>

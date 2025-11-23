@@ -12,12 +12,12 @@ class HomeController extends Controller
 
     public function index()
     {
-        // Lấy CÁC BIẾN THỂ (không phải sản phẩm gốc)
-        $variants = $this->productModel->getAllVariantsForDisplay();
+        // [SỬA] Gọi hàm lấy sản phẩm gom nhóm thay vì lấy tất cả biến thể
+        $products = $this->productModel->getAllProductsForDisplay();
 
         $data = [
             'title' => 'Trang Chủ',
-            'variants' => $variants // Gửi mảng "variants" sang View
+            'products' => $products // Đổi tên biến từ 'variants' thành 'products' cho đúng nghĩa
         ];
 
         $this->view('home', $data);

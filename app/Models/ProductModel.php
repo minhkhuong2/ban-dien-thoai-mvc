@@ -192,17 +192,30 @@ class ProductModel
     // =================================================================
 
     // Lấy tất cả biến thể để hiển thị (Trang chủ)
-    public function getAllVariantsForDisplay()
+    public function getAllProductsForDisplay($limit = 8)
     {
+        // Chúng ta sẽ GROUP BY p.id để mỗi điện thoại chỉ hiện 1 lần
+        // Lấy giá thấp nhất (MIN price) để hiển thị "Giá từ..."
         $this->db->query(
             'SELECT 
-                v.id as variant_id, v.price, v.price_sale, v.storage, v.color, v.image,
-                p.id as product_id, p.name as product_name, p.ram, p.cpu, p.brand_id
-            FROM product_variants v
-            JOIN products p ON v.product_id = p.id
-            WHERE v.stock_quantity > 0
-            ORDER BY v.id DESC'
+            p.id as product_id, 
+            p.name as product_name, 
+            p.ram, 
+            p.cpu, 
+            p.brand_id,
+            MIN(v.price) as min_price,
+            MAX(v.price) as max_price,
+            MAX(v.price_sale) as max_sale, -- Lấy giá sale nếu có
+            (SELECT image FROM product_variants WHERE product_id = p.id LIMIT 1) as image -- Lấy ảnh của biến thể đầu tiên
+        FROM products p
+        JOIN product_variants v ON p.id = v.product_id
+        WHERE v.stock_quantity > 0
+        GROUP BY p.id
+        ORDER BY p.id DESC
+        LIMIT :limit'
         );
+
+        $this->db->bind(':limit', $limit);
         return $this->db->resultSet();
     }
 
