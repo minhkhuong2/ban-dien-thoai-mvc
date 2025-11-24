@@ -231,87 +231,130 @@ class ProductModel
     }
 
     // Lấy sản phẩm liên quan
-    public function getRelatedProducts($brand_id, $current_product_id)
+    public function getRelatedProducts($category_id, $current_product_id)
     {
-        $this->db->query('SELECT 
-                            v.id as variant_id, v.price, v.price_sale, v.storage, v.image,
-                            p.id as product_id, p.name as product_name, p.ram, p.cpu
-                         FROM product_variants v
-                         JOIN products p ON v.product_id = p.id
-                         WHERE p.brand_id = :brand_id 
-                         AND p.id != :current_product_id 
-                         GROUP BY p.id
-                         LIMIT 4');
+        // 1. Thử lấy sản phẩm cùng danh mục trước
+        $sql = 'SELECT 
+                v.id as variant_id, v.price, v.price_sale, v.image,
+                p.id as product_id, p.name as product_name,
+                MIN(v.price) as min_price,      -- Lấy giá thấp nhất
+                MAX(v.price) as max_price,
+                MAX(v.price_sale) as max_sale
+             FROM product_variants v
+             JOIN products p ON v.product_id = p.id
+             WHERE p.category_id = :category_id 
+             AND p.id != :current_product_id 
+             GROUP BY p.id
+             LIMIT 4';
 
-        $this->db->bind(':brand_id', $brand_id);
+        $this->db->query($sql);
+        $this->db->bind(':category_id', $category_id);
         $this->db->bind(':current_product_id', $current_product_id);
 
-        return $this->db->resultSet();
+        $result = $this->db->resultSet();
+
+        // 2. [QUAN TRỌNG] Nếu không có sản phẩm cùng loại (kết quả rỗng)
+        // -> Lấy đại 4 sản phẩm bất kỳ khác (Random) để lấp đầy giao diện
+        if (empty($result)) {
+            $sql_random = 'SELECT 
+                        v.id as variant_id, v.price, v.price_sale, v.image,
+                        p.id as product_id, p.name as product_name,
+                        MIN(v.price) as min_price,
+                        MAX(v.price) as max_price,
+                        MAX(v.price_sale) as max_sale
+                     FROM product_variants v
+                     JOIN products p ON v.product_id = p.id
+                     WHERE p.id != :current_product_id 
+                     GROUP BY p.id
+                     ORDER BY RAND() -- Lấy ngẫu nhiên
+                     LIMIT 4';
+
+            $this->db->query($sql_random);
+            $this->db->bind(':current_product_id', $current_product_id);
+            $result = $this->db->resultSet();
+        }
+
+        return $result;
     }
 
     // HÀM LỌC SẢN PHẨM (CẬP NHẬT THÊM DANH MỤC)
-    public function getFilteredVariants($filters = [])
+    public function getFilteredProducts($filters = [])
     {
+        // Câu truy vấn cơ bản: Gom nhóm theo p.id để không bị lặp lại tên máy
         $sql = 'SELECT 
-                    v.id as variant_id, v.price, v.price_sale, v.storage, v.color, v.image,
-                    p.id as product_id, p.name as product_name, p.ram, p.cpu, p.brand_id
-                FROM product_variants v
-                JOIN products p ON v.product_id = p.id
-                WHERE v.stock_quantity > 0';
+                p.id as product_id, 
+                p.name as product_name, 
+                p.ram, 
+                p.cpu, 
+                p.brand_id,
+                MIN(v.price) as min_price,      -- Giá thấp nhất
+                MAX(v.price) as max_price,      -- Giá cao nhất
+                MAX(v.price_sale) as max_sale,  -- Kiểm tra xem có biến thể nào đang sale không
+                (SELECT image FROM product_variants WHERE product_id = p.id LIMIT 1) as image -- Lấy 1 ảnh đại diện
+            FROM products p
+            JOIN product_variants v ON p.id = v.product_id
+            WHERE v.stock_quantity > 0';
 
         // 1. Lọc theo Thương hiệu
         if (!empty($filters['brand_id'])) {
             $sql .= ' AND p.brand_id = :brand_id';
         }
 
-        // 2. Lọc theo Danh mục (MỚI)
+        // 2. Lọc theo Danh mục
         if (!empty($filters['category_id'])) {
             $sql .= ' AND p.category_id = :category_id';
         }
 
-        // 3. Lọc theo Mức giá
+        // 3. Lọc theo Tìm kiếm (Tên sản phẩm)
+        if (!empty($filters['search_query'])) {
+            $sql .= ' AND p.name LIKE :search_query';
+        }
+
+        // 4. Lọc theo Mức giá (Dựa trên giá thấp nhất min_price)
+        // Lưu ý: Vì GROUP BY nên ta dùng HAVING cho các điều kiện tổng hợp (MIN/MAX)
+        // Tuy nhiên để đơn giản và tối ưu, ta lọc WHERE trên từng biến thể trước, 
+        // nhưng logic đúng nhất cho UX là lọc sau khi gom nhóm. 
+        // Ở đây tôi dùng cách lọc biến thể con trước để đơn giản câu SQL.
         if (!empty($filters['price_range'])) {
             switch ($filters['price_range']) {
-                case 1:
+                case 1: // Dưới 5 triệu
                     $sql .= ' AND v.price < 5000000';
                     break;
-                case 2:
+                case 2: // 5 - 10 triệu
                     $sql .= ' AND v.price BETWEEN 5000000 AND 10000000';
                     break;
-                case 3:
+                case 3: // 10 - 20 triệu
                     $sql .= ' AND v.price BETWEEN 10000000 AND 20000000';
                     break;
-                case 4:
+                case 4: // 20 - 30 triệu
                     $sql .= ' AND v.price BETWEEN 20000000 AND 30000000';
                     break;
-                case 5:
+                case 5: // Trên 30 triệu
                     $sql .= ' AND v.price > 30000000';
                     break;
             }
         }
 
-        // 4. Lọc theo Tìm kiếm
-        if (!empty($filters['search_query'])) {
-            $sql .= ' AND p.name LIKE :search_query';
-        }
+        // QUAN TRỌNG: Gom nhóm
+        $sql .= ' GROUP BY p.id';
 
         // 5. Sắp xếp
         if (!empty($filters['sort_by'])) {
             switch ($filters['sort_by']) {
                 case 'price_asc':
-                    $sql .= ' ORDER BY v.price ASC';
+                    $sql .= ' ORDER BY MIN(v.price) ASC';
                     break;
                 case 'price_desc':
-                    $sql .= ' ORDER BY v.price DESC';
+                    $sql .= ' ORDER BY MIN(v.price) DESC';
                     break;
                 case 'newest':
-                    $sql .= ' ORDER BY v.id DESC';
+                    $sql .= ' ORDER BY p.id DESC';
                     break;
                 default:
-                    $sql .= ' ORDER BY v.id DESC';
+                    $sql .= ' ORDER BY p.id DESC';
             }
         } else {
-            $sql .= ' ORDER BY v.id DESC';
+            $sql .= ' ORDER BY p.id DESC';
         }
 
         $this->db->query($sql);
@@ -320,7 +363,7 @@ class ProductModel
         if (!empty($filters['brand_id'])) {
             $this->db->bind(':brand_id', $filters['brand_id']);
         }
-        if (!empty($filters['category_id'])) { // MỚI
+        if (!empty($filters['category_id'])) {
             $this->db->bind(':category_id', $filters['category_id']);
         }
         if (!empty($filters['search_query'])) {
@@ -333,7 +376,7 @@ class ProductModel
     // Tìm kiếm (Gọi lại hàm lọc)
     public function searchProducts($query)
     {
-        return $this->getFilteredVariants(['search_query' => $query]);
+        return $this->getFilteredProducts(['search_query' => $query]);
     }
 
     // Lấy sản phẩm đang giảm giá (Trang Khuyến mãi)
@@ -377,5 +420,44 @@ class ProductModel
         $row = $this->db->single();
         if ($row['avg_rating'] === null) $row['avg_rating'] = 0;
         return $row;
+    }
+    // =================================================================
+    // PHẦN 4: QUẢN LÝ THƯ VIỆN ẢNH (GALLERY)
+    // =================================================================
+
+    // Lấy tất cả ảnh phụ của sản phẩm
+    public function getGalleryByProductId($product_id)
+    {
+        $this->db->query('SELECT * FROM product_gallery WHERE product_id = :product_id');
+        $this->db->bind(':product_id', $product_id);
+        return $this->db->resultSet();
+    }
+
+    // Thêm ảnh vào gallery
+    public function addGalleryImage($product_id, $image, $color = null)
+    {
+        $this->db->query('INSERT INTO product_gallery (product_id, image, color) VALUES (:product_id, :image, :color)');
+        $this->db->bind(':product_id', $product_id);
+        $this->db->bind(':image', $image);
+        $this->db->bind(':color', $color); // Có thể null
+        return $this->db->execute();
+    }
+
+    // Xóa ảnh khỏi gallery
+    public function deleteGalleryImage($id)
+    {
+        // Lấy tên ảnh để xóa file vật lý (nếu cần xử lý ở controller)
+        $this->db->query('SELECT image FROM product_gallery WHERE id = :id');
+        $this->db->bind(':id', $id);
+        $row = $this->db->single();
+
+        if ($row) {
+            $this->db->query('DELETE FROM product_gallery WHERE id = :id');
+            $this->db->bind(':id', $id);
+            if ($this->db->execute()) {
+                return $row['image']; // Trả về tên ảnh để Controller xóa file
+            }
+        }
+        return false;
     }
 }

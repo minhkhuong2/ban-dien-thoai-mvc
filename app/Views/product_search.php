@@ -1,50 +1,67 @@
-<h2 class="section-title"><?php echo $data['title']; ?></h2>
+<div class="container" style="margin-top: 30px; margin-bottom: 50px;">
 
-<div class="product-grid">
-    <?php if (empty($data['variants'])) : ?> <p style="text-align: center; grid-column: 1 / -1;">Không tìm thấy sản phẩm nào phù hợp.</p>
-    <?php else : ?>
-        <?php foreach ($data['variants'] as $variant) : ?> <div class="product-card">
-                <?php
-                // Tính % giảm giá
-                if (isset($variant['price_sale']) && $variant['price_sale'] > 0) {
-                    $discount_percent = round((($variant['price'] - $variant['price_sale']) / $variant['price']) * 100);
-                    echo '<div class="discount-badge">-' . $discount_percent . '%</div>';
-                }
-                ?>
+    <div class="page-title-header">
+        <h1>Kết Quả Tìm Kiếm</h1>
+        <p>
+            Từ khóa: <strong style="color: #288ad6;">"<?php echo htmlspecialchars($data['search_query']); ?>"</strong>
+            - Tìm thấy <strong><?php echo count($data['products']); ?></strong> sản phẩm
+        </p>
+    </div>
 
-                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>">
-                    <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($variant['image']); ?>"
-                        alt="<?php echo htmlspecialchars($variant['product_name']); ?>"
-                        class="product-card-image">
+    <div class="product-grid">
+        <?php if (empty($data['products'])) : ?>
+            <div style="grid-column: 1 / -1; text-align: center; background: #fff; padding: 50px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="<?php echo URLROOT; ?>/images/no-result.png" alt="" style="width: 100px; opacity: 0.5; margin-bottom: 15px;">
+                <p style="font-size: 1.2rem; color: #555;">Rất tiếc, không tìm thấy sản phẩm nào phù hợp.</p>
+                <a href="<?php echo URLROOT; ?>/product/all" class="btn-add-to-cart" style="display: inline-block; width: auto; padding: 10px 30px; margin-top: 15px;">
+                    Xem tất cả sản phẩm
                 </a>
-                <div class="product-card-content">
-                    <h3>
-                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>">
-                            <?php echo htmlspecialchars($variant['product_name']); ?>
-                            (<?php echo htmlspecialchars($variant['storage']); ?>)
-                        </a>
-                    </h3>
-                    <div class="product-price">
-                        <?php if (isset($variant['price_sale']) && $variant['price_sale'] > 0) : ?>
-                            <?php echo number_format($variant['price_sale']); ?> VNĐ
-                            <span class="product-price-old"><?php echo number_format($variant['price']); ?> VNĐ</span>
-                        <?php else : ?>
-                            <?php echo number_format($variant['price']); ?> VNĐ
-                        <?php endif; ?>
-                    </div>
-                    <div class="product-specs">
-                        <span><?php echo htmlspecialchars($variant['ram']); ?></span> |
-                        <span><?php echo htmlspecialchars($variant['storage']); ?></span> |
-                        <span><?php echo htmlspecialchars($variant['cpu']); ?></span>
-                    </div>
-
-                    <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $variant['variant_id']; ?>" method="POST" class="add-to-cart-form">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="btn-add-to-cart">Thêm vào giỏ</button>
-                    </form>
-                </div>
             </div>
+        <?php else : ?>
+            <?php foreach ($data['products'] as $product) : ?>
+                <div class="product-card">
 
-        <?php endforeach; ?>
-    <?php endif; ?>
+                    <?php if ($product['max_sale'] > 0 && $product['max_sale'] < $product['min_price']):
+                        $percent = round((($product['min_price'] - $product['max_sale']) / $product['min_price']) * 100);
+                    ?>
+                        <span class="badge-top-left">-<?php echo $percent; ?>%</span>
+                    <?php endif; ?>
+
+                    <span class="badge-top-right">Mới</span>
+
+                    <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                        <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($product['image']); ?>"
+                            class="pc-img"
+                            alt="<?php echo htmlspecialchars($product['product_name']); ?>">
+                    </a>
+
+                    <div class="pc-info">
+                        <div class="pc-name">
+                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                                <?php echo htmlspecialchars($product['product_name']); ?>
+                            </a>
+                        </div>
+
+                        <div style="font-size: 13px; color: #ff9f00; margin-bottom: 5px;">
+                            ★★★★★ <span style="color: #999;">(5.0)</span>
+                        </div>
+
+                        <div class="pc-price">
+                            Từ <?php echo number_format($product['min_price']); ?> ₫
+                        </div>
+                    </div>
+
+                    <div class="pc-btns">
+                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-cart">
+                            <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                        </a>
+                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-view">
+                            Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
 </div>

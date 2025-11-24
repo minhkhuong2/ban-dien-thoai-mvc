@@ -34,6 +34,9 @@
                     <a href="<?php echo URLROOT; ?>/admin/editProduct/<?php echo $product['id']; ?>">
                         <i class="fas fa-edit"></i> Sửa & Biến thể
                     </a>
+                    <a href="<?php echo URLROOT; ?>/admin/gallery/<?php echo $product['id']; ?>" style="margin-left: 10px; color: #28a745;">
+                        <i class="fas fa-images"></i> Ảnh phụ
+                    </a>
                     <a href="<?php echo URLROOT; ?>/admin/deleteProduct/<?php echo $product['id']; ?>"
                         class="delete"
                         onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này? Toàn bộ biến thể cũng sẽ bị xóa!');">

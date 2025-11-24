@@ -704,4 +704,82 @@ class AdminController extends Controller
         header('Location: ' . URLROOT . '/admin/reviews');
         exit();
     }
+    public function gallery($product_id)
+    {
+        // 1. XỬ LÝ POST: Upload ảnh
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            // Kiểm tra có file được chọn không
+            if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+                $total_files = count($_FILES['images']['name']);
+                $color = !empty($_POST['color']) ? trim($_POST['color']) : null;
+
+                for ($i = 0; $i < $total_files; $i++) {
+                    if ($_FILES['images']['error'][$i] == 0) {
+                        $fileName = $_FILES['images']['name'][$i];
+                        $tmpName = $_FILES['images']['tmp_name'][$i];
+
+                        // Tạo tên file mới để tránh trùng
+                        $newFileName = time() . '_' . rand(100, 999) . '_' . $fileName;
+                        $uploadPath = APPROOT . '/../public/uploads/' . $newFileName;
+
+                        if (move_uploaded_file($tmpName, $uploadPath)) {
+                            // Lưu vào DB
+                            $this->productModel->addGalleryImage($product_id, $newFileName, $color);
+                        }
+                    }
+                }
+                // Upload xong thì reload trang
+                header('Location: ' . URLROOT . '/admin/gallery/' . $product_id . '?msg=success');
+                exit();
+            }
+        }
+
+        // 2. XỬ LÝ GET: Hiển thị danh sách ảnh
+        $product = $this->productModel->getBaseProductById($product_id);
+
+        if (!$product) {
+            header('Location: ' . URLROOT . '/admin/products');
+            exit();
+        }
+
+        $gallery = $this->productModel->getGalleryByProductId($product_id);
+
+        // Lấy danh sách màu để làm tùy chọn (Option) khi upload
+        // Ta lấy màu từ các biến thể đã tạo của sản phẩm này
+        $variants = $this->productModel->getVariantsByProductId($product_id);
+        $colors = [];
+        foreach ($variants as $v) {
+            if (!empty($v['color']) && !in_array($v['color'], $colors)) {
+                $colors[] = $v['color'];
+            }
+        }
+
+        $data = [
+            'title' => 'Thư viện ảnh: ' . $product['name'],
+            'product' => $product,
+            'gallery' => $gallery,
+            'colors' => $colors
+        ];
+
+        $this->view('admin/products/gallery', $data);
+    }
+
+    // Xóa ảnh gallery
+    public function deleteGalleryImage($image_id)
+    {
+        $imageName = $this->productModel->deleteGalleryImage($image_id);
+
+        if ($imageName) {
+            // Xóa file vật lý
+            $filePath = APPROOT . '/../public/uploads/' . $imageName;
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        // Quay lại trang trước đó
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
 }

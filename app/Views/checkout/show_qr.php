@@ -1,54 +1,77 @@
-<div class="static-page-container" style="max-width: 600px; margin: 40px auto; text-align: center;">
+<div class="container" style="margin-top: 40px; margin-bottom: 60px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden;">
 
-    <h1 style="color: #2ecc71; margin-bottom: 10px;">Đặt Hàng Thành Công!</h1>
-    <p>Mã đơn hàng của bạn: <strong>#<?php echo $data['order']['id']; ?></strong></p>
-    <p>Vui lòng quét mã QR dưới đây để thanh toán:</p>
+        <div style="background: linear-gradient(135deg, #288ad6 0%, #0056b3 100%); padding: 30px; text-align: center; color: white;">
+            <h2 style="margin: 0 0 10px 0;">Thanh Toán Chuyển Khoản</h2>
+            <p style="margin: 0; opacity: 0.9;">Vui lòng quét mã QR bên dưới để hoàn tất đơn hàng</p>
+        </div>
 
-    <hr style="margin: 20px 0; border-top: 1px dashed #ccc;">
+        <div style="padding: 30px; text-align: center;">
 
-    <?php
-    // --- CẤU HÌNH TÀI KHOẢN NGÂN HÀNG CỦA BẠN ---
-    $BANK_ID = '970436';               // Mã BIN của Vietcombank
-    $ACCOUNT_NO = '1056405604';           // Số tài khoản của bạn
-    $TEMPLATE = 'compact2';            // Giao diện QR
-    $AMOUNT = $data['order']['total_amount'];
-    $DESCRIPTION = 'THANHTOAN DON ' . $data['order']['id'];
-    $ACCOUNT_NAME = 'BUI VAN KHUONG';    // Tên chủ tài khoản (không dấu)
-    // ----------------------------------------------------
+            <p style="font-size: 1.1rem; color: #555; margin-bottom: 20px;">
+                Mã đơn hàng: <strong style="color: #288ad6;">#<?php echo $data['order']['id']; ?></strong>
+            </p>
 
-    // Link tạo QR tự động từ VietQR
-    $qr_url = sprintf(
-        "https://img.vietqr.io/image/%s-%s-%s.png?amount=%s&addInfo=%s&accountName=%s",
-        $BANK_ID,
-        $ACCOUNT_NO,
-        $TEMPLATE,
-        $AMOUNT,
-        urlencode($DESCRIPTION),
-        urlencode($ACCOUNT_NAME)
-    );
-    ?>
+            <?php
+            // CẤU HÌNH VIETQR
+            $BANK_ID = '970436'; // Vietcombank
+            $ACCOUNT_NO = '1056405604';
+            $TEMPLATE = 'compact2';
+            $AMOUNT = $data['order']['total_amount'];
+            $DESCRIPTION = 'THANHTOAN DON ' . $data['order']['id'];
+            $ACCOUNT_NAME = 'BUI VAN KHUONG';
 
-    <div style="margin: 20px 0;">
-        <img src="<?php echo $qr_url; ?>" alt="Mã QR Thanh Toán" style="max-width: 100%; border: 1px solid #ddd; border-radius: 10px;">
+            $qr_url = sprintf(
+                "https://img.vietqr.io/image/%s-%s-%s.png?amount=%s&addInfo=%s&accountName=%s",
+                $BANK_ID,
+                $ACCOUNT_NO,
+                $TEMPLATE,
+                $AMOUNT,
+                urlencode($DESCRIPTION),
+                urlencode($ACCOUNT_NAME)
+            );
+            ?>
+
+            <div style="border: 2px dashed #ddd; padding: 10px; display: inline-block; border-radius: 10px; margin-bottom: 20px;">
+                <img src="<?php echo $qr_url; ?>" alt="Mã QR" style="max-width: 100%; width: 350px; display: block;">
+            </div>
+
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; text-align: left; font-size: 0.95rem; line-height: 1.8;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                    <span style="color: #777;">Ngân hàng:</span>
+                    <strong>Vietcombank</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                    <span style="color: #777;">Số tài khoản:</span>
+                    <strong style="font-size: 1.1em;"><?php echo $ACCOUNT_NO; ?></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                    <span style="color: #777;">Chủ tài khoản:</span>
+                    <strong><?php echo $ACCOUNT_NAME; ?></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                    <span style="color: #777;">Số tiền:</span>
+                    <strong style="color: #d0021b; font-size: 1.2em;"><?php echo number_format($AMOUNT); ?> ₫</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #777;">Nội dung:</span>
+                    <strong style="color: #288ad6;"><?php echo $DESCRIPTION; ?></strong>
+                </div>
+            </div>
+
+            <p style="color: #999; font-size: 0.85rem; margin-top: 20px;">
+                * Hệ thống sẽ tự động xử lý đơn hàng sau khi nhận được tiền.
+            </p>
+
+            <div style="margin-top: 30px; display: flex; gap: 15px;">
+                <a href="<?php echo URLROOT; ?>/" class="btn-buy" style="text-decoration: none; flex: 1; background: #fff; color: #555; border: 1px solid #ddd;">
+                    Về Trang Chủ
+                </a>
+                <a href="<?php echo URLROOT; ?>/user/orders" class="btn-buy" style="text-decoration: none; flex: 1;">
+                    Tôi Đã Thanh Toán
+                </a>
+            </div>
+
+        </div>
     </div>
-
-    <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; text-align: left; margin-bottom: 20px;">
-        <p><strong>Ngân hàng:</strong> Vietcombank (NH TMCP Ngoai thuong VN)</p>
-        <p><strong>Số tài khoản:</strong> <?php echo $ACCOUNT_NO; ?></p>
-
-        <p><strong>Chủ tài khoản:</strong> <?php echo $ACCOUNT_NAME; ?></p>
-
-        <p><strong>Số tiền:</strong> <span style="color: #e74c3c; font-weight: bold; font-size: 1.2em;"><?php echo number_format($AMOUNT); ?> VNĐ</span></p>
-        <p><strong>Nội dung chuyển khoản:</strong> <span style="color: #3498db; font-weight: bold;"><?php echo $DESCRIPTION; ?></span></p>
-    </div>
-
-    <p style="font-size: 0.9rem; color: #777;">
-        * Sau khi chuyển khoản thành công, hệ thống sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.
-        <br>Bạn có thể xem lại đơn hàng trong mục "Lịch sử đơn hàng".
-    </p>
-
-    <br>
-    <a href="<?php echo URLROOT; ?>/" class="btn btn-primary" style="text-decoration: none; display: inline-block;">Về Trang Chủ</a>
-    <a href="<?php echo URLROOT; ?>/user/orders" class="btn btn-secondary" style="text-decoration: none; display: inline-block; margin-left: 10px;">Xem Đơn Hàng</a>
-
 </div>

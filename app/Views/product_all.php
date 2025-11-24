@@ -1,19 +1,18 @@
 <div class="page-title-header">
-    <h1>Sản phẩm điện thoại</h1>
-    <p>Khám phá bộ sưu tập điện thoại đa dạng...</p>
+    <h1>Tất Cả Sản Phẩm</h1>
+    <p>Tìm kiếm chiếc điện thoại ưng ý nhất cho bạn</p>
 </div>
 
 <form action="<?php echo URLROOT; ?>/product/all" method="GET" id="filter-form">
     <div class="product-page-layout">
 
         <aside class="sidebar-filters">
-
-            <h4>Bộ lọc sản phẩm</h4>
+            <h4><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h4>
 
             <div class="filter-widget">
-                <h5>Tìm kiếm</h5>
+                <h5>Từ khóa</h5>
                 <div class="search-filter">
-                    <input type="text" name="query" placeholder="Tìm kiếm sản phẩm..."
+                    <input type="text" name="query" placeholder="Nhập tên máy..."
                         value="<?php echo htmlspecialchars($data['filters']['search_query'] ?? ''); ?>">
                 </div>
             </div>
@@ -22,12 +21,11 @@
                 <h5>Danh mục</h5>
                 <ul>
                     <li>
-                        <a href="<?php echo URLROOT; ?>/product/all" class="<?php echo !isset($_GET['category_filter']) ? 'active' : ''; ?>">
+                        <a href="<?php echo URLROOT; ?>/product/all"
+                            class="<?php echo !isset($_GET['category_filter']) ? 'active' : ''; ?>">
                             Tất cả
                         </a>
-                        <span>(<?php echo $this->model('ProductModel')->countVariants(); ?>)</span>
                     </li>
-
                     <?php if (!empty($data['categories'])) : ?>
                         <?php foreach ($data['categories'] as $cat) : ?>
                             <li>
@@ -35,8 +33,7 @@
                                     class="<?php echo (isset($_GET['category_filter']) && $_GET['category_filter'] == $cat['id']) ? 'active' : ''; ?>">
                                     <?php echo htmlspecialchars($cat['name']); ?>
                                 </a>
-
-                                <span>(<?php echo $cat['product_count']; ?>)</span>
+                                <span><?php echo $cat['product_count']; ?></span>
                             </li>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -46,7 +43,7 @@
             <div class="filter-widget">
                 <h5>Thương hiệu</h5>
                 <select name="brand_filter" onchange="document.getElementById('filter-form').submit()">
-                    <option value="">Tất cả thương hiệu</option>
+                    <option value="">-- Tất cả hãng --</option>
                     <?php if (!empty($data['brands'])) : ?>
                         <?php foreach ($data['brands'] as $brand) : ?>
                             <option value="<?php echo $brand['id']; ?>"
@@ -61,7 +58,7 @@
             <div class="filter-widget">
                 <h5>Mức giá</h5>
                 <select name="price_filter" onchange="document.getElementById('filter-form').submit()">
-                    <option value="">Tất cả mức giá</option>
+                    <option value="">-- Tất cả --</option>
                     <option value="1" <?php echo ($data['filters']['price_range'] == 1) ? 'selected' : ''; ?>>Dưới 5 triệu</option>
                     <option value="2" <?php echo ($data['filters']['price_range'] == 2) ? 'selected' : ''; ?>>5 - 10 triệu</option>
                     <option value="3" <?php echo ($data['filters']['price_range'] == 3) ? 'selected' : ''; ?>>10 - 20 triệu</option>
@@ -70,18 +67,16 @@
                 </select>
             </div>
 
-            <a href="<?php echo URLROOT; ?>/product/all" class="btn-clear-filters" style="text-align: center; text-decoration: none;">Xóa bỏ lọc</a>
-
+            <a href="<?php echo URLROOT; ?>/product/all" class="btn-clear-filters">Xóa bộ lọc</a>
         </aside>
 
         <main class="main-product-grid">
-
             <div class="product-grid-header">
-                <span>Hiển thị <?php echo count($data['variants']); ?> sản phẩm</span>
+                <span>Tìm thấy <strong><?php echo count($data['products']); ?></strong> sản phẩm</span>
+
                 <div class="sort-by">
-                    <label for="sort">Sắp xếp: </label>
-                    <select name="sort" id="sort" onchange="document.getElementById('filter-form').submit()">
-                        <option value="default" <?php echo ($data['filters']['sort_by'] == 'default') ? 'selected' : ''; ?>>Mặc định</option>
+                    <label>Sắp xếp:</label>
+                    <select name="sort" onchange="document.getElementById('filter-form').submit()">
                         <option value="newest" <?php echo ($data['filters']['sort_by'] == 'newest') ? 'selected' : ''; ?>>Mới nhất</option>
                         <option value="price_asc" <?php echo ($data['filters']['sort_by'] == 'price_asc') ? 'selected' : ''; ?>>Giá tăng dần</option>
                         <option value="price_desc" <?php echo ($data['filters']['sort_by'] == 'price_desc') ? 'selected' : ''; ?>>Giá giảm dần</option>
@@ -90,46 +85,59 @@
             </div>
 
             <div class="product-grid">
-                <?php if (empty($data['variants'])) : ?>
-                    <p style="text-align: center; grid-column: 1 / -1;">Không tìm thấy sản phẩm nào phù hợp với bộ lọc.</p>
+                <?php if (empty($data['products'])) : ?>
+                    <p style="grid-column: 1/-1; text-align: center; padding: 40px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                        Không tìm thấy sản phẩm nào phù hợp.
+                    </p>
                 <?php else : ?>
-                    <?php foreach ($data['variants'] as $variant) : ?>
+                    <?php foreach ($data['products'] as $product) : ?>
                         <div class="product-card">
-                            <?php
-                            if (isset($variant['price_sale']) && $variant['price_sale'] > 0) {
-                                $discount_percent = round((($variant['price'] - $variant['price_sale']) / $variant['price']) * 100);
-                                echo '<div class="discount-badge">-' . $discount_percent . '%</div>';
-                            }
+
+                            <?php if ($product['max_sale'] > 0 && $product['max_sale'] < $product['min_price']):
+                                $percent = round((($product['min_price'] - $product['max_sale']) / $product['min_price']) * 100);
                             ?>
-                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>">
-                                <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($variant['image']); ?>"
-                                    alt="<?php echo htmlspecialchars($variant['product_name']); ?>"
-                                    class="product-card-image">
+                                <span class="badge-top-left">-<?php echo $percent; ?>%</span>
+                            <?php endif; ?>
+
+                            <span class="badge-top-right">Mới</span>
+
+                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                                <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($product['image']); ?>"
+                                    class="pc-img"
+                                    alt="<?php echo htmlspecialchars($product['product_name']); ?>">
                             </a>
-                            <div class="product-card-content">
-                                <h3><a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>"><?php echo htmlspecialchars($variant['product_name']); ?> (<?php echo htmlspecialchars($variant['storage']); ?>)</a></h3>
-                                <div class="product-price">
-                                    <?php if (isset($variant['price_sale']) && $variant['price_sale'] > 0) : ?>
-                                        <?php echo number_format($variant['price_sale']); ?> VNĐ
-                                        <span class="product-price-old"><?php echo number_format($variant['price']); ?> VNĐ</span>
-                                    <?php else : ?>
-                                        <?php echo number_format($variant['price']); ?> VNĐ
+
+                            <div class="pc-info">
+                                <div class="pc-name">
+                                    <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                                        <?php echo htmlspecialchars($product['product_name']); ?>
+                                    </a>
+                                </div>
+
+                                <div style="font-size: 13px; color: #ff9f00; margin-bottom: 5px;">
+                                    ★★★★★ <span style="color: #999;">(4.9)</span>
+                                </div>
+
+                                <div class="pc-price">
+                                    <?php echo number_format($product['min_price']); ?> ₫
+                                    <?php if ($product['max_sale'] > 0): ?>
+                                        <span class="pc-old-price"><?php echo number_format($product['max_price']); ?> đ</span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="product-specs">
-                                    <span><?php echo htmlspecialchars($variant['ram']); ?></span> |
-                                    <span><?php echo htmlspecialchars($variant['cpu']); ?></span>
-                                </div>
-                                <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $variant['variant_id']; ?>" method="POST" class="add-to-cart-form">
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit" class="btn-add-to-cart">Thêm vào giỏ</button>
-                                </form>
+                            </div>
+
+                            <div class="pc-btns">
+                                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-cart">
+                                    <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                                </a>
+                                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-view">
+                                    Xem chi tiết
+                                </a>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-
         </main>
     </div>
 </form>

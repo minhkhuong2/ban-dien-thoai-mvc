@@ -1,105 +1,83 @@
 <div class="new-hero-banner">
     <div class="new-hero-content">
-        <h1>Điện Thoại Chính Hãng<br>Giá Tốt Nhất</h1>
-        <p>Khám phá bộ sưu tập điện thoại thông minh mới nhất từ các thương hiệu hàng đầu. Chất lượng đảm bảo, giá cả cạnh tranh, dịch vụ tận tâm.</p>
+        <h1>Siêu Phẩm Công Nghệ<br>Giá Tốt Nhất Hôm Nay</h1>
+        <p>Sở hữu ngay những chiếc điện thoại flagship mới nhất với ưu đãi độc quyền và quà tặng hấp dẫn.</p>
         <div class="new-hero-buttons">
             <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-yellow">Mua Ngay</a>
-            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-outline">Xem Sản Phẩm</a>
+            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-outline">Xem Chi Tiết</a>
         </div>
     </div>
     <div class="new-hero-image">
-        <img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Điện thoại chính hãng">
+        <img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Banner điện thoại">
     </div>
 </div>
 
-<div class="new-brands-section">
-    <h2 class="section-title">Thương Hiệu Nổi Bật</h2>
-    <p style="color: #555; text-align: center; margin-top: -20px; margin-bottom: 30px;">Khám phá các thương hiệu điện thoại hàng đầu thế giới với đa dạng mẫu mã và tính năng</p>
-    <div class="new-brands-grid">
-        <div class="new-brand-item">
-            <img src="<?php echo URLROOT; ?>/images/brands/apple.png" alt="Apple">
-            <span>iPhone</span>
-        </div>
-        <div class="new-brand-item">
-            <img src="<?php echo URLROOT; ?>/images/brands/samsung.png" alt="Samsung">
-            <span>Samsung</span>
-        </div>
-        <div class="new-brand-item">
-            <img src="<?php echo URLROOT; ?>/images/brands/xiaomi.png" alt="Xiaomi">
-            <span>Xiaomi</span>
-        </div>
-        <div class="new-brand-item">
-            <img src="<?php echo URLROOT; ?>/images/brands/oppo.png" alt="Oppo">
-            <span>Oppo</span>
-        </div>
-        <div class="new-brand-item">
-            <img src="<?php echo URLROOT; ?>/images/brands/vivo.png" alt="Vivo">
-            <span>Vivo</span>
-        </div>
-        <div class="new-brand-item">
-            <img src="<?php echo URLROOT; ?>/images/brands/realme.png" alt="Realme">
-            <span>Realme</span>
-        </div>
-    </div>
-</div>
+<div class="container">
+    <h2 class="section-title" style="margin-top: 50px;">Sản Phẩm Nổi Bật</h2>
+    <p style="text-align: center; color: #666; margin-bottom: 30px;">Khám phá những flagship đẳng cấp nhất hiện nay</p>
 
-<h2 class="section-title">Sản Phẩm Nổi Bật</h2>
-<p style="color: #555; text-align: center; margin-top: -20px; margin-bottom: 30px;">Những chiếc điện thoại được yêu thích nhất với công nghệ tiên tiến và giá cả hợp lý</p>
+    <div class="product-grid">
+        <?php if (empty($data['products'])) : ?>
+            <p style="text-align: center; width: 100%;">Đang cập nhật sản phẩm...</p>
+        <?php else : ?>
+            <?php foreach ($data['products'] as $product) : ?>
+                <div class="product-card">
+                    <?php if ($product['max_sale'] > 0 && $product['max_sale'] < $product['min_price']):
+                        $percent = round((($product['min_price'] - $product['max_sale']) / $product['min_price']) * 100);
+                    ?>
+                        <span class="badge-top-left">-<?php echo $percent; ?>%</span>
+                    <?php endif; ?>
 
-<div class="product-grid">
-    <?php if (empty($data['products'])) : ?>
-        <p style="text-align: center; grid-column: 1 / -1;">Không có sản phẩm nào để hiển thị.</p>
-    <?php else : ?>
-        <?php foreach ($data['products'] as $product) : ?>
-            <div class="product-card">
-                <?php
-                // Logic này cần tinh chỉnh lại tùy vào logic giá của bạn, ở đây demo đơn giản
-                if ($product['max_sale'] > 0 && $product['max_sale'] < $product['min_price']) {
-                    echo '<div class="discount-badge">Giảm giá</div>';
-                }
-                ?>
+                    <span class="badge-top-right">Mới nhất</span>
 
-                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
-                    <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($product['image']); ?>"
-                        alt="<?php echo htmlspecialchars($product['product_name']); ?>"
-                        class="product-card-image">
-                </a>
-
-                <div class="product-card-content">
-                    <h3>
-                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
-                            <?php echo htmlspecialchars($product['product_name']); ?>
-                        </a>
-                    </h3>
-
-                    <div class="product-price">
-                        Từ <?php echo number_format($product['min_price']); ?> VNĐ
-                    </div>
-
-                    <div class="product-specs">
-                        <span><?php echo htmlspecialchars($product['ram']); ?></span> |
-                        <span><?php echo htmlspecialchars($product['cpu']); ?></span>
-                    </div>
-
-                    <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="btn-add-to-cart">
-                        Xem chi tiết
+                    <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                        <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($product['image']); ?>" class="pc-img">
                     </a>
+
+                    <div class="pc-info">
+                        <div class="pc-name">
+                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
+                                <?php echo htmlspecialchars($product['product_name']); ?>
+                            </a>
+                        </div>
+                        <div style="font-size: 13px; color: #ff9f00; margin-bottom: 5px;">
+                            ★★★★★ <span style="color: #999;">(4.8)</span>
+                        </div>
+
+                        <div class="pc-price">
+                            <?php echo number_format($product['min_price']); ?> ₫
+                            <?php if ($product['max_sale'] > 0): ?>
+                                <span class="pc-old-price"><?php echo number_format($product['max_price']); ?> đ</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="pc-btns">
+                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-cart">
+                            <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                        </a>
+                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-view">
+                            <i class="fas fa-eye"></i> Xem chi tiết
+                        </a>
+                    </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
+    <div class="view-all-btn-container">
+        <a href="<?php echo URLROOT; ?>/product/all" class="view-all-btn">Xem Tất Cả Sản Phẩm</a>
+    </div>
 </div>
 
-<div class="view-all-btn-container">
-    <a href="<?php echo URLROOT; ?>/product/all" class="view-all-btn">Xem Tất Cả Sản Phẩm</a>
-</div>
-
-
-<div class="newsletter-banner">
-    <h3>Đăng Ký Nhận Tin Tức</h3>
-    <p>Nhận thông tin về sản phẩm mới, khuyến mãi đặc biệt và các tin tức công nghệ mới nhất</p>
-    <form action="#" method="POST" class="newsletter-form">
-        <input type="email" name="email" placeholder="Nhập email của bạn...">
-        <button type="submit">Đăng ký</button>
-    </form>
+<div class="new-brands-section" style="margin-top: 60px;">
+    <h3 style="margin-bottom: 20px;">Thương Hiệu Đồng Hành</h3>
+    <div class="new-brands-grid">
+        <div class="new-brand-item"><img src="<?php echo URLROOT; ?>/images/brands/apple.png" alt="Apple"></div>
+        <div class="new-brand-item"><img src="<?php echo URLROOT; ?>/images/brands/samsung.png" alt="Samsung"></div>
+        <div class="new-brand-item"><img src="<?php echo URLROOT; ?>/images/brands/xiaomi.png" alt="Xiaomi"></div>
+        <div class="new-brand-item"><img src="<?php echo URLROOT; ?>/images/brands/oppo.png" alt="Oppo"></div>
+        <div class="new-brand-item"><img src="<?php echo URLROOT; ?>/images/brands/vivo.png" alt="Vivo"></div>
+        <div class="new-brand-item"><img src="<?php echo URLROOT; ?>/images/brands/realme.png" alt="Realme"></div>
+    </div>
 </div>
