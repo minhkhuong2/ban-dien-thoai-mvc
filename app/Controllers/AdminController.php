@@ -782,4 +782,52 @@ class AdminController extends Controller
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
+    public function editVoucher($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $data = [
+                'id' => $id,
+                'code' => strtoupper(trim($_POST['code'])),
+                'type' => $_POST['type'],
+                'value' => (int)$_POST['value'],
+                'min_order_value' => (int)$_POST['min_order_value'],
+                'start_date' => trim($_POST['start_date']),
+                'end_date' => trim($_POST['end_date']),
+                'usage_limit' => (int)$_POST['usage_limit'],
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            if ($this->voucherModel->updateVoucher($data)) {
+                header('Location: ' . URLROOT . '/admin/vouchers');
+                exit();
+            } else {
+                die('Cập nhật thất bại');
+            }
+        } else {
+            // GET: Hiển thị form với dữ liệu cũ
+            $voucher = $this->voucherModel->getVoucherById($id);
+            if (!$voucher) {
+                header('Location: ' . URLROOT . '/admin/vouchers');
+                exit();
+            }
+
+            $data = [
+                'title' => 'Sửa Voucher: ' . $voucher['code'],
+                'voucher' => $voucher
+            ];
+            $this->view('admin/vouchers/edit', $data);
+        }
+    }
+
+    // Xóa Voucher
+    public function deleteVoucher($id)
+    {
+        if ($this->voucherModel->deleteVoucher($id)) {
+            header('Location: ' . URLROOT . '/admin/vouchers');
+            exit();
+        } else {
+            die('Xóa thất bại');
+        }
+    }
 }

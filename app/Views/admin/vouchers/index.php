@@ -14,6 +14,7 @@
             <th>Lượt dùng</th>
             <th>Thời gian</th>
             <th>Trạng thái</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
@@ -49,6 +50,16 @@
                     <?php else : ?>
                         <span style="color: red;">Đã khóa</span>
                     <?php endif; ?>
+                </td>
+                <td class="action-links">
+                    <a href="<?php echo URLROOT; ?>/admin/editVoucher/<?php echo $voucher['id']; ?>">
+                        <i class="fas fa-edit"></i> Sửa
+                    </a>
+                    <a href="<?php echo URLROOT; ?>/admin/deleteVoucher/<?php echo $voucher['id']; ?>"
+                        class="delete"
+                        onclick="return confirm('Bạn chắc chắn muốn xóa mã này?');">
+                        <i class="fas fa-trash"></i> Xóa
+                    </a>
                 </td>
             </tr>
         <?php endforeach; ?>

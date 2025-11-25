@@ -58,6 +58,57 @@ class VoucherModel
         $this->db->bind(':id', $voucher_id);
         return $this->db->execute();
     }
+    public function getActiveVouchers()
+    {
+        $this->db->query('SELECT * FROM vouchers 
+                          WHERE is_active = 1 
+                          AND (start_date IS NULL OR start_date <= NOW())
+                          AND (end_date IS NULL OR end_date >= NOW())
+                          AND (usage_limit = 0 OR usage_count < usage_limit)
+                          ORDER BY value DESC');
+        return $this->db->resultSet();
+    }
+    public function getVoucherById($id)
+    {
+        $this->db->query('SELECT * FROM vouchers WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    // Cập nhật voucher
+    public function updateVoucher($data)
+    {
+        $this->db->query('UPDATE vouchers SET 
+                            code = :code, 
+                            type = :type, 
+                            value = :value, 
+                            min_order_value = :min_order_value, 
+                            start_date = :start_date, 
+                            end_date = :end_date, 
+                            usage_limit = :usage_limit, 
+                            is_active = :is_active 
+                         WHERE id = :id');
+
+        $this->db->bind(':id', $data['id']);
+        $this->db->bind(':code', $data['code']);
+        $this->db->bind(':type', $data['type']);
+        $this->db->bind(':value', $data['value']);
+        $this->db->bind(':min_order_value', $data['min_order_value']);
+        $this->db->bind(':start_date', $data['start_date'] ?: null);
+        $this->db->bind(':end_date', $data['end_date'] ?: null);
+        $this->db->bind(':usage_limit', $data['usage_limit']);
+        $this->db->bind(':is_active', $data['is_active']);
+
+        return $this->db->execute();
+    }
+
+    // Xóa voucher
+    public function deleteVoucher($id)
+    {
+        $this->db->query('DELETE FROM vouchers WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
 
     // (Các hàm khác như findByCode, updateUsage... sẽ thêm sau)
 }

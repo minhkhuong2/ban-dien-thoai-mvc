@@ -6,12 +6,13 @@ class PageController extends Controller
     private $productModel;
     private $postModel;
     private $categoryModel;
-
+    private $voucherModel;
     public function __construct()
     {
         $this->productModel = $this->model('ProductModel');
         $this->postModel = $this->model('PostModel');
         $this->categoryModel = $this->model('CategoryModel');
+        $this->voucherModel = $this->model('VoucherModel');
     }
 
     // Trang Liên hệ
@@ -35,13 +36,16 @@ class PageController extends Controller
     }
     public function promotions()
     {
-        // Lấy sản phẩm đang sale từ Model
-        // Sửa: Gọi hàm getOnSaleVariants() (chúng ta sẽ thêm ở Model)
-        $variants = $this->productModel->getOnSaleVariants(); // Dùng hàm mới
+        // Lấy sản phẩm đang sale
+        $variants = $this->productModel->getOnSaleVariants();
+
+        // [MỚI] Lấy danh sách Voucher đang hoạt động
+        $vouchers = $this->voucherModel->getActiveVouchers();
 
         $data = [
-            'title' => 'Sản phẩm Khuyến Mãi',
-            'variants' => $variants // Gửi 'variants'
+            'title' => 'Săn Voucher & Khuyến Mãi',
+            'variants' => $variants,
+            'vouchers' => $vouchers // Truyền sang view
         ];
 
         $this->view('pages/promotions', $data);
