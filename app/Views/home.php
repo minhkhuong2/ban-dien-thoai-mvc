@@ -1,14 +1,14 @@
 <div class="new-hero-banner">
     <div class="new-hero-content">
         <h1>Siêu Phẩm Công Nghệ<br>Giá Tốt Nhất Hôm Nay</h1>
-        <p>Sở hữu ngay những chiếc điện thoại flagship mới nhất với ưu đãi độc quyền và quà tặng hấp dẫn.</p>
+        <p>Sở hữu ngay những chiếc điện thoại flagship mới nhất với ưu đãi độc quyền.</p>
         <div class="new-hero-buttons">
             <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-yellow">Mua Ngay</a>
             <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-outline">Xem Chi Tiết</a>
         </div>
     </div>
     <div class="new-hero-image">
-        <img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Banner điện thoại">
+        <img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Banner">
     </div>
 </div>
 
@@ -22,12 +22,12 @@
         <?php else : ?>
             <?php foreach ($data['products'] as $product) : ?>
                 <div class="product-card">
+
                     <?php if ($product['max_sale'] > 0 && $product['max_sale'] < $product['min_price']):
                         $percent = round((($product['min_price'] - $product['max_sale']) / $product['min_price']) * 100);
                     ?>
                         <span class="badge-top-left">-<?php echo $percent; ?>%</span>
                     <?php endif; ?>
-
                     <span class="badge-top-right">Mới nhất</span>
 
                     <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
@@ -43,23 +43,25 @@
                         <div style="font-size: 13px; color: #ff9f00; margin-bottom: 5px;">
                             ★★★★★ <span style="color: #999;">(4.8)</span>
                         </div>
-
                         <div class="pc-price">
-                            <?php echo number_format($product['min_price']); ?> ₫
-                            <?php if ($product['max_sale'] > 0): ?>
-                                <span class="pc-old-price"><?php echo number_format($product['max_price']); ?> đ</span>
-                            <?php endif; ?>
+                            Từ <?php echo number_format($product['min_price']); ?> ₫
                         </div>
                     </div>
 
                     <div class="pc-btns">
-                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-cart">
-                            <i class="fas fa-shopping-cart"></i> Giỏ hàng
-                        </a>
+
+                        <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $product['default_variant_id']; ?>" method="POST" class="add-to-cart-form" style="flex: 1;">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="pc-btn pc-btn-cart" style="width: 100%; cursor: pointer;">
+                                Giỏ hàng
+                            </button>
+                        </form>
+
                         <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-view">
-                            <i class="fas fa-eye"></i> Xem chi tiết
+                            Xem chi tiết
                         </a>
                     </div>
+
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>

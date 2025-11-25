@@ -127,9 +127,19 @@
                             </div>
 
                             <div class="pc-btns">
-                                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-cart">
-                                    <i class="fas fa-shopping-cart"></i> Giỏ hàng
-                                </a>
+                                <?php if (isset($product['default_variant_id'])): ?>
+                                    <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $product['default_variant_id']; ?>" method="POST" class="add-to-cart-form" style="flex: 1;">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="pc-btn pc-btn-cart" style="width: 100%; cursor: pointer;">
+                                            Giỏ hàng
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-cart">
+                                        Chọn mua
+                                    </a>
+                                <?php endif; ?>
+
                                 <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-view">
                                     Xem chi tiết
                                 </a>

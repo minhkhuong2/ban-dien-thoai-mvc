@@ -1126,22 +1126,33 @@ body {
 /* 7.3. Nút "Xem Tất Cả" */
 .view-all-btn-container {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 50px; /* Cách xa sản phẩm bên trên */
+  margin-bottom: 50px; /* Cách xa footer bên dưới */
+  clear: both; /* Ngắt dòng hoàn toàn khỏi các phần tử float */
+  display: block;
+  width: 100%;
+  position: relative;
+  z-index: 10; /* Đảm bảo nổi lên trên */
 }
 
 .view-all-btn {
-  padding: 12px 30px;
+  padding: 12px 40px;
   font-size: 1rem;
   font-weight: bold;
   text-decoration: none;
-  border-radius: 25px;
-  background: var(--dark-color);
-  color: var(--white-color);
-  transition: background 0.3s ease;
+  border-radius: 30px;
+  background: var(--primary-color); /* Dùng màu xanh chủ đạo cho đẹp */
+  color: var(--white);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(40, 138, 214, 0.3); /* Bóng đổ nhẹ */
+  border: 2px solid transparent;
 }
 
 .view-all-btn:hover {
-  background: #555;
+  background: var(--white);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
 }
 
 /* 7.4. Banner Đăng Ký Tin Tức (Mới) */

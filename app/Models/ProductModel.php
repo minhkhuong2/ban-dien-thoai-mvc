@@ -194,25 +194,24 @@ class ProductModel
     // Lấy tất cả biến thể để hiển thị (Trang chủ)
     public function getAllProductsForDisplay($limit = 8)
     {
-        // Chúng ta sẽ GROUP BY p.id để mỗi điện thoại chỉ hiện 1 lần
-        // Lấy giá thấp nhất (MIN price) để hiển thị "Giá từ..."
         $this->db->query(
             'SELECT 
-            p.id as product_id, 
-            p.name as product_name, 
-            p.ram, 
-            p.cpu, 
-            p.brand_id,
-            MIN(v.price) as min_price,
-            MAX(v.price) as max_price,
-            MAX(v.price_sale) as max_sale, -- Lấy giá sale nếu có
-            (SELECT image FROM product_variants WHERE product_id = p.id LIMIT 1) as image -- Lấy ảnh của biến thể đầu tiên
-        FROM products p
-        JOIN product_variants v ON p.id = v.product_id
-        WHERE v.stock_quantity > 0
-        GROUP BY p.id
-        ORDER BY p.id DESC
-        LIMIT :limit'
+                p.id as product_id, 
+                p.name as product_name, 
+                p.ram, 
+                p.cpu, 
+                p.brand_id,
+                v.id as default_variant_id,     -- [QUAN TRỌNG] Lấy ID biến thể để thêm giỏ
+                MIN(v.price) as min_price,
+                MAX(v.price) as max_price,
+                MAX(v.price_sale) as max_sale,
+                (SELECT image FROM product_variants WHERE product_id = p.id LIMIT 1) as image
+            FROM products p
+            JOIN product_variants v ON p.id = v.product_id
+            WHERE v.stock_quantity > 0
+            GROUP BY p.id
+            ORDER BY p.id DESC
+            LIMIT :limit'
         );
 
         $this->db->bind(':limit', $limit);
@@ -280,65 +279,56 @@ class ProductModel
     // HÀM LỌC SẢN PHẨM (CẬP NHẬT THÊM DANH MỤC)
     public function getFilteredProducts($filters = [])
     {
-        // Câu truy vấn cơ bản: Gom nhóm theo p.id để không bị lặp lại tên máy
+        // [SỬA LẠI] Dùng MAX(v.id) để đảm bảo luôn lấy được 1 ID biến thể hợp lệ
         $sql = 'SELECT 
-                p.id as product_id, 
-                p.name as product_name, 
-                p.ram, 
-                p.cpu, 
-                p.brand_id,
-                MIN(v.price) as min_price,      -- Giá thấp nhất
-                MAX(v.price) as max_price,      -- Giá cao nhất
-                MAX(v.price_sale) as max_sale,  -- Kiểm tra xem có biến thể nào đang sale không
-                (SELECT image FROM product_variants WHERE product_id = p.id LIMIT 1) as image -- Lấy 1 ảnh đại diện
-            FROM products p
-            JOIN product_variants v ON p.id = v.product_id
-            WHERE v.stock_quantity > 0';
+                    p.id as product_id, 
+                    p.name as product_name, 
+                    p.ram, 
+                    p.cpu, 
+                    p.brand_id,
+                    MAX(v.id) as default_variant_id, -- <--- QUAN TRỌNG: Lấy ID biến thể để thêm giỏ
+                    MIN(v.price) as min_price,      
+                    MAX(v.price) as max_price,      
+                    MAX(v.price_sale) as max_sale,  
+                    (SELECT image FROM product_variants WHERE product_id = p.id LIMIT 1) as image
+                FROM products p
+                JOIN product_variants v ON p.id = v.product_id
+                WHERE v.stock_quantity > 0';
 
-        // 1. Lọc theo Thương hiệu
+        // --- CÁC BỘ LỌC GIỮ NGUYÊN ---
         if (!empty($filters['brand_id'])) {
             $sql .= ' AND p.brand_id = :brand_id';
         }
-
-        // 2. Lọc theo Danh mục
         if (!empty($filters['category_id'])) {
             $sql .= ' AND p.category_id = :category_id';
         }
-
-        // 3. Lọc theo Tìm kiếm (Tên sản phẩm)
         if (!empty($filters['search_query'])) {
             $sql .= ' AND p.name LIKE :search_query';
         }
-
-        // 4. Lọc theo Mức giá (Dựa trên giá thấp nhất min_price)
-        // Lưu ý: Vì GROUP BY nên ta dùng HAVING cho các điều kiện tổng hợp (MIN/MAX)
-        // Tuy nhiên để đơn giản và tối ưu, ta lọc WHERE trên từng biến thể trước, 
-        // nhưng logic đúng nhất cho UX là lọc sau khi gom nhóm. 
-        // Ở đây tôi dùng cách lọc biến thể con trước để đơn giản câu SQL.
         if (!empty($filters['price_range'])) {
             switch ($filters['price_range']) {
-                case 1: // Dưới 5 triệu
+                case 1:
                     $sql .= ' AND v.price < 5000000';
                     break;
-                case 2: // 5 - 10 triệu
+                case 2:
                     $sql .= ' AND v.price BETWEEN 5000000 AND 10000000';
                     break;
-                case 3: // 10 - 20 triệu
+                case 3:
                     $sql .= ' AND v.price BETWEEN 10000000 AND 20000000';
                     break;
-                case 4: // 20 - 30 triệu
+                case 4:
                     $sql .= ' AND v.price BETWEEN 20000000 AND 30000000';
                     break;
-                case 5: // Trên 30 triệu
+                case 5:
                     $sql .= ' AND v.price > 30000000';
                     break;
             }
         }
 
-        // QUAN TRỌNG: Gom nhóm
+        // Gom nhóm
         $sql .= ' GROUP BY p.id';
 
-        // 5. Sắp xếp
+        // Sắp xếp
         if (!empty($filters['sort_by'])) {
             switch ($filters['sort_by']) {
                 case 'price_asc':
