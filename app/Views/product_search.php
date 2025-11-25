@@ -27,7 +27,7 @@
                         <span class="badge-top-left">-<?php echo $percent; ?>%</span>
                     <?php endif; ?>
 
-                    <span class="badge-top-right">Mới</span>
+                    <span class="badge-top-right">Kết quả</span>
 
                     <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>">
                         <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($product['image']); ?>"
@@ -43,7 +43,7 @@
                         </div>
 
                         <div style="font-size: 13px; color: #ff9f00; margin-bottom: 5px;">
-                            ★★★★★ <span style="color: #999;">(5.0)</span>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
 
                         <div class="pc-price">
@@ -52,18 +52,14 @@
                     </div>
 
                     <div class="pc-btns">
-                        <?php if (isset($product['default_variant_id'])): ?>
-                            <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $product['default_variant_id']; ?>" method="POST" class="add-to-cart-form">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="pc-btn pc-btn-cart" style="width: 100%; cursor: pointer; border:none;">
-                                    <i class="fas fa-shopping-cart"></i> Giỏ hàng
-                                </button>
-                            </form>
-                        <?php else: ?>
-                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-cart">
-                                <i class="fas fa-shopping-cart"></i> Chọn mua
-                            </a>
-                        <?php endif; ?>
+
+                        <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $product['default_variant_id']; ?>" method="POST" class="add-to-cart-form" style="flex: 1;">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="pc-btn pc-btn-cart" style="width: 100%; cursor: pointer;">
+                                <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                            </button>
+                        </form>
+
                         <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $product['product_id']; ?>" class="pc-btn pc-btn-view">
                             Xem chi tiết
                         </a>

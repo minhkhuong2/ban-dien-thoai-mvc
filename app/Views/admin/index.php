@@ -1,228 +1,229 @@
-<style>
-    /* CSS cho Dashboard */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
-    }
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    .stat-card {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        transition: transform 0.3s ease;
-    }
+<div style="margin-bottom: 30px;">
+    <h2 style="margin-top: 0; color: #2d3748; border-bottom: none;">Tổng Quan Kinh Doanh</h2>
+    <p style="color: #718096;">Chào mừng quay trở lại, Administrator!</p>
+</div>
 
-    .stat-card:hover {
-        transform: translateY(-5px);
-    }
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 30px;">
 
-    .stat-info h3 {
-        font-size: 1.8em;
-        margin: 0;
-        color: #2c3e50;
-        font-weight: bold;
-    }
-
-    .stat-info p {
-        margin: 5px 0 0;
-        color: #7f8c8d;
-        font-size: 0.95em;
-    }
-
-    .stat-icon {
-        font-size: 2.5em;
-        opacity: 0.2;
-    }
-
-    /* Phần biểu đồ */
-    .chart-container {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        margin-bottom: 30px;
-    }
-
-    /* Bảng đơn hàng */
-    .recent-orders {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .status-badge {
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-size: 0.85em;
-        color: #fff;
-        font-weight: bold;
-        display: inline-block;
-    }
-</style>
-
-<h2>Tổng quan kinh doanh</h2>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-info">
-            <h3><?php echo number_format($data['revenue']); ?>₫</h3>
-            <p>Doanh thu tổng</p>
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #48bb78; position: relative; overflow: hidden;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Doanh thu</div>
+                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                    <?php echo number_format($data['revenue']); ?> ₫
+                </div>
+            </div>
+            <div style="background: #f0fff4; color: #48bb78; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                <i class="fas fa-wallet"></i>
+            </div>
         </div>
-        <div class="stat-icon" style="color: #2ecc71;">💰</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-info">
-            <h3><?php echo $data['total_orders']; ?></h3>
-            <p>Đơn hàng</p>
+
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #4299e1; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Đơn hàng</div>
+                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                    <?php echo number_format($data['total_orders']); ?>
+                </div>
+            </div>
+            <div style="background: #ebf8ff; color: #4299e1; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
         </div>
-        <div class="stat-icon" style="color: #3498db;">📦</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-info">
-            <h3><?php echo $data['total_products']; ?></h3>
-            <p>Sản phẩm</p>
+
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #ecc94b; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Sản phẩm</div>
+                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                    <?php echo number_format($data['total_products']); ?>
+                </div>
+            </div>
+            <div style="background: #fffff0; color: #ecc94b; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                <i class="fas fa-box-open"></i>
+            </div>
         </div>
-        <div class="stat-icon" style="color: #e67e22;">📱</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-info">
-            <h3><?php echo $data['total_users']; ?></h3>
-            <p>Khách hàng</p>
+
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #ed64a6; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Khách hàng</div>
+                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                    <?php echo number_format($data['total_users']); ?>
+                </div>
+            </div>
+            <div style="background: #fff5f7; color: #ed64a6; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                <i class="fas fa-users"></i>
+            </div>
         </div>
-        <div class="stat-icon" style="color: #9b59b6;">👥</div>
     </div>
 </div>
 
-<div class="chart-container">
-    <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 15px; color: #333;">Biểu đồ doanh thu (30 ngày gần nhất)</h3>
-    <canvas id="revenueChart" height="100"></canvas>
-</div>
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
 
-<div class="recent-orders">
-    <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 15px; color: #333;">Đơn hàng mới nhất</h3>
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background: #f8f9fa; text-align: left; color: #555;">
-                <th style="padding: 12px;">ID</th>
-                <th style="padding: 12px;">Khách hàng</th>
-                <th style="padding: 12px;">Tổng tiền</th>
-                <th style="padding: 12px;">Trạng thái</th>
-                <th style="padding: 12px;">Ngày đặt</th>
-                <th style="padding: 12px;">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($data['recent_orders'])): ?>
-                <tr>
-                    <td colspan="6" style="padding: 20px; text-align: center; color: #777;">Chưa có đơn hàng nào.</td>
-                </tr>
-            <?php else: ?>
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 20px; color: #2d3748; font-size: 1.1rem;">Biểu đồ doanh thu (30 ngày gần nhất)</h4>
+        <div style="position: relative; height: 300px; width: 100%;">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 20px; color: #2d3748; font-size: 1.1rem;">Đơn hàng mới nhất</h4>
+
+        <?php if (empty($data['recent_orders'])): ?>
+            <p style="color: #777;">Chưa có đơn hàng nào.</p>
+        <?php else: ?>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
                 <?php foreach ($data['recent_orders'] as $order): ?>
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px; font-weight: bold;">#<?php echo $order['id']; ?></td>
-                        <td style="padding: 12px;">
-                            <?php echo htmlspecialchars($order['full_name']); ?><br>
-                            <small style="color:#888;"><?php echo htmlspecialchars($order['phone']); ?></small>
-                        </td>
-                        <td style="padding: 12px; font-weight: bold; color: #e74c3c;"><?php echo number_format($order['total_amount']); ?>₫</td>
-                        <td style="padding: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #edf2f7;">
+                        <div>
+                            <div style="font-weight: bold; color: #2d3748;">#<?php echo $order['id']; ?> - <?php echo htmlspecialchars($order['full_name']); ?></div>
+                            <div style="font-size: 0.85em; color: #a0aec0; margin-top: 3px;">
+                                <i class="far fa-clock"></i> <?php echo date('d/m H:i', strtotime($order['order_date'])); ?>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: bold; color: #2d3748;"><?php echo number_format($order['total_amount']); ?> ₫</div>
                             <?php
-                            switch ($order['status']) {
-                                case 0:
-                                    echo '<span class="status-badge" style="background:#f1c40f;">⏳ Chờ xử lý</span>';
-                                    break;
-                                case 1:
-                                    echo '<span class="status-badge" style="background:#3498db;">✅ Đã xác nhận</span>';
-                                    break;
-                                case 2:
-                                    echo '<span class="status-badge" style="background:#9b59b6;">🚚 Đang giao</span>';
-                                    break;
-                                case 3:
-                                    echo '<span class="status-badge" style="background:#2ecc71;">🎉 Hoàn thành</span>';
-                                    break;
-                                case 4:
-                                    echo '<span class="status-badge" style="background:#e74c3c;">❌ Đã hủy</span>';
-                                    break;
+                            $stt_color = '#ecc94b';
+                            $stt_text = 'Chờ xử lý';
+                            if ($order['status'] == 1) {
+                                $stt_color = '#4299e1';
+                                $stt_text = 'Đã xác nhận';
+                            }
+                            if ($order['status'] == 2) {
+                                $stt_color = '#805ad5';
+                                $stt_text = 'Đang giao';
+                            }
+                            if ($order['status'] == 3) {
+                                $stt_color = '#48bb78';
+                                $stt_text = 'Hoàn thành';
+                            }
+                            if ($order['status'] == 4) {
+                                $stt_color = '#f56565';
+                                $stt_text = 'Đã hủy';
                             }
                             ?>
-                        </td>
-                        <td style="padding: 12px; color: #777;"><?php echo date('d/m H:i', strtotime($order['order_date'])); ?></td>
-                        <td style="padding: 12px;">
-                            <a href="<?php echo URLROOT; ?>/admin/orderdetail/<?php echo $order['id']; ?>" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.9em; text-decoration: none; border-radius: 4px; background: #3498db; color: white;">Xem</a>
-                        </td>
-                    </tr>
+                            <span style="font-size: 0.75em; padding: 2px 8px; border-radius: 10px; background-color: <?php echo $stt_color; ?>20; color: <?php echo $stt_color; ?>; font-weight: 600;">
+                                <?php echo $stt_text; ?>
+                            </span>
+                        </div>
+                        <a href="<?php echo URLROOT; ?>/admin/orderdetail/<?php echo $order['id']; ?>" style="color: #a0aec0; margin-left: 10px; transition: 0.3s;" title="Xem chi tiết">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
                 <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
-    <div style="margin-top: 15px; text-align: center;">
-        <a href="<?php echo URLROOT; ?>/admin/orders" style="color: #3498db; text-decoration: none; font-weight: bold;">Xem tất cả đơn hàng &rarr;</a>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="<?php echo URLROOT; ?>/admin/orders" style="text-decoration: none; color: #667eea; font-weight: 600; font-size: 0.9rem;">
+                    Xem tất cả đơn hàng &rarr;
+                </a>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Chuẩn bị dữ liệu từ PHP sang JS
-    const chartData = <?php echo json_encode($data['chart_data']); ?>;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy dữ liệu JSON từ PHP
+        const chartData = <?php echo json_encode($data['chart_data']); ?>;
 
-    // Tách mảng ngày và mảng tiền
-    const labels = chartData.map(item => item.date);
-    const totals = chartData.map(item => item.total);
+        // Xử lý dữ liệu
+        const labels = chartData.map(item => {
+            const d = new Date(item.date);
+            return d.getDate() + '/' + (d.getMonth() + 1); // Format ngày/tháng
+        });
+        const values = chartData.map(item => item.total);
 
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'line', // Dùng biểu đồ đường (line) cho đẹp
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Doanh thu (VNĐ)',
-                data: totals,
-                backgroundColor: 'rgba(52, 152, 219, 0.2)', // Màu nền dưới đường (nhạt)
-                borderColor: 'rgba(52, 152, 219, 1)', // Màu đường kẻ (đậm)
-                borderWidth: 2,
-                fill: true, // Tô màu vùng dưới biểu đồ
-                tension: 0.4 // Bo cong đường kẻ cho mượt
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false // Ẩn chú thích nếu không cần
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+
+        // Tạo Gradient màu xanh đẹp mắt
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(66, 153, 225, 0.5)'); // Xanh đậm ở trên
+        gradient.addColorStop(1, 'rgba(66, 153, 225, 0)'); // Trong suốt ở dưới
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: values,
+                    backgroundColor: gradient,
+                    borderColor: '#4299e1',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#4299e1',
+                    pointHoverBackgroundColor: '#4299e1',
+                    pointHoverBorderColor: '#fff',
+                    fill: true,
+                    tension: 0.4 // Đường cong mềm mại
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }, // Ẩn chú thích
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    }).format(context.parsed.y);
+                                }
+                                return label;
                             }
-                            // Format tiền VNĐ trong tooltip
-                            label += new Intl.NumberFormat('vi-VN').format(context.raw) + ' ₫';
-                            return label;
                         }
                     }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        // Format tiền VNĐ trục dọc
-                        callback: function(value) {
-                            if (value >= 1000000) return (value / 1000000) + 'tr';
-                            return new Intl.NumberFormat('vi-VN').format(value);
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            borderDash: [2, 4],
+                            color: '#edf2f7'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-US', {
+                                    notation: "compact",
+                                    compactDisplay: "short"
+                                }).format(value) + 'đ';
+                            },
+                            color: '#a0aec0',
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#a0aec0',
+                            font: {
+                                size: 11
+                            }
                         }
                     }
                 }
             }
-        }
+        });
     });
 </script>
