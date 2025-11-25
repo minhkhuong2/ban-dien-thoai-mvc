@@ -111,7 +111,7 @@ $color_map = [
             <span class="discount-tag" id="display-badge" style="display:none;"></span>
         </div>
 
-        <form id="add-cart-form" method="POST">
+        <form id="add-cart-form" method="POST" class="add-to-cart-form">
 
             <?php
             $colors = array_unique(array_column($variants, 'color'));
