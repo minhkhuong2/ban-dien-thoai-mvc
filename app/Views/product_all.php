@@ -3,10 +3,11 @@
     <p>Tìm kiếm chiếc điện thoại ưng ý nhất cho bạn</p>
 </div>
 
-<form action="<?php echo URLROOT; ?>/product/all" method="GET" id="filter-form">
+
     <div class="product-page-layout">
 
         <aside class="sidebar-filters">
+            <form action="<?php echo URLROOT; ?>/product/all" method="GET" id="filter-form">
             <h4><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h4>
 
             <div class="filter-widget">
@@ -68,6 +69,7 @@
             </div>
 
             <a href="<?php echo URLROOT; ?>/product/all" class="btn-clear-filters">Xóa bộ lọc</a>
+            </form>
         </aside>
 
         <main class="main-product-grid">
@@ -76,7 +78,7 @@
 
                 <div class="sort-by">
                     <label>Sắp xếp:</label>
-                    <select name="sort" onchange="document.getElementById('filter-form').submit()">
+                    <select name="sort" form="filter-form" onchange="document.getElementById('filter-form').submit()">
                         <option value="newest" <?php echo ($data['filters']['sort_by'] == 'newest') ? 'selected' : ''; ?>>Mới nhất</option>
                         <option value="price_asc" <?php echo ($data['filters']['sort_by'] == 'price_asc') ? 'selected' : ''; ?>>Giá tăng dần</option>
                         <option value="price_desc" <?php echo ($data['filters']['sort_by'] == 'price_desc') ? 'selected' : ''; ?>>Giá giảm dần</option>
@@ -150,4 +152,4 @@
             </div>
         </main>
     </div>
-</form>
+
