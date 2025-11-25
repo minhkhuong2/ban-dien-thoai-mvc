@@ -20,11 +20,16 @@ class App
         $url = $this->parseUrl();
 
         // 1. Xử lý Controller
-        // Kiểm tra xem file controller có tồn tại không
-        // $url[0] là tên controller
-        if (isset($url[0]) && file_exists('../app/Controllers/' . ucfirst($url[0]) . 'Controller.php')) {
-            $this->controller = ucfirst($url[0]) . 'Controller';
-            unset($url[0]);
+        if (isset($url[0])) {
+            if (file_exists('../app/Controllers/' . ucfirst($url[0]) . 'Controller.php')) {
+                $this->controller = ucfirst($url[0]) . 'Controller';
+                unset($url[0]);
+            } else {
+                // [MỚI] Nếu gõ tên controller bậy -> Chuyển sang ErrorsController
+                require_once '../app/Controllers/ErrorsController.php';
+                $this->controller = 'ErrorsController';
+                // (Tùy chọn: có thể gán url[1] = index để nó chạy hàm index)
+            }
         }
 
         // Require file controller
