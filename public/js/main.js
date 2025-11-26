@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // 1. CÁC HÀM HELPER (Hỗ trợ)
   // ============================================================
 
-  // Hàm hiển thị thông báo Toast
+  // Hiển thị thông báo Toast
   window.showToast = function (message, isError = false) {
-    // Xóa toast cũ nếu có
+    // Xóa toast cũ nếu có để không bị chồng chéo
     const oldToast = document.querySelector(".ajax-toast");
     if (oldToast) oldToast.remove();
 
@@ -16,12 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    // Animation
+    // Animation hiện ra
     requestAnimationFrame(() => {
       toast.style.opacity = 1;
       toast.style.transform = "translateY(0)";
     });
 
+    // Tự động ẩn sau 3s
     setTimeout(() => {
       toast.style.opacity = 0;
       toast.style.transform = "translateY(20px)";
@@ -29,24 +30,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 3000);
   };
 
-  // Format tiền tệ
+  // Format tiền tệ Việt Nam
   const fmtMoney = (amount) =>
     new Intl.NumberFormat("vi-VN").format(amount) + " ₫";
 
   // Cập nhật giao diện Giỏ hàng (Badge, Tổng tiền...)
   function updateCartUI(data) {
-    // 1. Cập nhật Badge trên Header
     const badge = document.getElementById("cart-count-badge");
     if (badge) badge.innerText = data.cartCount;
 
-    // 2. Cập nhật các số liệu trong trang Giỏ hàng (nếu đang đứng ở đó)
     const subTotal = document.getElementById("cart-subtotal");
     if (subTotal) subTotal.innerText = fmtMoney(data.subtotal);
 
     const grandTotal = document.getElementById("cart-grand-total");
     if (grandTotal) grandTotal.innerText = fmtMoney(data.grandTotal);
 
-    // Cập nhật dòng giảm giá
     const discountRow = document.getElementById("cart-discount-row");
     if (discountRow) {
       if (data.discount > 0) {
@@ -60,37 +58,34 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Cập nhật số lượng dòng sản phẩm hiển thị
+    // Cập nhật số lượng dòng sản phẩm trong trang giỏ hàng
     const pageCount = document.getElementById("cart-page-count");
     if (pageCount)
       pageCount.innerText = document.querySelectorAll(".cart-item-row").length;
 
-    // Nếu giỏ hàng trống thì reload để hiện giao diện trống
+    // Nếu giỏ hàng trống thì reload
     if (document.querySelector(".cart-page-layout") && data.cartCount === 0) {
       location.reload();
     }
   }
 
   // ============================================================
-  // 2. XỬ LÝ MUA HÀNG (QUAN TRỌNG NHẤT)
-  // Dùng Event Delegation để bắt mọi nút submit form có class .add-to-cart-form
+  // 2. XỬ LÝ MUA HÀNG AJAX (Toàn bộ website)
   // ============================================================
 
   document.body.addEventListener("submit", function (e) {
-    // Kiểm tra xem phần tử được submit có phải là form mua hàng không
+    // 2.1. Xử lý Form Thêm vào giỏ / Mua ngay
     if (e.target && e.target.classList.contains("add-to-cart-form")) {
-      e.preventDefault(); // <--- CHẶN TRANG ĐEN NGAY LẬP TỨC
+      e.preventDefault();
 
       const form = e.target;
 
-      // Kiểm tra tính hợp lệ (cho trang chi tiết sản phẩm)
+      // Kiểm tra tính hợp lệ (cho trang chi tiết)
       if (form.getAttribute("data-valid") === "false") {
         showToast("Vui lòng chọn phiên bản sản phẩm!", true);
         return;
       }
 
-      // Xác định nút nào được nhấn (Mua ngay hay Thêm giỏ)
-      // e.submitter là nút kích hoạt sự kiện submit (Browser hiện đại)
       let isBuyNow = false;
       if (
         e.submitter &&
@@ -100,10 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const formData = new FormData(form);
-      const actionUrl = form.action;
-
-      // Gửi Ajax
-      fetch(actionUrl, {
+      fetch(form.action, {
         method: "POST",
         body: formData,
         headers: { Accept: "application/json" },
@@ -111,17 +103,16 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            // Cập nhật số lượng trên icon
             const badge = document.getElementById("cart-count-badge");
             if (badge) badge.innerText = data.cartCount;
 
             if (isBuyNow) {
               window.location.href = URLROOT + "/checkout";
             } else {
-              showToast(data.message); // Hiện thông báo xanh
+              showToast(data.message);
             }
           } else {
-            showToast(data.message, true); // Hiện lỗi đỏ
+            showToast(data.message, true);
           }
         })
         .catch((err) => {
@@ -130,13 +121,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Xử lý Form Voucher
+    // 2.2. Xử lý Form Voucher
     if (e.target && e.target.id === "voucher-form") {
       e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
-
-      fetch(form.action, {
+      const formData = new FormData(e.target);
+      fetch(e.target.action, {
         method: "POST",
         body: formData,
         headers: { Accept: "application/json" },
@@ -144,7 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((res) => res.json())
         .then((data) => {
           updateCartUI(data);
-
           const voucherMsg = document.getElementById(
             "voucher-message-container"
           );
@@ -164,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ============================================================
-  // 3. LOGIC TRANG CHI TIẾT (Product Detail - Chọn màu/Dung lượng)
+  // 3. LOGIC TRANG CHI TIẾT SẢN PHẨM
   // ============================================================
 
   const variantsElement = document.getElementById("variants-json");
@@ -181,18 +169,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const mainForm = document.getElementById("add-cart-form");
     const errorMsg = document.getElementById("error-msg");
     const btns = document.querySelectorAll(".btn-cart, .btn-buy");
-    const mainTrack = document.getElementById("main-track");
     const thumbItems = document.querySelectorAll(".thumb-item");
-    const mainImgStatic = document.getElementById("main-img");
 
-    // Hàm cập nhật UI khi chọn biến thể
+    // --- 3.1. Logic cập nhật UI khi chọn biến thể ---
     function updateVariantUI() {
       const selectedColorBtn = document.querySelector(".color-item.active");
       const selectedStorageBtn = document.querySelector(".storage-item.active");
 
-      // Nếu trang không có nút chọn (sản phẩm đơn), bỏ qua check
       if (!selectedColorBtn && !selectedStorageBtn && variants.length > 0) {
-        // Trường hợp sản phẩm chỉ có 1 biến thể duy nhất -> Tự chọn luôn
+        // Trường hợp 1 biến thể duy nhất
         const v = variants[0];
         if (mainForm) {
           mainForm.action = URLROOT + "/cart/add/" + v.id;
@@ -212,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
         (v) => v.color === color && v.storage === storage
       );
 
-      // Update trạng thái các nút dung lượng
+      // Cập nhật trạng thái nút dung lượng
       storageItems.forEach((item) => {
         const sVal = item.getAttribute("data-val");
         const vTemp = variants.find(
@@ -232,21 +217,17 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       if (variant && variant.stock_quantity > 0) {
-        // -- CÓ HÀNG --
+        // CÓ HÀNG
         if (errorMsg) errorMsg.style.display = "none";
         if (mainForm) {
           mainForm.action = URLROOT + "/cart/add/" + variant.id;
           mainForm.setAttribute("data-valid", "true");
         }
 
-        // Đổi ảnh slider theo màu
-        if (variant.color && typeof slideToColor === "function")
-          slideToColor(variant.color);
-        // Đổi ảnh tĩnh nếu ko dùng slider
-        if (mainImgStatic && variant.image)
-          mainImgStatic.src = URLROOT + "/uploads/" + variant.image;
+        // Slide ảnh chính tới màu tương ứng
+        if (variant.color) slideToColor(variant.color);
 
-        // Giá
+        // Giá tiền
         const finalPrice =
           variant.price_sale > 0 ? variant.price_sale : variant.price;
         if (priceEl) priceEl.innerText = fmtMoney(finalPrice);
@@ -274,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
           b.style.cursor = "pointer";
         });
       } else {
-        // -- HẾT HÀNG --
+        // HẾT HÀNG
         if (priceEl) priceEl.innerText = "Liên hệ";
         if (oldPriceEl) oldPriceEl.style.display = "none";
         if (badgeEl) badgeEl.style.display = "none";
@@ -291,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Event Listeners
+    // Gán sự kiện click
     colorItems.forEach((btn) => {
       btn.addEventListener("click", function () {
         colorItems.forEach((b) => b.classList.remove("active"));
@@ -309,17 +290,20 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // --- LOGIC SLIDER ẢNH ---
+    // --- 3.2. SLIDER ẢNH CHÍNH (MAIN GALLERY) ---
+    const mainTrack = document.getElementById("main-track");
+    const slides = document.querySelectorAll(".slider-single-img");
     let currentSlideIndex = 0;
     let galleryInterval;
-    const slides = document.querySelectorAll(".slider-single-img");
 
     window.goToSlide = function (index) {
       if (!mainTrack || index < 0 || index >= slides.length) return;
       currentSlideIndex = index;
       mainTrack.style.transform = `translateX(-${index * 100}%)`;
+
       thumbItems.forEach((t) => t.classList.remove("active"));
       if (thumbItems[index]) thumbItems[index].classList.add("active");
+
       resetGalleryTimer();
     };
 
@@ -337,14 +321,14 @@ document.addEventListener("DOMContentLoaded", function () {
       clearInterval(galleryInterval);
       galleryInterval = setInterval(nextSlide, 4000);
     }
-    window.slideToColor = function (colorName) {
+    function slideToColor(colorName) {
       for (let i = 0; i < slides.length; i++) {
         if (slides[i].getAttribute("data-color") === colorName) {
           goToSlide(i);
           break;
         }
       }
-    };
+    }
 
     const gPrev = document.getElementById("gallery-prev");
     const gNext = document.getElementById("gallery-next");
@@ -354,7 +338,25 @@ document.addEventListener("DOMContentLoaded", function () {
       resetGalleryTimer();
     }
 
-    // Tab chuyển đổi
+    // --- 3.3. CUỘN ẢNH THUMBNAIL (MỚI) ---
+    const thumbTrack = document.getElementById("thumb-track");
+    const thumbPrev = document.getElementById("thumb-prev");
+    const thumbNext = document.getElementById("thumb-next");
+
+    if (thumbTrack && thumbPrev && thumbNext) {
+      const item = thumbTrack.querySelector(".thumb-item");
+      let scrollAmount = 100;
+      if (item) scrollAmount = item.offsetWidth + 10;
+
+      thumbPrev.addEventListener("click", () => {
+        thumbTrack.scrollBy({ left: -scrollAmount * 2, behavior: "smooth" });
+      });
+      thumbNext.addEventListener("click", () => {
+        thumbTrack.scrollBy({ left: scrollAmount * 2, behavior: "smooth" });
+      });
+    }
+
+    // --- 3.4. Các tiện ích khác ---
     window.openTab = function (tabName) {
       const contents = document.getElementsByClassName("tab-content");
       for (let i = 0; i < contents.length; i++)
@@ -376,15 +378,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     };
 
+    // Khởi chạy lần đầu
     updateVariantUI();
   }
 
   // ============================================================
-  // 4. LOGIC TRANG GIỎ HÀNG (Xóa / Cập nhật số lượng)
+  // 4. LOGIC TRANG GIỎ HÀNG (Click +/- và Xóa)
   // ============================================================
 
   document.body.addEventListener("click", function (e) {
-    // Nút +/- số lượng
+    // Nút +/-
     if (e.target.classList.contains("cart-qty-change")) {
       const btn = e.target;
       const row = btn.closest(".cart-item-row");
@@ -412,11 +415,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (newQty === 0) row.remove();
             updateCartUI(data);
             if (data.itemTotals && data.itemTotals[variantId]) {
-              const itemTotal = document.getElementById(
-                `item-total-${variantId}`
-              );
-              if (itemTotal)
-                itemTotal.innerText = fmtMoney(data.itemTotals[variantId]);
+              document.getElementById(`item-total-${variantId}`).innerText =
+                fmtMoney(data.itemTotals[variantId]);
             }
           } else {
             showToast(data.message, true);
@@ -425,8 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Nút Xóa (Thùng rác)
-    // Tìm thẻ a có class remove-from-cart-ajax hoặc thẻ i bên trong nó
+    // Nút Xóa
     const deleteLink = e.target.closest(".remove-from-cart-ajax");
     if (deleteLink) {
       e.preventDefault();
@@ -446,39 +445,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ============================================================
-  // 5. LOGIC KHÁC (SLIDER RELATED, MENU, THANH TOÁN)
+  // 5. CÁC CHỨC NĂNG KHÁC (Mobile Menu, Checkout)
   // ============================================================
-
-  const relTrack = document.getElementById("related-track");
-  const relPrev = document.getElementById("rel-prev");
-  const relNext = document.getElementById("rel-next");
-  if (relTrack && relPrev && relNext) {
-    let scrollAmount = 0;
-    const cardWidth = 260;
-    const maxScroll = relTrack.scrollWidth - relTrack.clientWidth;
-
-    relNext.addEventListener("click", () => {
-      if (Math.abs(scrollAmount) >= maxScroll) scrollAmount = 0;
-      else scrollAmount -= cardWidth;
-      relTrack.style.transform = `translateX(${scrollAmount}px)`;
-    });
-
-    relPrev.addEventListener("click", () => {
-      if (scrollAmount === 0) return;
-      else scrollAmount += cardWidth;
-      if (scrollAmount > 0) scrollAmount = 0;
-      relTrack.style.transform = `translateX(${scrollAmount}px)`;
-    });
-
-    let relAuto = setInterval(() => relNext.click(), 4000);
-    relTrack.parentElement.addEventListener("mouseenter", () =>
-      clearInterval(relAuto)
-    );
-    relTrack.parentElement.addEventListener(
-      "mouseleave",
-      () => (relAuto = setInterval(() => relNext.click(), 4000))
-    );
-  }
 
   const mobileMenuBtn = document.getElementById("mobile-menu-btn");
   const mobileMenu = document.getElementById("mobile-menu-container");

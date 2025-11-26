@@ -3314,8 +3314,10 @@ body {
 }
 
 .related-slider-container {
-  overflow: hidden; /* Ẩn các sản phẩm bị tràn */
-  padding: 10px 5px; /* Padding để bóng đổ sản phẩm không bị cắt */
+  overflow-x: auto;
+  padding-bottom: 10px;
+  /* Tùy chọn: Ẩn thanh cuộn nếu muốn */
+  scrollbar-width: thin;
 }
 
 .related-slider-track {
@@ -3740,4 +3742,96 @@ body {
 }
 .thumb-item.active {
   border-color: #288ad6;
+}
+/* =================================================================
+   CẬP NHẬT GIAO DIỆN CHI TIẾT SẢN PHẨM (Dán vào cuối file style.css)
+   ================================================================= */
+
+/* 1. CHỈNH ẢNH PHỤ THÀNH HÌNH VUÔNG VÀ THÊM NÚT ĐIỀU HƯỚNG */
+
+.thumbnail-wrapper {
+  position: relative;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 35px; /* Tạo khoảng trống 2 bên cho nút */
+}
+
+.thumb-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto; /* Cho phép cuộn ngang */
+  scroll-behavior: smooth; /* Cuộn mượt */
+  padding-bottom: 5px;
+  width: 100%;
+  /* Ẩn thanh cuộn mặc định */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.thumb-list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.thumb-item {
+  /* Cài đặt kích thước cố định để tạo hình vuông */
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0; /* Ngăn không cho bị co lại */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.2s;
+  opacity: 0.6;
+}
+
+.thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo ảnh lấp đầy khung vuông mà không bị méo */
+}
+
+.thumb-item.active,
+.thumb-item:hover {
+  opacity: 1;
+  border-color: var(--primary-color, #288ad6);
+}
+
+/* Nút điều hướng cho thumbnail */
+.thumb-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+.thumb-nav-btn:hover {
+  background: var(--primary-color, #288ad6);
+  color: #fff;
+  border-color: var(--primary-color, #288ad6);
+}
+.thumb-prev {
+  left: 0;
+}
+.thumb-next {
+  right: 0;
+}
+
+/* 2. CSS CHO SẢN PHẨM LIÊN QUAN (Đảm bảo cuộn được khi đã xóa nút) */
+.related-slider-container {
+  overflow-x: auto;
+  padding-bottom: 10px;
+  /* Tùy chọn: Ẩn thanh cuộn nếu muốn */
+  scrollbar-width: thin;
 }

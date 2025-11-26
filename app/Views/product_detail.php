@@ -78,13 +78,19 @@ if (!empty($gallery)) {
                 <button class="gallery-btn btn-next" id="gallery-next"><i class="fas fa-chevron-right"></i></button>
             </div>
 
-            <div class="thumb-list">
-                <?php foreach ($final_images as $index => $img) : ?>
-                    <div class="thumb-item <?php echo ($index == 0) ? 'active' : ''; ?>"
-                        onclick="goToSlide(<?php echo $index; ?>)">
-                        <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($img['src']); ?>" alt="">
-                    </div>
-                <?php endforeach; ?>
+            <div class="thumbnail-wrapper">
+                <button class="thumb-nav-btn thumb-prev" id="thumb-prev"><i class="fas fa-chevron-left"></i></button>
+
+                <div class="thumb-list" id="thumb-track">
+                    <?php foreach ($final_images as $index => $img) : ?>
+                        <div class="thumb-item <?php echo ($index == 0) ? 'active' : ''; ?>"
+                            onclick="goToSlide(<?php echo $index; ?>)">
+                            <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($img['src']); ?>" alt="">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <button class="thumb-nav-btn thumb-next" id="thumb-next"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -257,30 +263,26 @@ if (!empty($gallery)) {
     <?php if (empty($related_products)) : ?>
         <p style="color: #777;">Đang cập nhật...</p>
     <?php else : ?>
-        <div class="related-slider-wrapper">
-            <button class="slider-nav-btn prev-btn" id="rel-prev"><i class="fas fa-chevron-left"></i></button>
-            <div class="related-slider-container">
-                <div class="related-slider-track" id="related-track">
-                    <?php foreach ($related_products as $p) : ?>
-                        <div class="product-card slider-item">
-                            <?php if ($p['max_sale'] > 0 && $p['max_sale'] < $p['min_price']): $pct = round((($p['min_price'] - $p['max_sale']) / $p['min_price']) * 100); ?>
-                                <span class="badge-top-left">-<?php echo $pct; ?>%</span>
-                            <?php endif; ?>
-                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>">
-                                <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($p['image']); ?>" class="pc-img" alt="">
-                            </a>
-                            <div class="pc-info">
-                                <div class="pc-name"><a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>"><?php echo htmlspecialchars($p['product_name']); ?></a></div>
-                                <div class="pc-price">Từ <?php echo number_format($p['min_price']); ?> ₫</div>
-                            </div>
-                            <div class="pc-btns">
-                                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>" class="pc-btn pc-btn-view" style="width: 100%;">Xem chi tiết</a>
-                            </div>
+        <div class="related-slider-container" style="overflow-x: auto;">
+            <div class="related-slider-track" id="related-track" style="gap: 15px; padding-bottom: 10px;">
+                <?php foreach ($related_products as $p) : ?>
+                    <div class="product-card slider-item" style="min-width: 220px;">
+                        <?php if ($p['max_sale'] > 0 && $p['max_sale'] < $p['min_price']): $pct = round((($p['min_price'] - $p['max_sale']) / $p['min_price']) * 100); ?>
+                            <span class="badge-top-left">-<?php echo $pct; ?>%</span>
+                        <?php endif; ?>
+                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>">
+                            <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($p['image']); ?>" class="pc-img" alt="">
+                        </a>
+                        <div class="pc-info">
+                            <div class="pc-name"><a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>"><?php echo htmlspecialchars($p['product_name']); ?></a></div>
+                            <div class="pc-price">Từ <?php echo number_format($p['min_price']); ?> ₫</div>
                         </div>
-                    <?php endforeach; ?>
-                </div>
+                        <div class="pc-btns">
+                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>" class="pc-btn pc-btn-view" style="width: 100%;">Xem chi tiết</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
-            <button class="slider-nav-btn next-btn" id="rel-next"><i class="fas fa-chevron-right"></i></button>
         </div>
     <?php endif; ?>
 </div>
