@@ -1038,133 +1038,187 @@ body {
 }
 
 /* --- HOME PAGE UI --- */
+
+/* 1. Banner Chính (Có ảnh nền) */
 .new-hero-banner {
-  background: var(--white);
+  /* Ảnh nền (Nhớ lưu ảnh banner-bg.jpg vào thư mục images) */
+  background-image: url("../images/banner-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* Kích thước & Bố cục */
+  height: 450px;
   display: flex;
   align-items: center;
-  padding: 40px;
+  padding: 0 50px;
   border-radius: 10px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 40px;
-  gap: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Lớp phủ đen mờ để làm nổi bật chữ */
+.new-hero-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Độ mờ 50% */
+  z-index: 1;
+  border-radius: 10px;
 }
 
 .new-hero-content {
-  flex: 1;
+  position: relative;
+  z-index: 2;
+  width: 60%; /* Chữ chiếm 60% chiều rộng */
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .new-hero-content h1 {
-  font-size: 2.8rem;
-  color: var(--text-color);
+  font-size: 3rem;
+  font-weight: 800;
   margin: 0 0 15px 0;
   line-height: 1.2;
+  color: #fff;
 }
 
 .new-hero-content p {
   font-size: 1.1rem;
-  color: #555;
+  color: #f1f1f1;
   margin-bottom: 30px;
+  max-width: 80%;
+}
+
+.new-hero-buttons {
+  display: flex;
+  gap: 15px;
 }
 
 .new-hero-buttons .btn {
-  padding: 12px 25px;
+  padding: 12px 30px;
   font-size: 1rem;
   font-weight: bold;
+  border-radius: 30px;
   text-decoration: none;
-  border-radius: 25px;
-  margin-right: 15px;
+  text-transform: uppercase;
+  transition: 0.3s;
 }
 
 .btn-yellow {
   background-color: #f1c40f;
-  color: var(--text-color);
+  color: #333;
+  border: 2px solid #f1c40f;
+}
+.btn-yellow:hover {
+  background-color: #d4ac0d;
+  border-color: #d4ac0d;
 }
 
 .btn-outline {
   background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+}
+.btn-outline:hover {
+  background: #fff;
   color: var(--primary-color);
-  border: 2px solid var(--primary-color);
 }
 
+/* Ẩn ảnh cũ đi vì đã dùng background */
 .new-hero-image {
-  flex: 1;
+  display: none;
 }
 
-.new-hero-image img {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  display: block;
-}
-
+/* 2. Khu vực Thương hiệu */
 .new-brands-section {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
 .new-brands-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, 1fr); /* 6 cột */
   gap: 20px;
+  align-items: center;
 }
 
-.new-brand-item img {
-  width: 100%;
-  max-width: 130px;
-  height: 40px;
-  margin-bottom: 10px;
-  object-fit: contain;
+.new-brand-item {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .new-brand-item:hover {
-  box-shadow: var(--shadow);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  border-color: var(--primary-color);
+}
+
+.new-brand-item img {
+  max-width: 80%;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: 5px;
+  filter: grayscale(100%); /* Ảnh đen trắng */
+  transition: 0.3s;
+}
+
+.new-brand-item:hover img {
+  filter: grayscale(0%); /* Có màu khi hover */
 }
 
 .new-brand-item span {
-  display: block;
-  font-weight: bold;
-  color: var(--text-color);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
 }
 
+/* 3. Nút Xem tất cả (Cuối danh sách sản phẩm) */
 .view-all-btn-container {
   text-align: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin: 40px 0;
   clear: both;
-  display: block;
-  width: 100%;
-  position: relative;
-  z-index: 10;
 }
 
 .view-all-btn {
+  display: inline-block;
   padding: 12px 40px;
-  font-size: 1rem;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 30px;
   background: var(--primary-color);
-  color: var(--white);
-  transition: all 0.3s ease;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 30px;
+  text-decoration: none;
   box-shadow: 0 4px 10px rgba(40, 138, 214, 0.3);
-  border: 2px solid transparent;
+  transition: 0.3s;
 }
 
 .view-all-btn:hover {
-  background: var(--white);
-  color: var(--primary-color);
-  border-color: var(--primary-color);
+  background: var(--primary-dark);
   transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(40, 138, 214, 0.4);
 }
 
+/* 4. Banner Đăng ký tin (Newsletter) */
 .newsletter-banner {
-  background: linear-gradient(135deg, #4e54c8 0%, #3a3f9b 100%);
-  color: var(--white);
-  padding: 40px;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
   border-radius: 10px;
+  padding: 40px;
   text-align: center;
-  margin-top: 40px;
+  color: #fff;
+  margin-top: 60px;
+  box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
 }
 
 .newsletter-banner h3 {
@@ -1173,8 +1227,8 @@ body {
 }
 
 .newsletter-banner p {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
+  font-size: 1rem;
+  margin-bottom: 25px;
   opacity: 0.9;
 }
 
@@ -1182,49 +1236,65 @@ body {
   display: flex;
   justify-content: center;
   gap: 10px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.newsletter-form input[type="email"] {
-  width: 300px;
-  padding: 12px 15px;
+.newsletter-form input {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 30px;
   border: none;
-  border-radius: 25px;
+  outline: none;
   font-size: 1rem;
 }
 
 .newsletter-form button {
   padding: 12px 30px;
-  font-size: 1rem;
+  background: #f1c40f;
+  color: #333;
   font-weight: bold;
   border: none;
-  border-radius: 25px;
-  background: #f1c40f;
-  color: var(--text-color);
+  border-radius: 30px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
+.newsletter-form button:hover {
+  background: #d4ac0d;
+}
+
+/* Responsive Mobile cho Trang chủ */
 @media (max-width: 768px) {
   .new-hero-banner {
-    flex-direction: column;
-    padding: 20px;
+    height: auto;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .new-hero-content {
+    width: 100%;
   }
 
   .new-hero-content h1 {
     font-size: 2rem;
   }
 
+  .new-hero-buttons {
+    justify-content: center;
+  }
+
   .new-brands-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* Mobile hiện 3 cột */
   }
 
   .newsletter-form {
     flex-direction: column;
-    align-items: center;
   }
 
-  .newsletter-form input[type="email"] {
+  .newsletter-form input,
+  .newsletter-form button {
     width: 100%;
-    max-width: 300px;
   }
 }
 
@@ -3053,10 +3123,9 @@ body {
   }
 
   .new-hero-banner {
-    flex-direction: column;
-    padding: 30px 15px;
-    text-align: center;
+    padding: 0;
     height: auto;
+    display: block;
   }
 
   .new-hero-content {

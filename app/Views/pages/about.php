@@ -64,55 +64,55 @@
     <div class="about-section services-section">
         <div class="container">
             <h2 class="section-title text-center">Dịch Vụ Của Chúng Tôi</h2>
-            <p class="section-intro text-center">Chúng tôi cam kết mang đến trải nghiệm mua sắm và dịch vụ tốt nhất.</p>
+            <p class="section-intro text-center">Chúng tôi cung cấp đa dạng dịch vụ để đáp ứng mọi nhu cầu của khách hàng</p>
 
             <div class="services-grid">
                 <div class="service-item">
-                    <div class="service-icon">
+                    <div class="service-icon icon-blue">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
                     <h3 class="service-title">Bán Điện Thoại</h3>
-                    <p class="service-desc">Cung cấp các dòng điện thoại chính hãng mới nhất.</p>
+                    <p class="service-desc">Cung cấp đầy đủ các dòng điện thoại từ phổ thông đến cao cấp của tất cả thương hiệu nổi tiếng.</p>
                 </div>
 
                 <div class="service-item">
-                    <div class="service-icon">
-                        <i class="fas fa-headphones"></i>
-                    </div>
-                    <h3 class="service-title">Phụ Kiện</h3>
-                    <p class="service-desc">Đa dạng phụ kiện ốp lưng, tai nghe, sạc dự phòng.</p>
-                </div>
-
-                <div class="service-item">
-                    <div class="service-icon">
+                    <div class="service-icon icon-green">
                         <i class="fas fa-tools"></i>
                     </div>
                     <h3 class="service-title">Sửa Chữa</h3>
-                    <p class="service-desc">Dịch vụ sửa chữa uy tín, linh kiện chính hãng.</p>
+                    <p class="service-desc">Dịch vụ sửa chữa chuyên nghiệp với đội ngũ kỹ thuật viên giàu kinh nghiệm và linh kiện chính hãng.</p>
                 </div>
 
                 <div class="service-item">
-                    <div class="service-icon">
+                    <div class="service-icon icon-purple">
                         <i class="fas fa-sync-alt"></i>
                     </div>
                     <h3 class="service-title">Thu Cũ Đổi Mới</h3>
-                    <p class="service-desc">Hỗ trợ lên đời sản phẩm với giá thu mua tốt nhất.</p>
+                    <p class="service-desc">Chương trình thu cũ đổi mới với giá hấp dẫn, giúp khách hàng tiết kiệm chi phí nâng cấp.</p>
                 </div>
 
                 <div class="service-item">
-                    <div class="service-icon">
-                        <i class="fas fa-credit-card"></i>
+                    <div class="service-icon icon-orange">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3 class="service-title">Trả Góp 0%</h3>
-                    <p class="service-desc">Thủ tục đơn giản, xét duyệt nhanh chóng.</p>
+                    <h3 class="service-title">Bảo Hành</h3>
+                    <p class="service-desc">Dịch vụ bảo hành chính hãng với quy trình nhanh chóng, minh bạch và hỗ trợ tận tình.</p>
                 </div>
 
                 <div class="service-item">
-                    <div class="service-icon">
+                    <div class="service-icon icon-red">
+                        <i class="fas fa-headphones-alt"></i>
+                    </div>
+                    <h3 class="service-title">Phụ Kiện</h3>
+                    <p class="service-desc">Đa dạng phụ kiện chính hãng: ốp lưng, cường lực, tai nghe, sạc dự phòng và nhiều hơn nữa.</p>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon icon-dark-blue">
                         <i class="fas fa-headset"></i>
                     </div>
                     <h3 class="service-title">Tư Vấn 24/7</h3>
-                    <p class="service-desc">Đội ngũ hỗ trợ nhiệt tình, giải đáp mọi thắc mắc.</p>
+                    <p class="service-desc">Đội ngũ nhân viên am hiểu sản phẩm, luôn sẵn sàng hỗ trợ giải đáp mọi thắc mắc của bạn.</p>
                 </div>
             </div>
         </div>

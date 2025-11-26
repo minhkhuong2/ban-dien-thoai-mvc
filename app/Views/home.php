@@ -1,13 +1,13 @@
 <div class="new-hero-banner">
     <div class="new-hero-content">
         <h1>Siêu Phẩm Công Nghệ<br>Giá Tốt Nhất Hôm Nay</h1>
-        <p>Sở hữu ngay những chiếc điện thoại flagship mới nhất với ưu đãi độc quyền.</p>
+        <p>Sở hữu ngay những chiếc điện thoại flagship mới nhất với ưu đãi độc quyền và quà tặng hấp dẫn.</p>
         <div class="new-hero-buttons">
-            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-yellow">Mua Ngay</a>
-            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-outline">Xem Chi Tiết</a>
+            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-yellow">MUA NGAY</a>
+            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-outline">XEM CHI TIẾT</a>
         </div>
     </div>
-    <div class="new-hero-image">
+    <div class="new-hero-image" style="display:none;">
         <img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Banner">
     </div>
 </div>
@@ -41,7 +41,7 @@
                             </a>
                         </div>
                         <div style="font-size: 13px; color: #ff9f00; margin-bottom: 5px;">
-                            ★★★★★ <span style="color: #999;">(4.8)</span>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
                         <div class="pc-price">
                             Từ <?php echo number_format($product['min_price']); ?> ₫
@@ -49,7 +49,6 @@
                     </div>
 
                     <div class="pc-btns">
-
                         <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $product['default_variant_id']; ?>" method="POST" class="add-to-cart-form" style="flex: 1;">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="pc-btn pc-btn-cart" style="width: 100%; cursor: pointer;">
