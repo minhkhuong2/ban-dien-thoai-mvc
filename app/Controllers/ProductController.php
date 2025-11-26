@@ -57,14 +57,17 @@ class ProductController extends Controller
             exit();
         }
 
-        // 2. Lấy tất cả BIẾN THỂ (Để JS xử lý đổi màu/giá)
+        // 2. Lấy tất cả BIẾN THỂ
         $variants = $this->productModel->getVariantsByProductId($product_id);
 
-        // 3. [SỬA] Lấy sản phẩm liên quan theo DANH MỤC (Category)
-        // Để so sánh Samsung S24 với iPhone 15 (khác hãng, cùng phân khúc)
+        // 3. [MỚI - QUAN TRỌNG] Lấy Ảnh Phụ (Gallery)
+        // Hàm này chúng ta đã viết trong Model lúc làm trang Admin rồi, giờ chỉ cần gọi ra
+        $gallery = $this->productModel->getGalleryByProductId($product_id);
+
+        // 4. Lấy sản phẩm liên quan
         $related_products = $this->productModel->getRelatedProducts($product['category_id'], $product_id);
 
-        // 4. Lấy Đánh giá
+        // 5. Lấy Đánh giá
         $reviews = $this->productModel->getReviewsByProductId($product_id);
         $rating_info = $this->productModel->getRatingInfo($product_id);
 
@@ -72,6 +75,7 @@ class ProductController extends Controller
             'title' => $product['name'],
             'product' => $product,
             'variants' => $variants,
+            'gallery' => $gallery, // <-- Truyền biến này sang View
             'related_products' => $related_products,
             'reviews' => $reviews,
             'rating_info' => $rating_info

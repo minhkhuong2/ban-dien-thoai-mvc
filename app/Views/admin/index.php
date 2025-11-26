@@ -1,128 +1,139 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div style="margin-bottom: 30px;">
-    <h2 style="margin-top: 0; color: #2d3748; border-bottom: none;">Tổng Quan Kinh Doanh</h2>
-    <p style="color: #718096;">Chào mừng quay trở lại, Administrator!</p>
+<div class="mb-4">
+    <h2 class="card-title" style="font-size: 1.5rem; margin-bottom: 8px;">Tổng Quan Kinh Doanh</h2>
+    <p style="color: var(--text-light);">Chào mừng quay trở lại, Administrator!</p>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 30px;">
+<!-- Stats Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 32px;">
 
-    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #48bb78; position: relative; overflow: hidden;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <!-- Revenue -->
+    <div class="card" style="margin-bottom: 0; padding: 24px; border-left: 4px solid var(--success-color);">
+        <div class="flex-between">
             <div>
-                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Doanh thu</div>
-                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                <div style="color: var(--text-light); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Doanh thu</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main);">
                     <?php echo number_format($data['revenue']); ?> ₫
                 </div>
             </div>
-            <div style="background: #f0fff4; color: #48bb78; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background-color: #d1fae5; color: var(--success-color); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                 <i class="fas fa-wallet"></i>
             </div>
         </div>
     </div>
 
-    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #4299e1; position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <!-- Orders -->
+    <div class="card" style="margin-bottom: 0; padding: 24px; border-left: 4px solid var(--info-color);">
+        <div class="flex-between">
             <div>
-                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Đơn hàng</div>
-                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                <div style="color: var(--text-light); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Đơn hàng</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main);">
                     <?php echo number_format($data['total_orders']); ?>
                 </div>
             </div>
-            <div style="background: #ebf8ff; color: #4299e1; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background-color: #dbeafe; color: var(--info-color); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                 <i class="fas fa-shopping-cart"></i>
             </div>
         </div>
     </div>
 
-    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #ecc94b; position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <!-- Products -->
+    <div class="card" style="margin-bottom: 0; padding: 24px; border-left: 4px solid var(--warning-color);">
+        <div class="flex-between">
             <div>
-                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Sản phẩm</div>
-                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                <div style="color: var(--text-light); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Sản phẩm</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main);">
                     <?php echo number_format($data['total_products']); ?>
                 </div>
             </div>
-            <div style="background: #fffff0; color: #ecc94b; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background-color: #fef3c7; color: var(--warning-color); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                 <i class="fas fa-box-open"></i>
             </div>
         </div>
     </div>
 
-    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #ed64a6; position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <!-- Customers -->
+    <div class="card" style="margin-bottom: 0; padding: 24px; border-left: 4px solid var(--danger-color);">
+        <div class="flex-between">
             <div>
-                <div style="color: #a0aec0; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Khách hàng</div>
-                <div style="font-size: 1.8em; font-weight: bold; color: #2d3748; margin-top: 5px;">
+                <div style="color: var(--text-light); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Khách hàng</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main);">
                     <?php echo number_format($data['total_users']); ?>
                 </div>
             </div>
-            <div style="background: #fff5f7; color: #ed64a6; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background-color: #fee2e2; color: var(--danger-color); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                 <i class="fas fa-users"></i>
             </div>
         </div>
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
 
-    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <h4 style="margin-top: 0; margin-bottom: 20px; color: #2d3748; font-size: 1.1rem;">Biểu đồ doanh thu (30 ngày gần nhất)</h4>
-        <div style="position: relative; height: 300px; width: 100%;">
+    <!-- Chart -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Biểu đồ doanh thu (30 ngày gần nhất)</h4>
+        </div>
+        <div style="position: relative; height: 350px; width: 100%;">
             <canvas id="revenueChart"></canvas>
         </div>
     </div>
 
-    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <h4 style="margin-top: 0; margin-bottom: 20px; color: #2d3748; font-size: 1.1rem;">Đơn hàng mới nhất</h4>
+    <!-- Recent Orders -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Đơn hàng mới nhất</h4>
+        </div>
 
         <?php if (empty($data['recent_orders'])): ?>
-            <p style="color: #777;">Chưa có đơn hàng nào.</p>
+            <p style="color: var(--text-light); text-align: center; padding: 20px;">Chưa có đơn hàng nào.</p>
         <?php else: ?>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
                 <?php foreach ($data['recent_orders'] as $order): ?>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #edf2f7;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
                         <div>
-                            <div style="font-weight: bold; color: #2d3748;">#<?php echo $order['id']; ?> - <?php echo htmlspecialchars($order['full_name']); ?></div>
-                            <div style="font-size: 0.85em; color: #a0aec0; margin-top: 3px;">
+                            <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">#<?php echo $order['id']; ?> - <?php echo htmlspecialchars($order['full_name']); ?></div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">
                                 <i class="far fa-clock"></i> <?php echo date('d/m H:i', strtotime($order['order_date'])); ?>
                             </div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: bold; color: #2d3748;"><?php echo number_format($order['total_amount']); ?> ₫</div>
+                        <div class="text-right">
+                            <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;"><?php echo number_format($order['total_amount']); ?> ₫</div>
                             <?php
-                            $stt_color = '#ecc94b';
+                            $badge_class = 'badge-warning';
                             $stt_text = 'Chờ xử lý';
                             if ($order['status'] == 1) {
-                                $stt_color = '#4299e1';
+                                $badge_class = 'badge-info';
                                 $stt_text = 'Đã xác nhận';
                             }
                             if ($order['status'] == 2) {
-                                $stt_color = '#805ad5';
+                                $badge_class = 'badge-info';
                                 $stt_text = 'Đang giao';
                             }
                             if ($order['status'] == 3) {
-                                $stt_color = '#48bb78';
+                                $badge_class = 'badge-success';
                                 $stt_text = 'Hoàn thành';
                             }
                             if ($order['status'] == 4) {
-                                $stt_color = '#f56565';
+                                $badge_class = 'badge-danger';
                                 $stt_text = 'Đã hủy';
                             }
                             ?>
-                            <span style="font-size: 0.75em; padding: 2px 8px; border-radius: 10px; background-color: <?php echo $stt_color; ?>20; color: <?php echo $stt_color; ?>; font-weight: 600;">
+                            <span class="badge <?php echo $badge_class; ?>">
                                 <?php echo $stt_text; ?>
                             </span>
                         </div>
-                        <a href="<?php echo URLROOT; ?>/admin/orderdetail/<?php echo $order['id']; ?>" style="color: #a0aec0; margin-left: 10px; transition: 0.3s;" title="Xem chi tiết">
+                        <a href="<?php echo URLROOT; ?>/admin/orderdetail/<?php echo $order['id']; ?>" class="btn-icon" style="width: 32px; height: 32px; font-size: 0.8rem;" title="Xem chi tiết">
                             <i class="fas fa-chevron-right"></i>
                         </a>
                     </div>
                 <?php endforeach; ?>
             </div>
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="<?php echo URLROOT; ?>/admin/orders" style="text-decoration: none; color: #667eea; font-weight: 600; font-size: 0.9rem;">
-                    Xem tất cả đơn hàng &rarr;
+            <div style="text-align: center; margin-top: 24px;">
+                <a href="<?php echo URLROOT; ?>/admin/orders" style="text-decoration: none; color: var(--primary-color); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
+                    Xem tất cả đơn hàng <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
         <?php endif; ?>
@@ -143,10 +154,10 @@
 
         const ctx = document.getElementById('revenueChart').getContext('2d');
 
-        // Tạo Gradient màu xanh đẹp mắt
+        // Tạo Gradient màu
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(66, 153, 225, 0.5)'); // Xanh đậm ở trên
-        gradient.addColorStop(1, 'rgba(66, 153, 225, 0)'); // Trong suốt ở dưới
+        gradient.addColorStop(0, 'rgba(79, 70, 229, 0.2)'); 
+        gradient.addColorStop(1, 'rgba(79, 70, 229, 0)'); 
 
         new Chart(ctx, {
             type: 'line',
@@ -156,14 +167,15 @@
                     label: 'Doanh thu (VNĐ)',
                     data: values,
                     backgroundColor: gradient,
-                    borderColor: '#4299e1',
+                    borderColor: '#4f46e5',
                     borderWidth: 2,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#4299e1',
-                    pointHoverBackgroundColor: '#4299e1',
-                    pointHoverBorderColor: '#fff',
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#4f46e5',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
                     fill: true,
-                    tension: 0.4 // Đường cong mềm mại
+                    tension: 0.4
                 }]
             },
             options: {
@@ -172,8 +184,13 @@
                 plugins: {
                     legend: {
                         display: false
-                    }, // Ẩn chú thích
+                    },
                     tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 12,
+                        titleFont: { family: 'Inter', size: 13 },
+                        bodyFont: { family: 'Inter', size: 13 },
+                        cornerRadius: 8,
                         callbacks: {
                             label: function(context) {
                                 let label = context.dataset.label || '';
@@ -195,20 +212,19 @@
                     y: {
                         beginAtZero: true,
                         grid: {
-                            borderDash: [2, 4],
-                            color: '#edf2f7'
+                            borderDash: [4, 4],
+                            color: '#e2e8f0',
+                            drawBorder: false
                         },
                         ticks: {
                             callback: function(value) {
                                 return new Intl.NumberFormat('en-US', {
                                     notation: "compact",
                                     compactDisplay: "short"
-                                }).format(value) + 'đ';
+                                }).format(value);
                             },
-                            color: '#a0aec0',
-                            font: {
-                                size: 11
-                            }
+                            color: '#64748b',
+                            font: { family: 'Inter', size: 11 }
                         }
                     },
                     x: {
@@ -216,10 +232,8 @@
                             display: false
                         },
                         ticks: {
-                            color: '#a0aec0',
-                            font: {
-                                size: 11
-                            }
+                            color: '#64748b',
+                            font: { family: 'Inter', size: 11 }
                         }
                     }
                 }

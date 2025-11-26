@@ -1,42 +1,65 @@
-<h2><?php echo $data['title']; ?></h2>
+<div class="mb-4">
+    <h2 class="card-title" style="font-size: 1.5rem;"><?php echo $data['title']; ?></h2>
+</div>
 
-<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: start;">
 
-    <div style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: fit-content;">
-        <h4>Thêm Danh Mục Mới</h4>
+    <!-- Add Form -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Thêm Danh Mục Mới</h4>
+        </div>
         <form action="<?php echo URLROOT; ?>/admin/addProductCategory" method="POST">
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Tên danh mục</label>
-                <input type="text" name="name" required placeholder="Ví dụ: Điện thoại Gaming" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <div class="form-group">
+                <label class="form-label">Tên danh mục</label>
+                <input type="text" name="name" required placeholder="Ví dụ: Điện thoại Gaming" class="form-control">
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%;">Thêm ngay</button>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-plus"></i> Thêm ngay
+            </button>
         </form>
     </div>
 
-    <div style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <table style="margin-top: 0;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên Danh Mục</th>
-                    <th style="text-align: center;">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($data['categories'] as $cat) : ?>
+    <!-- List -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách danh mục</h4>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
                     <tr>
-                        <td>#<?php echo $cat['id']; ?></td>
-                        <td><strong><?php echo htmlspecialchars($cat['name']); ?></strong></td>
-                        <td class="action-links" style="text-align: center;">
-                            <a href="<?php echo URLROOT; ?>/admin/deleteProductCategory/<?php echo $cat['id']; ?>"
-                                class="delete"
-                                onclick="return confirm('Xóa danh mục này? Các sản phẩm thuộc danh mục này sẽ bị mất danh mục.');">
-                                <i class="fas fa-trash"></i> Xóa
-                            </a>
-                        </td>
+                        <th style="width: 80px;">ID</th>
+                        <th>Tên Danh Mục</th>
+                        <th class="text-right" style="width: 100px;">Hành động</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php if (empty($data['categories'])): ?>
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 24px; color: var(--text-light);">Chưa có danh mục nào.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($data['categories'] as $cat) : ?>
+                            <tr>
+                                <td>#<?php echo $cat['id']; ?></td>
+                                <td>
+                                    <div style="font-weight: 600; color: var(--text-main);"><?php echo htmlspecialchars($cat['name']); ?></div>
+                                </td>
+                                <td class="text-right">
+                                    <a href="<?php echo URLROOT; ?>/admin/deleteProductCategory/<?php echo $cat['id']; ?>"
+                                        class="btn-icon"
+                                        title="Xóa"
+                                        style="color: var(--danger-color); border-color: var(--danger-color);"
+                                        onclick="return confirm('Xóa danh mục này? Các sản phẩm thuộc danh mục này sẽ bị mất danh mục.');">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
