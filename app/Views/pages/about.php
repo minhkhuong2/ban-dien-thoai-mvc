@@ -61,55 +61,59 @@
         </div>
     </div>
 
-    <div class="about-section">
-        <h2 class="section-title">Dịch Vụ Của Chúng Tôi</h2>
-        <div class="services-grid">
-            <div class="service-box">
-                <div class="service-box-icon"><svg viewBox="0 0 24 24" class="icon">
-                        <path d="M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zM7 19V5h10v14H7z"></path>
-                        <path d="M12 18h.01"></path>
-                    </svg></div>
-                <h4>Sản Phẩm Đa Dạng</h4>
-                <p>Cung cấp đủ các dòng điện thoại từ phổ thông đến cao cấp của tất cả thương hiệu.</p>
-            </div>
-            <div class="service-box">
-                <div class="service-box-icon"><svg viewBox="0 0 24 24" class="icon">
-                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                    </svg></div>
-                <h4>Sửa Chữa</h4>
-                <p>Dịch vụ sửa chữa chuyên nghiệp với đội ngũ giàu kinh nghiệm và linh kiện chính hãng.</p>
-            </div>
-            <div class="service-box">
-                <div class="service-box-icon"><svg viewBox="0 0 24 24" class="icon">
-                        <polyline points="23 4 23 10 17 10"></polyline>
-                        <polyline points="1 20 1 14 7 14"></polyline>
-                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                    </svg></div>
-                <h4>Thu Cũ Đổi Mới</h4>
-                <p>Chương trình thu cũ đổi mới với giá hấp dẫn, giúp khách hàng tiết kiệm chi phí.</p>
-            </div>
-            <div class="service-box">
-                <div class="service-box-icon"><svg viewBox="0 0 24 24" class="icon">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg></div>
-                <h4>Bảo Hành</h4>
-                <p>Dịch vụ bảo hành chính hãng với quy trình nhanh gọn, minh bạch, rõ ràng.</p>
-            </div>
-            <div class="service-box">
-                <div class="service-box-icon"><svg viewBox="0 0 24 24" class="icon">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg></div>
-                <h4>Phụ Kiện</h4>
-                <p>Đa dạng phụ kiện chính hãng: ốp lưng, cường lực, sạc dự phòng, tai nghe...</p>
-            </div>
-            <div class="service-box">
-                <div class="service-box-icon"><svg viewBox="0 0 24 24" class="icon">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg></div>
-                <h4>Tư Vấn</h4>
-                <p>Tư vấn chuyên nghiệp giúp khách hàng tìm ra sản phẩm phù hợp với nhu cầu và tài chính.</p>
+    <div class="about-section services-section">
+        <div class="container">
+            <h2 class="section-title text-center">Dịch Vụ Của Chúng Tôi</h2>
+            <p class="section-intro text-center">Chúng tôi cam kết mang đến trải nghiệm mua sắm và dịch vụ tốt nhất.</p>
+
+            <div class="services-grid">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="service-title">Bán Điện Thoại</h3>
+                    <p class="service-desc">Cung cấp các dòng điện thoại chính hãng mới nhất.</p>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <h3 class="service-title">Phụ Kiện</h3>
+                    <p class="service-desc">Đa dạng phụ kiện ốp lưng, tai nghe, sạc dự phòng.</p>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="service-title">Sửa Chữa</h3>
+                    <p class="service-desc">Dịch vụ sửa chữa uy tín, linh kiện chính hãng.</p>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="service-title">Thu Cũ Đổi Mới</h3>
+                    <p class="service-desc">Hỗ trợ lên đời sản phẩm với giá thu mua tốt nhất.</p>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3 class="service-title">Trả Góp 0%</h3>
+                    <p class="service-desc">Thủ tục đơn giản, xét duyệt nhanh chóng.</p>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="service-title">Tư Vấn 24/7</h3>
+                    <p class="service-desc">Đội ngũ hỗ trợ nhiệt tình, giải đáp mọi thắc mắc.</p>
+                </div>
             </div>
         </div>
     </div>

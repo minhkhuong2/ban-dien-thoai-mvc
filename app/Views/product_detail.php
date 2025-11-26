@@ -118,7 +118,7 @@ if (!empty($gallery)) {
             <span class="discount-tag" id="display-badge" style="display:none;"></span>
         </div>
 
-        <form id="add-cart-form" method="POST">
+        <form id="add-cart-form" class="add-to-cart-form" method="POST">
 
             <?php
             $colors = array_unique(array_column($variants, 'color'));
