@@ -49,7 +49,10 @@
                     </div>
 
                     <div class="pc-btns">
-                        <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $product['default_variant_id']; ?>" method="POST" class="add-to-cart-form" style="flex: 1;">
+                        <form action="<?php echo URLROOT; ?>/cart/add/<?php echo $product['default_variant_id']; ?>"
+                            method="POST"
+                            class="add-to-cart-form"
+                            onsubmit="return handleAddToCart(event, this);" style="flex: 1;">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="pc-btn pc-btn-cart" style="width: 100%; cursor: pointer;">
                                 Giỏ hàng

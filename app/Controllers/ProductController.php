@@ -16,9 +16,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Hiển thị trang chi tiết sản phẩm.
-     * $id này sẽ được tự động truyền vào
-     * bởi file /app/core/App.php
+     * Hiển thị tất cả sản phẩm (Có lọc)
      */
     public function all()
     {
@@ -30,16 +28,16 @@ class ProductController extends Controller
             'search_query' => $_GET['query'] ?? null
         ];
 
-        // [SỬA] Gọi hàm getFilteredProducts (thay vì getFilteredVariants)
-        // Biến trả về giờ là danh sách Products (đã gom nhóm)
+        // Gọi hàm lọc sản phẩm (lấy cả ID biến thể mặc định)
         $products = $this->productModel->getFilteredProducts($filters);
 
+        // Lấy dữ liệu cho Sidebar
         $brands = $this->brandModel->getAllBrands();
         $categories = $this->productCategoryModel->getCategoriesWithCount();
 
         $data = [
             'title' => 'Tất cả Sản phẩm',
-            'products' => $products, // Đổi tên key thành products cho dễ hiểu
+            'products' => $products,
             'brands' => $brands,
             'categories' => $categories,
             'filters' => $filters
@@ -47,6 +45,8 @@ class ProductController extends Controller
 
         $this->view('product_all', $data);
     }
+
+    // Hiển thị chi tiết sản phẩm
     public function detail($product_id = 0)
     {
         // 1. Lấy thông tin GỐC
@@ -60,12 +60,11 @@ class ProductController extends Controller
         // 2. Lấy tất cả BIẾN THỂ
         $variants = $this->productModel->getVariantsByProductId($product_id);
 
-        // 3. [MỚI - QUAN TRỌNG] Lấy Ảnh Phụ (Gallery)
-        // Hàm này chúng ta đã viết trong Model lúc làm trang Admin rồi, giờ chỉ cần gọi ra
+        // 3. Lấy Ảnh Phụ (Gallery)
         $gallery = $this->productModel->getGalleryByProductId($product_id);
 
-        // 4. Lấy sản phẩm liên quan
-        $related_products = $this->productModel->getRelatedProducts($product['category_id'], $product_id);
+        // 4. Lấy sản phẩm liên quan (Cùng thương hiệu)
+        $related_products = $this->productModel->getRelatedProducts($product['brand_id'], $product_id);
 
         // 5. Lấy Đánh giá
         $reviews = $this->productModel->getReviewsByProductId($product_id);
@@ -75,7 +74,7 @@ class ProductController extends Controller
             'title' => $product['name'],
             'product' => $product,
             'variants' => $variants,
-            'gallery' => $gallery, // <-- Truyền biến này sang View
+            'gallery' => $gallery,
             'related_products' => $related_products,
             'reviews' => $reviews,
             'rating_info' => $rating_info
@@ -83,33 +82,52 @@ class ProductController extends Controller
 
         $this->view('product_detail', $data);
     }
+
+    // Tìm kiếm sản phẩm
     public function search()
     {
         $query = isset($_GET['query']) ? $_GET['query'] : '';
 
-        // [SỬA] Gọi hàm tìm kiếm mới (trả về products gom nhóm)
+        // Gọi hàm tìm kiếm
         $products = $this->productModel->searchProducts($query);
 
         $data = [
             'title' => 'Kết quả tìm kiếm cho: "' . htmlspecialchars($query) . '"',
-            'products' => $products, // Đổi tên key
+            'products' => $products,
             'search_query' => $query
         ];
 
         $this->view('product_search', $data);
     }
-    // Hiển thị trang sản phẩm theo thương hiệu
-    // URL: /public/product/brand/1
+
+    // Hiển thị sản phẩm theo Thương hiệu (ĐÃ SỬA LỖI THIẾU DATA SIDEBAR)
     public function brand($brand_id = 0)
     {
-        // [SỬA] Tái sử dụng hàm lọc để lấy theo brand (gom nhóm luôn)
-        $products = $this->productModel->getFilteredProducts(['brand_id' => $brand_id]);
+        // Tạo bộ lọc chỉ có brand_id, các cái khác null
+        $filters = [
+            'brand_id' => $brand_id,
+            'category_id' => null,
+            'price_range' => null,
+            'sort_by' => null,
+            'search_query' => null
+        ];
+
+        // Tái sử dụng hàm lọc để lấy sản phẩm của hãng này
+        $products = $this->productModel->getFilteredProducts($filters);
+
+        // QUAN TRỌNG: Phải lấy cả Brands và Categories để hiển thị Sidebar không bị lỗi
+        $brands = $this->brandModel->getAllBrands();
+        $categories = $this->productCategoryModel->getCategoriesWithCount();
 
         $data = [
             'title' => 'Sản phẩm theo Thương hiệu',
-            'products' => $products
+            'products' => $products,
+            'brands' => $brands,         // <-- Phải có cái này
+            'categories' => $categories, // <-- Phải có cái này
+            'filters' => $filters        // <-- Phải có cái này
         ];
 
+        // Tái sử dụng View 'product_all'
         $this->view('product_all', $data);
     }
 }

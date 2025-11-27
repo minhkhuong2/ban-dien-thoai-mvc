@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   // ============================================================
-  // 1. CÁC HÀM HELPER (Hỗ trợ)
+  // 1. CÁC HÀM HELPER
   // ============================================================
-
-  // Hiển thị thông báo Toast
   window.showToast = function (message, isError = false) {
     const oldToast = document.querySelector(".ajax-toast");
     if (oldToast) oldToast.remove();
@@ -25,11 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 3000);
   };
 
-  // Format tiền tệ
   const fmtMoney = (amount) =>
     new Intl.NumberFormat("vi-VN").format(amount) + " ₫";
 
-  // Cập nhật giao diện Giỏ hàng
   function updateCartUI(data) {
     const badge = document.getElementById("cart-count-badge");
     if (badge) badge.innerText = data.cartCount;
@@ -63,26 +59,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ============================================================
-  // 2. XỬ LÝ MUA HÀNG (QUAN TRỌNG NHẤT)
-  // Sử dụng Event Delegation để bắt sự kiện cho cả nút được sinh ra động
+  // 2. XỬ LÝ MUA HÀNG (FIX LỖI MÀN HÌNH ĐEN)
   // ============================================================
 
   document.body.addEventListener("submit", function (e) {
-    // 2.1. Xử lý Form Thêm giỏ hàng (Trang chủ, Danh sách, Chi tiết)
+    // 2.1. Form thêm giỏ hàng
     if (e.target && e.target.classList.contains("add-to-cart-form")) {
-      e.preventDefault(); // CHẶN TRANG ĐEN
+      e.preventDefault(); // <--- CHẶN SUBMIT MẶC ĐỊNH
 
       const form = e.target;
 
-      // Kiểm tra data-valid (chỉ có ở trang chi tiết khi chọn biến thể)
-      if (
-        form.hasAttribute("data-valid") &&
-        form.getAttribute("data-valid") === "false"
-      ) {
+      // Kiểm tra data-valid (dành cho trang chi tiết)
+      if (form.getAttribute("data-valid") === "false") {
         showToast("Vui lòng chọn phiên bản sản phẩm!", true);
         return;
       }
 
+      // Kiểm tra nút bấm
       let isBuyNow = false;
       if (
         e.submitter &&
@@ -105,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (badge) badge.innerText = data.cartCount;
 
             if (isBuyNow) {
-              window.location.href = URLROOT + "/checkout"; // URLROOT được định nghĩa ở header
+              window.location.href = URLROOT + "/checkout"; // URLROOT phải được define ở header
             } else {
               showToast(data.message);
             }
@@ -115,13 +108,11 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((err) => {
           console.error(err);
-          // Nếu lỗi, có thể do action URL chưa đúng, thử fallback
-          showToast("Đã thêm vào giỏ hàng!", false); // Giả lập thành công nếu server vẫn chạy ngầm đúng
-          // location.reload(); // Hoặc reload để chắc chắn
+          showToast("Lỗi kết nối server!", true);
         });
     }
 
-    // 2.2. Xử lý Form Voucher
+    // 2.2. Form Voucher
     if (e.target && e.target.id === "voucher-form") {
       e.preventDefault();
       const formData = new FormData(e.target);
@@ -153,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ============================================================
-  // 3. LOGIC TRANG CHI TIẾT (Product Detail - Chọn màu/Dung lượng)
+  // 3. LOGIC TRANG CHI TIẾT (Biến thể & Slider)
   // ============================================================
 
   const variantsElement = document.getElementById("variants-json");
@@ -169,18 +160,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const mainForm = document.getElementById("add-cart-form");
     const errorMsg = document.getElementById("error-msg");
     const btns = document.querySelectorAll(".btn-cart, .btn-buy");
-    const mainTrack = document.getElementById("main-track");
     const thumbItems = document.querySelectorAll(".thumb-item");
 
+    // Cập nhật UI khi chọn biến thể
     function updateVariantUI() {
       const selectedColorBtn = document.querySelector(".color-item.active");
       const selectedStorageBtn = document.querySelector(".storage-item.active");
 
-      // Nếu không có nút chọn (sản phẩm đơn)
+      // Fix lỗi nếu sản phẩm chỉ có 1 biến thể (ko cần chọn)
       if (!selectedColorBtn && !selectedStorageBtn && variants.length > 0) {
         const v = variants[0];
         if (mainForm) {
           mainForm.action = URLROOT + "/cart/add/" + v.id;
+          mainForm.setAttribute("data-valid", "true");
         }
         return;
       }
@@ -196,6 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
         (v) => v.color === color && v.storage === storage
       );
 
+      // Update trạng thái nút dung lượng
       storageItems.forEach((item) => {
         const sVal = item.getAttribute("data-val");
         const vTemp = variants.find(
@@ -286,10 +279,11 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // --- SLIDER LOGIC ---
+    // --- SLIDER ẢNH CHÍNH ---
+    const mainTrack = document.getElementById("main-track");
+    const slides = document.querySelectorAll(".slider-single-img");
     let currentSlideIndex = 0;
     let galleryInterval;
-    const slides = document.querySelectorAll(".slider-single-img");
 
     window.goToSlide = function (index) {
       if (!mainTrack || index < 0 || index >= slides.length) return;
@@ -331,23 +325,26 @@ document.addEventListener("DOMContentLoaded", function () {
       resetGalleryTimer();
     }
 
-    // Cuộn Thumbnail
+    // --- CUỘN THUMBNAIL (BỔ SUNG PHẦN BẠN THIẾU) ---
     const thumbTrack = document.getElementById("thumb-track");
     const thumbPrev = document.getElementById("thumb-prev");
     const thumbNext = document.getElementById("thumb-next");
+
     if (thumbTrack && thumbPrev && thumbNext) {
       const item = thumbTrack.querySelector(".thumb-item");
-      let scrollAmount = 100;
-      if (item) scrollAmount = item.offsetWidth + 10;
+      let scrollAmount = 80; // Mặc định
+      if (item) scrollAmount = item.offsetWidth + 10; // width + gap
 
-      thumbPrev.addEventListener("click", () =>
-        thumbTrack.scrollBy({ left: -scrollAmount * 2, behavior: "smooth" })
-      );
-      thumbNext.addEventListener("click", () =>
-        thumbTrack.scrollBy({ left: scrollAmount * 2, behavior: "smooth" })
-      );
+      thumbPrev.addEventListener("click", () => {
+        thumbTrack.scrollBy({ left: -scrollAmount * 2, behavior: "smooth" });
+      });
+
+      thumbNext.addEventListener("click", () => {
+        thumbTrack.scrollBy({ left: scrollAmount * 2, behavior: "smooth" });
+      });
     }
 
+    // Tab & Qty
     window.openTab = function (tabName) {
       const contents = document.getElementsByClassName("tab-content");
       for (let i = 0; i < contents.length; i++)
@@ -373,7 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ============================================================
-  // 4. LOGIC TRANG GIỎ HÀNG (Click +/- và Xóa)
+  // 4. LOGIC GIỎ HÀNG
   // ============================================================
 
   document.body.addEventListener("click", function (e) {
@@ -435,9 +432,22 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ============================================================
-  // 5. CÁC CHỨC NĂNG KHÁC (Mobile Menu, Checkout, Slider Related)
+  // 5. LOGIC KHÁC (Menu, Checkout, Slider Related)
   // ============================================================
 
+  // Slider sản phẩm liên quan (Tự động chạy)
+  const relTrack = document.getElementById("related-track");
+  if (relTrack) {
+    let scroll = 0;
+    const max = relTrack.scrollWidth - relTrack.clientWidth;
+    // Mỗi 4 giây cuộn 1 đoạn 260px
+    setInterval(() => {
+      scroll = Math.abs(scroll) >= max ? 0 : scroll - 260;
+      relTrack.style.transform = `translateX(${scroll}px)`;
+    }, 4000);
+  }
+
+  // Menu Mobile
   const mobileMenuBtn = document.getElementById("mobile-menu-btn");
   const mobileMenu = document.getElementById("mobile-menu-container");
   const mobileOverlay = document.getElementById("mobile-menu-overlay");
@@ -455,6 +465,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (closeMenuBtn) closeMenuBtn.addEventListener("click", toggleMenu);
   if (mobileOverlay) mobileOverlay.addEventListener("click", toggleMenu);
 
+  // Checkout
   const shippingRadios = document.querySelectorAll(
     'input[name="shipping_method"]'
   );
@@ -486,16 +497,5 @@ document.addEventListener("DOMContentLoaded", function () {
         totalEl.innerText = fmtMoney(subtotal - discount + fee);
       });
     });
-  }
-
-  // Slider Related (Tự động)
-  const relTrack = document.getElementById("related-track");
-  if (relTrack) {
-    let scroll = 0;
-    const max = relTrack.scrollWidth - relTrack.clientWidth;
-    setInterval(() => {
-      scroll = Math.abs(scroll) >= max ? 0 : scroll - 260;
-      relTrack.style.transform = `translateX(${scroll}px)`;
-    }, 4000);
   }
 });
