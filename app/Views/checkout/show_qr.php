@@ -75,7 +75,10 @@
 
         <div class="qr-actions">
             <a href="<?php echo URLROOT; ?>/" class="btn-cancel">Hủy giao dịch</a>
-            <a href="<?php echo URLROOT; ?>/user/orders" class="btn-confirm">Xác nhận đã chuyển</a>
+            <a href="<?php echo URLROOT; ?>/user/orders" class="btn-confirm"
+                onclick="return confirm('Bạn xác nhận đã chuyển khoản thành công? Chúng tôi sẽ kiểm tra và xử lý đơn hàng ngay.');">
+                Tôi đã chuyển tiền
+            </a>
         </div>
 
     </div>

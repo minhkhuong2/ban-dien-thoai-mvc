@@ -65,6 +65,14 @@
             <small>Nhập địa chỉ đầy đủ (số nhà, đường, phường/xã, quận/huyện, tỉnh/TP) để tiện cho việc giao hàng.</small>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="font-size: 1rem; padding: 12px 20px;">Cập nhật thông tin</button>
+        <div style="display: flex; gap: 15px; align-items: center; margin-top: 30px;">
+            <button type="submit" class="btn btn-primary" style="font-size: 1rem; padding: 12px 20px;">
+                Cập nhật thông tin
+            </button>
+
+            <a href="<?php echo URLROOT; ?>/user/change_password" class="btn" style="background: #f8f9fa; color: #333; border: 1px solid #ccc; text-decoration: none; padding: 12px 20px; font-size: 1rem; border-radius: 4px;">
+                <i class="fas fa-key"></i> Đổi mật khẩu
+            </a>
+        </div>
     </form>
 </div>

@@ -98,6 +98,17 @@ class UserController extends Controller
             if (empty($data['email_err']) && empty($data['password_err'])) {
                 $loggedInUser = $this->userModel->login($data['email'], $data['password']);
                 if ($loggedInUser) {
+                    if (isset($_POST['remember'])) {
+                        // 1. Tạo token ngẫu nhiên an toàn
+                        $token = bin2hex(random_bytes(32));
+
+                        // 2. Lưu vào Database
+                        $this->userModel->setRememberToken($loggedInUser['id'], $token);
+
+                        // 3. Lưu vào Cookie trình duyệt (Hết hạn sau 30 ngày)
+                        // Tên cookie: 'remember_user', Giá trị: token, Thời gian: 30 ngày, Đường dẫn: /
+                        setcookie('remember_user', $token, time() + (86400 * 30), "/");
+                    }
                     // Đăng nhập thành công, Tạo Session
                     $this->createUserSession($loggedInUser);
                 } else {
@@ -144,11 +155,17 @@ class UserController extends Controller
     // Hàm Đăng xuất
     public function logout()
     {
+        // Xóa token trong DB trước khi hủy session
+        if (isset($_SESSION['user_id'])) {
+            $this->userModel->removeRememberToken($_SESSION['user_id']);
+        }
         unset($_SESSION['user_id']);
         unset($_SESSION['user_email']);
         unset($_SESSION['user_name']);
-        unset($_SESSION['is_admin']); // Đảm bảo xóa cả quyền admin
+        unset($_SESSION['is_admin']);
         session_destroy();
+        // [MỚI] Xóa Cookie
+        setcookie('remember_user', '', time() - 3600, "/");
         header('Location: ' . URLROOT);
         exit();
     }

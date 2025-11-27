@@ -164,4 +164,25 @@ class UserModel
         $this->db->bind(':id', $id);
         return $this->db->execute();
     }
+    public function setRememberToken($userId, $token)
+    {
+        $this->db->query('UPDATE users SET remember_token = :token WHERE id = :id');
+        $this->db->bind(':token', $token);
+        $this->db->bind(':id', $userId);
+        return $this->db->execute();
+    }
+    public function getUserByToken($token)
+    {
+        $this->db->query('SELECT * FROM users WHERE remember_token = :token');
+        $this->db->bind(':token', $token);
+        return $this->db->single();
+    }
+
+    // [GHI NHỚ] 3. Xóa token (Khi đăng xuất)
+    public function removeRememberToken($userId)
+    {
+        $this->db->query('UPDATE users SET remember_token = NULL WHERE id = :id');
+        $this->db->bind(':id', $userId);
+        return $this->db->execute();
+    }
 }
