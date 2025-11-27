@@ -3343,3 +3343,112 @@ body {
     padding: 30px 20px;
   }
 }
+/* =========================================
+   RESPONSIVE MOBILE (Thêm vào cuối file)
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Banner Chính */
+  .new-hero-banner {
+    flex-direction: column; /* Xếp dọc */
+    height: auto; /* Chiều cao tự động */
+    padding: 40px 20px; /* Giảm padding */
+    text-align: center; /* Căn giữa nội dung */
+    background-position: center; /* Căn giữa ảnh nền */
+  }
+
+  .new-hero-content {
+    width: 100%; /* Chiếm hết chiều rộng */
+    margin-bottom: 30px; /* Cách ảnh bên dưới */
+  }
+
+  .new-hero-content h1 {
+    font-size: 2.2rem; /* Giảm cỡ chữ */
+  }
+
+  .new-hero-content p {
+    font-size: 1rem;
+  }
+
+  .new-hero-buttons {
+    justify-content: center; /* Căn giữa nút bấm */
+  }
+
+  .new-hero-image {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .new-hero-image::before {
+    width: 280px; /* Giảm kích thước vòng tròn */
+    height: 280px;
+  }
+
+  .new-hero-image img {
+    max-width: 300px; /* Giảm kích thước ảnh */
+  }
+
+  /* 2. Lưới Thương hiệu */
+  .new-brands-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 cột thay vì 6 */
+    gap: 15px;
+  }
+
+  /* 3. Lưới Sản phẩm */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 cột (nếu màn hình đủ rộng) */
+    gap: 10px;
+  }
+
+  /* Nếu màn hình quá nhỏ (< 480px) thì về 1 cột */
+  @media (max-width: 480px) {
+    .product-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* 4. Banner Newsletter */
+  .newsletter-banner {
+    padding: 30px 20px;
+  }
+
+  .newsletter-form {
+    flex-direction: column; /* Ô nhập và nút xếp dọc */
+  }
+
+  .newsletter-form input {
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
+  .newsletter-form button {
+    width: 100%;
+    border-radius: 5px;
+  }
+
+  /* 5. Chi tiết sản phẩm */
+  .product-detail-container {
+    flex-direction: column; /* Ảnh trên, thông tin dưới */
+  }
+  .detail-left,
+  .detail-right {
+    width: 100%;
+  }
+  .main-image-slider {
+    height: 300px; /* Giảm chiều cao slider ảnh */
+  }
+
+  /* Nút Mua Hàng Sticky (Dính dưới đáy màn hình - Tùy chọn) */
+  /*
+    .action-btns {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: #fff;
+        padding: 10px;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        z-index: 999;
+        margin-top: 0;
+    }
+    */
+}
