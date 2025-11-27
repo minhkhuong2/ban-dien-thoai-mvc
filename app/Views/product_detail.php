@@ -1,47 +1,39 @@
 <?php
 // File: app/Views/product_detail.php
 
-// 1. Lấy dữ liệu
 $product = $data['product'];
 $variants = $data['variants'];
-$gallery = $data['gallery']; // [MỚI] Lấy ảnh phụ
+$gallery = $data['gallery'];
 $reviews = $data['reviews'];
 $rating_info = $data['rating_info'];
 $related_products = $data['related_products'];
+$dynamic_colors = $data['dynamic_colors'] ?? []; // [MỚI] Lấy màu động từ Controller
 
 $first_variant = !empty($variants) ? $variants[0] : null;
 
-// Tính sao
+// Tính toán sao
 $avg_rating = $rating_info['avg_rating'] ? round($rating_info['avg_rating'], 1) : 0;
 $review_count = $rating_info['review_count'];
 $star_percent = ($avg_rating / 5) * 100;
 
-// -----------------------------------------------------------
-// LOGIC GỘP ẢNH: BIẾN THỂ + ẢNH PHỤ -> CHUNG 1 DANH SÁCH
-// -----------------------------------------------------------
-$final_images = []; // Mảng chứa tất cả ảnh để hiển thị slider
-$added_src = [];    // Mảng phụ để check trùng lặp ảnh
+// Gộp ảnh (Biến thể + Gallery)
+$final_images = [];
+$added_src = [];
 
-// 1. Lấy ảnh của biến thể đầu tiên (Ưu tiên số 1)
 if ($first_variant) {
     $final_images[] = ['src' => $first_variant['image'], 'color' => $first_variant['color']];
     $added_src[] = $first_variant['image'];
 }
-
-// 2. Lấy ảnh của các biến thể khác
 foreach ($variants as $v) {
     if (!in_array($v['image'], $added_src)) {
         $final_images[] = ['src' => $v['image'], 'color' => $v['color']];
         $added_src[] = $v['image'];
     }
 }
-
-// 3. [QUAN TRỌNG] Lấy ảnh từ thư viện Gallery (Ảnh phụ từ Admin)
 if (!empty($gallery)) {
     foreach ($gallery as $g) {
-        // Nếu ảnh chưa có trong danh sách thì thêm vào
         if (!in_array($g['image'], $added_src)) {
-            $final_images[] = ['src' => $g['image'], 'color' => $g['color']]; // color có thể null (Chung)
+            $final_images[] = ['src' => $g['image'], 'color' => $g['color']];
             $added_src[] = $g['image'];
         }
     }
@@ -50,7 +42,7 @@ if (!empty($gallery)) {
 
 <div class="breadcrumb">
     <a href="<?php echo URLROOT; ?>/">Trang chủ</a> ›
-    <a href="<?php echo URLROOT; ?>/product/all">Sản phẩm</a> ›
+    <a href="<?php echo URLROOT; ?>/product/all">Điện thoại</a> ›
     <a href="<?php echo URLROOT; ?>/product/brand/<?php echo $product['brand_id']; ?>">
         <?php echo htmlspecialchars($product['brand_name']); ?>
     </a> ›
@@ -79,7 +71,7 @@ if (!empty($gallery)) {
             </div>
 
             <div class="thumbnail-wrapper">
-                <button class="thumb-nav-btn thumb-prev" id="thumb-prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="thumb-btn prev" id="thumb-prev"><i class="fas fa-chevron-left"></i></button>
 
                 <div class="thumb-list" id="thumb-track">
                     <?php foreach ($final_images as $index => $img) : ?>
@@ -90,7 +82,7 @@ if (!empty($gallery)) {
                     <?php endforeach; ?>
                 </div>
 
-                <button class="thumb-nav-btn thumb-next" id="thumb-next"><i class="fas fa-chevron-right"></i></button>
+                <button class="thumb-btn next" id="thumb-next"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -118,27 +110,11 @@ if (!empty($gallery)) {
             <span class="discount-tag" id="display-badge" style="display:none;"></span>
         </div>
 
-        <form id="add-cart-form"
-            method="POST"
-            class="add-to-cart-form"
-            onsubmit="return handleAddToCart(event, this);">
+        <form id="add-cart-form" method="POST" class="add-to-cart-form" onsubmit="return handleAddToCart(event, this);">
 
             <?php
             $colors = array_unique(array_column($variants, 'color'));
             $storages = array_unique(array_column($variants, 'storage'));
-            // Map màu sắc
-            $color_map = [
-                'Đen' => '#000000',
-                'Trắng' => '#f5f5f5',
-                'Vàng' => '#f2d366',
-                'Tím' => '#d8bfd8',
-                'Xám' => '#808080',
-                'Xanh' => '#a2c2e0',
-                'Titan Tự nhiên' => '#bcb6a9',
-                'Titan Xanh' => '#3e4f5c',
-                'Titan Đen' => '#333333',
-                'Titan Trắng' => '#eeeeee'
-            ];
             ?>
 
             <?php if (!empty($colors)): ?>
@@ -146,7 +122,8 @@ if (!empty($gallery)) {
                     <span class="option-label">Màu sắc: <span id="text-color" style="font-weight:normal"></span></span>
                     <div class="color-list">
                         <?php foreach ($colors as $idx => $c):
-                            $hex = isset($color_map[$c]) ? $color_map[$c] : '#eee';
+                            // Lấy mã màu từ DB
+                            $hex = isset($dynamic_colors[$c]) ? $dynamic_colors[$c] : '#eee';
                         ?>
                             <div class="color-item <?php echo $idx == 0 ? 'active' : ''; ?>"
                                 style="background-color: <?php echo $hex; ?>;"
@@ -220,10 +197,6 @@ if (!empty($gallery)) {
                 <td><?php echo htmlspecialchars($product['screen_size']); ?></td>
             </tr>
             <tr>
-                <td>Hệ điều hành</td>
-                <td><?php echo htmlspecialchars($product['os']); ?></td>
-            </tr>
-            <tr>
                 <td>Camera sau</td>
                 <td><?php echo htmlspecialchars($product['camera_rear']); ?></td>
             </tr>
@@ -248,43 +221,46 @@ if (!empty($gallery)) {
     <div id="tab-review" class="tab-content" style="display:none">
         <div class="reviews-container">
             <?php if (empty($reviews)): ?>
-                <p style="text-align: center; color: #777; padding: 20px;">Chưa có đánh giá nào.</p>
-            <?php else: ?>
-                <?php foreach ($reviews as $rv): ?>
+                <p style="text-align: center; color: #777;">Chưa có đánh giá nào.</p>
+                <?php else: foreach ($reviews as $rv): ?>
                     <div style="border-bottom:1px solid #eee; padding: 15px 0;">
                         <strong><?php echo htmlspecialchars($rv['user_name']); ?></strong> - <span style="color:#f1c40f"><?php echo str_repeat('★', $rv['rating']); ?></span>
                         <p><?php echo nl2br(htmlspecialchars($rv['comment'])); ?></p>
                     </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <?php endforeach;
+            endif; ?>
         </div>
     </div>
 </div>
 
-<div class="container" style="margin-top: 50px; margin-bottom: 60px; position: relative;">
-    <h2 class="section-title" style="text-align: left; border-left: 5px solid #288ad6; padding-left: 15px; margin-bottom: 20px;">Sản phẩm liên quan</h2>
+<div class="container" style="margin-top: 50px; margin-bottom: 60px;">
+    <h2 class="section-title" style="text-align: left; border-left: 5px solid #288ad6; padding-left: 15px; margin-bottom: 20px;">
+        Sản phẩm liên quan
+    </h2>
     <?php if (empty($related_products)) : ?>
         <p style="color: #777;">Đang cập nhật...</p>
     <?php else : ?>
-        <div class="related-slider-container" style="overflow-x: auto;">
-            <div class="related-slider-track" id="related-track" style="gap: 15px; padding-bottom: 10px;">
-                <?php foreach ($related_products as $p) : ?>
-                    <div class="product-card slider-item" style="min-width: 220px;">
-                        <?php if ($p['max_sale'] > 0 && $p['max_sale'] < $p['min_price']): $pct = round((($p['min_price'] - $p['max_sale']) / $p['min_price']) * 100); ?>
-                            <span class="badge-top-left">-<?php echo $pct; ?>%</span>
-                        <?php endif; ?>
-                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>">
-                            <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($p['image']); ?>" class="pc-img" alt="">
-                        </a>
-                        <div class="pc-info">
-                            <div class="pc-name"><a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>"><?php echo htmlspecialchars($p['product_name']); ?></a></div>
-                            <div class="pc-price">Từ <?php echo number_format($p['min_price']); ?> ₫</div>
+        <div class="related-slider-wrapper">
+            <div class="related-slider-container">
+                <div class="related-slider-track" id="related-track">
+                    <?php foreach ($related_products as $p) : ?>
+                        <div class="product-card slider-item">
+                            <?php if ($p['max_sale'] > 0 && $p['max_sale'] < $p['min_price']): $pct = round((($p['min_price'] - $p['max_sale']) / $p['min_price']) * 100); ?>
+                                <span class="badge-top-left">-<?php echo $pct; ?>%</span>
+                            <?php endif; ?>
+                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>">
+                                <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($p['image']); ?>" class="pc-img" alt="">
+                            </a>
+                            <div class="pc-info">
+                                <div class="pc-name"><a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>"><?php echo htmlspecialchars($p['product_name']); ?></a></div>
+                                <div class="pc-price">Từ <?php echo number_format($p['min_price']); ?> ₫</div>
+                            </div>
+                            <div class="pc-btns">
+                                <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>" class="pc-btn pc-btn-view" style="width: 100%;">Xem chi tiết</a>
+                            </div>
                         </div>
-                        <div class="pc-btns">
-                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $p['product_id']; ?>" class="pc-btn pc-btn-view" style="width: 100%;">Xem chi tiết</a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
     <?php endif; ?>

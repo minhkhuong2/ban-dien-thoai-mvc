@@ -312,4 +312,36 @@ class UserController extends Controller
 
         $this->view('user_reset_password', $data);
     }
+    public function change_password()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . URLROOT . '/user/login');
+            exit();
+        }
+
+        $data = ['title' => 'Đổi mật khẩu'];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $current_pass = $_POST['current_password'];
+            $new_pass = $_POST['new_password'];
+            $confirm_pass = $_POST['confirm_password'];
+
+            // Lấy thông tin user để check pass cũ
+            $user = $this->userModel->getUserById($_SESSION['user_id']);
+
+            if (!password_verify($current_pass, $user['password'])) {
+                $data['error'] = 'Mật khẩu hiện tại không đúng';
+            } elseif (strlen($new_pass) < 6) {
+                $data['error'] = 'Mật khẩu mới phải từ 6 ký tự';
+            } elseif ($new_pass != $confirm_pass) {
+                $data['error'] = 'Mật khẩu xác nhận không khớp';
+            } else {
+                // Đổi pass
+                $this->userModel->changePassword($_SESSION['user_id'], password_hash($new_pass, PASSWORD_DEFAULT));
+                $data['success'] = 'Đổi mật khẩu thành công!';
+            }
+        }
+
+        $this->view('user_change_password', $data);
+    }
 }

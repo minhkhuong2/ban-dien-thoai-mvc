@@ -537,7 +537,8 @@ class AdminController extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
                 'attribute_id' => (int)$_POST['attribute_id'],
-                'value' => trim($_POST['value'])
+                'value' => trim($_POST['value']),
+                'color_code' => !empty($_POST['color_code']) ? trim($_POST['color_code']) : null
             ];
             if (!empty($data['value']) && $data['attribute_id'] > 0) {
                 $this->attributeModel->createAttributeValue($data);
@@ -829,5 +830,63 @@ class AdminController extends Controller
         } else {
             die('Xóa thất bại');
         }
+    }
+    // --- QUẢN LÝ THƯƠNG HIỆU ---
+    public function brands()
+    {
+        $brands = $this->brandModel->getAllBrands();
+        $data = ['title' => 'Quản lý Thương hiệu', 'brands' => $brands];
+        $this->view('admin/brands/index', $data);
+    }
+
+    public function addBrand()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $name = trim($_POST['name']);
+            $image = 'default-brand.png';
+
+            // Upload logo
+            if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0) {
+                $image = time() . '_' . $_FILES['logo']['name'];
+                move_uploaded_file($_FILES['logo']['tmp_name'], APPROOT . '/../public/images/brands/' . $image);
+            }
+
+            $this->brandModel->createBrand($name, $image);
+            header('Location: ' . URLROOT . '/admin/brands');
+            exit();
+        }
+        $data = ['title' => 'Thêm Thương hiệu'];
+        $this->view('admin/brands/add', $data);
+    }
+
+    public function editBrand($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $image = $_POST['current_logo'];
+            if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0) {
+                $image = time() . '_' . $_FILES['logo']['name'];
+                move_uploaded_file($_FILES['logo']['tmp_name'], APPROOT . '/../public/images/brands/' . $image);
+            }
+
+            $data = [
+                'id' => $id,
+                'name' => trim($_POST['name']),
+                'logo' => $image
+            ];
+            $this->brandModel->updateBrand($data);
+            header('Location: ' . URLROOT . '/admin/brands');
+            exit();
+        }
+
+        $brand = $this->brandModel->getBrandById($id);
+        $data = ['title' => 'Sửa Thương hiệu', 'brand' => $brand];
+        $this->view('admin/brands/edit', $data);
+    }
+
+    public function deleteBrand($id)
+    {
+        $this->brandModel->deleteBrand($id);
+        header('Location: ' . URLROOT . '/admin/brands');
+        exit();
     }
 }

@@ -6,13 +6,15 @@ class ProductController extends Controller
     private $productModel;
     private $brandModel;
     private $productCategoryModel;
+    private $attributeModel; // <--- ĐÃ THÊM DÒNG NÀY (Sẽ hết báo đỏ)
 
     public function __construct()
     {
-        // Khởi tạo ProductModel
+        // Khởi tạo các Model
         $this->productModel = $this->model('ProductModel');
         $this->brandModel = $this->model('BrandModel');
         $this->productCategoryModel = $this->model('ProductCategoryModel');
+        $this->attributeModel = $this->model('AttributeModel');
     }
 
     /**
@@ -28,7 +30,7 @@ class ProductController extends Controller
             'search_query' => $_GET['query'] ?? null
         ];
 
-        // Gọi hàm lọc sản phẩm (lấy cả ID biến thể mặc định)
+        // Gọi hàm lọc sản phẩm
         $products = $this->productModel->getFilteredProducts($filters);
 
         // Lấy dữ liệu cho Sidebar
@@ -63,12 +65,25 @@ class ProductController extends Controller
         // 3. Lấy Ảnh Phụ (Gallery)
         $gallery = $this->productModel->getGalleryByProductId($product_id);
 
-        // 4. Lấy sản phẩm liên quan (Cùng thương hiệu)
+        // 4. Lấy sản phẩm liên quan
         $related_products = $this->productModel->getRelatedProducts($product['brand_id'], $product_id);
 
         // 5. Lấy Đánh giá
         $reviews = $this->productModel->getReviewsByProductId($product_id);
         $rating_info = $this->productModel->getRatingInfo($product_id);
+
+        // 6. [MỚI] Lấy danh sách Mã Màu (Hex) từ DB để hiển thị nút tròn đẹp hơn
+        $all_attributes = $this->attributeModel->getAllAttributesWithValues();
+        $dynamic_colors = [];
+        foreach ($all_attributes as $attr) {
+            if (stripos($attr['name'], 'Màu') !== false) {
+                foreach ($attr['values'] as $val) {
+                    if (!empty($val['color_code'])) {
+                        $dynamic_colors[$val['value']] = $val['color_code'];
+                    }
+                }
+            }
+        }
 
         $data = [
             'title' => $product['name'],
@@ -77,7 +92,8 @@ class ProductController extends Controller
             'gallery' => $gallery,
             'related_products' => $related_products,
             'reviews' => $reviews,
-            'rating_info' => $rating_info
+            'rating_info' => $rating_info,
+            'dynamic_colors' => $dynamic_colors // Truyền mã màu sang View
         ];
 
         $this->view('product_detail', $data);
@@ -88,7 +104,6 @@ class ProductController extends Controller
     {
         $query = isset($_GET['query']) ? $_GET['query'] : '';
 
-        // Gọi hàm tìm kiếm
         $products = $this->productModel->searchProducts($query);
 
         $data = [
@@ -100,10 +115,9 @@ class ProductController extends Controller
         $this->view('product_search', $data);
     }
 
-    // Hiển thị sản phẩm theo Thương hiệu (ĐÃ SỬA LỖI THIẾU DATA SIDEBAR)
+    // Hiển thị sản phẩm theo Thương hiệu
     public function brand($brand_id = 0)
     {
-        // Tạo bộ lọc chỉ có brand_id, các cái khác null
         $filters = [
             'brand_id' => $brand_id,
             'category_id' => null,
@@ -112,22 +126,19 @@ class ProductController extends Controller
             'search_query' => null
         ];
 
-        // Tái sử dụng hàm lọc để lấy sản phẩm của hãng này
         $products = $this->productModel->getFilteredProducts($filters);
 
-        // QUAN TRỌNG: Phải lấy cả Brands và Categories để hiển thị Sidebar không bị lỗi
         $brands = $this->brandModel->getAllBrands();
         $categories = $this->productCategoryModel->getCategoriesWithCount();
 
         $data = [
             'title' => 'Sản phẩm theo Thương hiệu',
             'products' => $products,
-            'brands' => $brands,         // <-- Phải có cái này
-            'categories' => $categories, // <-- Phải có cái này
-            'filters' => $filters        // <-- Phải có cái này
+            'brands' => $brands,
+            'categories' => $categories,
+            'filters' => $filters
         ];
 
-        // Tái sử dụng View 'product_all'
         $this->view('product_all', $data);
     }
 }

@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $data['title'] ?? 'Admin Panel'; ?></title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Custom Admin CSS -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin_style.css">
-    
+
     <!-- TinyMCE -->
     <script src="https://cdn.tiny.cloud/1/j11t84m6p6055q6198i708s9882654321/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
@@ -53,6 +53,7 @@
                     <li><a href="<?php echo URLROOT; ?>/admin/attributes" class="submenu-link">Thuộc tính</a></li>
                 </ul>
             </li>
+            <li><a href="<?php echo URLROOT; ?>/admin/brands" class="menu-link"><i class="fas fa-copyright"></i> <span>Thương hiệu</span></a></li>
 
             <!-- Orders -->
             <li>
@@ -103,18 +104,18 @@
 
     <!-- MAIN CONTENT WRAPPER -->
     <div class="admin-main">
-        
+
         <!-- HEADER -->
         <header class="admin-header">
             <div class="header-left">
                 <h2><?php echo $data['title'] ?? 'Dashboard'; ?></h2>
             </div>
-            
+
             <div class="header-right">
                 <a href="<?php echo URLROOT; ?>/" target="_blank" class="btn-icon" title="Xem website">
                     <i class="fas fa-globe"></i>
                 </a>
-                
+
                 <div class="user-profile">
                     <div class="user-avatar">
                         <?php echo isset($_SESSION['user_name']) ? strtoupper(substr($_SESSION['user_name'], 0, 1)) : 'A'; ?>
@@ -124,7 +125,7 @@
                         <span class="user-role">Administrator</span>
                     </div>
                 </div>
-                
+
                 <a href="<?php echo URLROOT; ?>/user/logout" class="btn-icon" title="Đăng xuất" style="color: var(--danger-color); border-color: var(--danger-color);">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
@@ -134,40 +135,40 @@
         <!-- CONTENT -->
         <main class="admin-content">
 
-    <script>
-        function toggleSubmenu(element) {
-            const submenu = element.nextElementSibling;
-            const isActive = element.classList.contains('active');
-            
-            // Toggle active state
-            element.classList.toggle('active');
-            submenu.classList.toggle('show');
-        }
+            <script>
+                function toggleSubmenu(element) {
+                    const submenu = element.nextElementSibling;
+                    const isActive = element.classList.contains('active');
 
-        // Auto-expand active menu
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentPath = window.location.pathname;
-            
-            // Check submenus
-            document.querySelectorAll('.submenu-link').forEach(link => {
-                if (currentPath.includes(link.getAttribute('href'))) {
-                    link.classList.add('active');
-                    const submenu = link.closest('.submenu');
-                    if (submenu) {
-                        submenu.classList.add('show');
-                        if (submenu.previousElementSibling) {
-                            submenu.previousElementSibling.classList.add('active');
+                    // Toggle active state
+                    element.classList.toggle('active');
+                    submenu.classList.toggle('show');
+                }
+
+                // Auto-expand active menu
+                document.addEventListener('DOMContentLoaded', function() {
+                    const currentPath = window.location.pathname;
+
+                    // Check submenus
+                    document.querySelectorAll('.submenu-link').forEach(link => {
+                        if (currentPath.includes(link.getAttribute('href'))) {
+                            link.classList.add('active');
+                            const submenu = link.closest('.submenu');
+                            if (submenu) {
+                                submenu.classList.add('show');
+                                if (submenu.previousElementSibling) {
+                                    submenu.previousElementSibling.classList.add('active');
+                                }
+                            }
                         }
-                    }
-                }
-            });
+                    });
 
-            // Check main menus
-            document.querySelectorAll('.menu-link').forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && currentPath === href) {
-                    link.classList.add('active');
-                }
-            });
-        });
-    </script>
+                    // Check main menus
+                    document.querySelectorAll('.menu-link').forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href && currentPath === href) {
+                            link.classList.add('active');
+                        }
+                    });
+                });
+            </script>

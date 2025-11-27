@@ -48,9 +48,11 @@ class AttributeModel
     // Thêm một giá trị mới (ví dụ: "512GB" vào "Dung lượng")
     public function createAttributeValue($data)
     {
-        $this->db->query('INSERT INTO attribute_values (attribute_id, value) VALUES (:attr_id, :value)');
+        // Cập nhật câu lệnh SQL thêm color_code
+        $this->db->query('INSERT INTO attribute_values (attribute_id, value, color_code) VALUES (:attr_id, :value, :color_code)');
         $this->db->bind(':attr_id', $data['attribute_id']);
         $this->db->bind(':value', $data['value']);
+        $this->db->bind(':color_code', $data['color_code'] ?? null);
         return $this->db->execute();
     }
     public function deleteAttribute($id)

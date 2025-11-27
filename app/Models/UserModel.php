@@ -156,4 +156,12 @@ class UserModel
         $this->db->bind(':id', $id);
         return $this->db->execute();
     }
+    // Đổi mật khẩu (Khi đang đăng nhập)
+    public function changePassword($id, $newPasswordHash)
+    {
+        $this->db->query('UPDATE users SET password = :password WHERE id = :id');
+        $this->db->bind(':password', $newPasswordHash);
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
 }
