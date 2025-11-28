@@ -6,12 +6,14 @@ class CheckoutController extends Controller
     private $userModel;
     private $productModel;
     private $orderModel;
+    private $voucherModel;
 
     public function __construct()
     {
         $this->userModel = $this->model('UserModel');
         $this->productModel = $this->model('ProductModel');
         $this->orderModel = $this->model('OrderModel');
+        $this->voucherModel = $this->model('VoucherModel');
     }
 
     public function index()
@@ -77,9 +79,14 @@ class CheckoutController extends Controller
             $orderId = $this->orderModel->createOrder($orderData, $cartItemsForDB);
 
             if ($orderId) {
+                if (isset($_SESSION['voucher']['id'])) {
+                    $this->voucherModel = $this->model('VoucherModel'); // Khởi tạo model nếu chưa có
+                    $this->voucherModel->incrementVoucherUsage($_SESSION['voucher']['id']);
+                }
                 // --- [MỚI] GỬI EMAIL XÁC NHẬN ---
                 require_once '../app/core/Mailer.php';
                 $mailer = new Mailer();
+
 
                 // Chuẩn bị danh sách sản phẩm để gửi mail (có tên, màu, dung lượng)
                 $emailItems = [];
