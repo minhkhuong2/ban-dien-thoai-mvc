@@ -889,4 +889,65 @@ class AdminController extends Controller
         header('Location: ' . URLROOT . '/admin/brands');
         exit();
     }
+    public function settings()
+    {
+        // Lấy thông tin admin hiện tại
+        $user = $this->userModel->getUserById($_SESSION['user_id']);
+
+        $data = [
+            'title' => 'Cài đặt tài khoản',
+            'user' => $user,
+            'success' => '',
+            'error' => ''
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            // 1. Xử lý Cập nhật thông tin
+            if (isset($_POST['update_info'])) {
+                $updateData = [
+                    'user_id' => $_SESSION['user_id'],
+                    'full_name' => trim($_POST['full_name']),
+                    'phone' => trim($_POST['phone']),
+                    'address' => trim($_POST['address'])
+                ];
+
+                if ($this->userModel->updateProfile($updateData)) {
+                    $_SESSION['user_name'] = $updateData['full_name']; // Cập nhật lại Session tên
+                    $data['success'] = 'Đã cập nhật thông tin thành công!';
+                    // Refresh lại dữ liệu user để hiển thị
+                    $data['user'] = $this->userModel->getUserById($_SESSION['user_id']);
+                } else {
+                    $data['error'] = 'Có lỗi xảy ra khi cập nhật thông tin.';
+                }
+            }
+
+            // 2. Xử lý Đổi mật khẩu
+            if (isset($_POST['change_pass'])) {
+                $current_pass = $_POST['current_password'];
+                $new_pass = $_POST['new_password'];
+                $confirm_pass = $_POST['confirm_password'];
+
+                if (!password_verify($current_pass, $user['password'])) {
+                    $data['error'] = 'Mật khẩu hiện tại không đúng.';
+                } elseif (strlen($new_pass) < 6) {
+                    $data['error'] = 'Mật khẩu mới phải có ít nhất 6 ký tự.';
+                } elseif ($new_pass !== $confirm_pass) {
+                    $data['error'] = 'Mật khẩu xác nhận không khớp.';
+                } else {
+                    // Đổi mật khẩu (Hàm này đã có trong UserModel từ bước trước)
+                    $newHash = password_hash($new_pass, PASSWORD_DEFAULT);
+                    if ($this->userModel->changePassword($_SESSION['user_id'], $newHash)) {
+                        $data['success'] = 'Đổi mật khẩu thành công!';
+                        // Cập nhật lại biến user để lấy pass mới (dù ko hiển thị ra)
+                        $data['user'] = $this->userModel->getUserById($_SESSION['user_id']);
+                    } else {
+                        $data['error'] = 'Lỗi hệ thống, không thể đổi mật khẩu.';
+                    }
+                }
+            }
+        }
+
+        $this->view('admin/settings', $data);
+    }
 }

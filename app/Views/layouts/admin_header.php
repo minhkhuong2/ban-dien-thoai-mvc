@@ -100,6 +100,12 @@
                 </a>
             </li>
         </ul>
+        <li>
+            <a href="<?php echo URLROOT; ?>/admin/settings" class="menu-link <?php echo (isset($data['active_menu']) && $data['active_menu'] == 'settings') ? 'active' : ''; ?>">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt tài khoản</span>
+            </a>
+        </li>
     </aside>
 
     <!-- MAIN CONTENT WRAPPER -->
