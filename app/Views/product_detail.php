@@ -16,20 +16,56 @@ $avg_rating = $rating_info['avg_rating'] ? round($rating_info['avg_rating'], 1) 
 $review_count = $rating_info['review_count'];
 $star_percent = ($avg_rating / 5) * 100;
 
-// Gộp ảnh (Biến thể + Gallery)
+// [LOGIC MỚI] GỘP ẢNH THEO MÀU (FALLBACK)
+// 1. Tìm ảnh "xịn" nhất cho từng màu
+$color_best_images = [];
+foreach ($variants as $v) {
+    $c = $v['color'];
+    $img = $v['image'];
+    // Nếu ảnh không phải default và không rỗng thì ưu tiên
+    $is_real_image = !empty($img) && strpos($img, 'default-variant') === false;
+
+    if (!isset($color_best_images[$c])) {
+        $color_best_images[$c] = $img;
+    }
+
+    $current_best = $color_best_images[$c];
+    $current_is_real = !empty($current_best) && strpos($current_best, 'default-variant') === false;
+
+    if ($is_real_image && !$current_is_real) {
+        $color_best_images[$c] = $img;
+    }
+}
+
+// 2. Cập nhật lại ảnh cho toàn bộ biến thể theo màu
+foreach ($variants as &$v) {
+    if (isset($color_best_images[$v['color']])) {
+        $v['image'] = $color_best_images[$v['color']];
+    }
+}
+unset($v);
+$data['variants'] = $variants; // Cập nhật lại data gốc nếu cần thiết
+
+// 3. Chuẩn bị ảnh cho Slider
 $final_images = [];
 $added_src = [];
 
-if ($first_variant) {
-    $final_images[] = ['src' => $first_variant['image'], 'color' => $first_variant['color']];
-    $added_src[] = $first_variant['image'];
+// Luôn thêm ảnh của biến thể đầu tiên (đang được chọn mặc định)
+if (!empty($variants)) {
+    $first_v = $variants[0];
+    $final_images[] = ['src' => $first_v['image'], 'color' => $first_v['color']];
+    $added_src[] = $first_v['image'];
 }
+
+// Thêm các ảnh unique khác từ variants
 foreach ($variants as $v) {
     if (!in_array($v['image'], $added_src)) {
         $final_images[] = ['src' => $v['image'], 'color' => $v['color']];
         $added_src[] = $v['image'];
     }
 }
+
+// Thêm ảnh từ Gallery (nếu có)
 if (!empty($gallery)) {
     foreach ($gallery as $g) {
         if (!in_array($g['image'], $added_src)) {
@@ -38,6 +74,7 @@ if (!empty($gallery)) {
         }
     }
 }
+
 ?>
 
 <div class="breadcrumb">
