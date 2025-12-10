@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin_style.css">
 
     <!-- TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/j11t84m6p6055q6198i708s9882654321/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/f5ki7g32fbz5dvwyewmebby06c18z1eictmhgmftkwkhehmi/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 
 <body>

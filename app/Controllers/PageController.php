@@ -97,9 +97,13 @@ class PageController extends Controller
         // TĂNG LƯỢT XEM (MỚI)
         $this->postModel->increaseView($post['id']);
 
+        // [MỚI] Lấy bài viết liên quan
+        $related_posts = $this->postModel->getRelatedPosts($post['id']);
+
         $data = [
             'title' => $post['title'],
-            'post' => $post
+            'post' => $post,
+            'related_posts' => $related_posts // <-- Gửi sang view
         ];
         $this->view('pages/post_detail', $data);
     }

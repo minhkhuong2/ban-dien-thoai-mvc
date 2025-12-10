@@ -45,8 +45,78 @@
         <aside class="news-sidebar">
             <div class="sidebar-widget">
                 <h3>Tin mới nhất</h3>
-                <p style="color: #777; font-style: italic;">Đang cập nhật thêm tin tức...</p>
+                <?php if (!empty($data['related_posts'])): ?>
+                    <ul class="related-posts-list">
+                        <?php foreach ($data['related_posts'] as $rp): ?>
+                            <li class="related-item">
+                                <a href="<?php echo URLROOT; ?>/page/post/<?php echo $rp['slug']; ?>">
+                                    <div class="ri-image">
+                                        <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($rp['image']); ?>" alt="">
+                                    </div>
+                                    <div class="ri-content">
+                                        <h4 class="ri-title"><?php echo htmlspecialchars($rp['title']); ?></h4>
+                                    </div>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p style="color: #777; font-style: italic;">Đang cập nhật thêm tin tức...</p>
+                <?php endif; ?>
             </div>
+
+            <style>
+                .related-posts-list {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }
+                .related-item {
+                    margin-bottom: 15px;
+                    border-bottom: 1px dashed #eee;
+                    padding-bottom: 15px;
+                }
+                .related-item:last-child {
+                    border-bottom: none;
+                    margin-bottom: 0;
+                }
+                .related-item a {
+                    display: flex;
+                    gap: 10px;
+                    text-decoration: none;
+                }
+                .ri-image {
+                    width: 70px;
+                    height: 50px;
+                    flex-shrink: 0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                }
+                .ri-image img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 0; /* Override global img style */
+                    margin: 0; /* Override global img style */
+                }
+                .ri-content {
+                    flex-grow: 1;
+                }
+                .ri-title {
+                    font-size: 0.9rem;
+                    color: #333;
+                    margin: 0;
+                    line-height: 1.4;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    transition: color 0.2s;
+                }
+                .related-item a:hover .ri-title {
+                    color: #288ad6;
+                }
+            </style>
 
             <div class="sidebar-widget banner-widget">
                 <img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Quảng cáo">

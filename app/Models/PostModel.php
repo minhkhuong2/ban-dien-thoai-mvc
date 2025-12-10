@@ -107,4 +107,14 @@ class PostModel
         $this->db->bind(':id', $id);
         $this->db->execute();
     }
+    // HÀM MỚI: Lấy bài viết liên quan (Trừ bài hiện tại)
+    public function getRelatedPosts($current_id, $limit = 5)
+    {
+        // Lấy ngẫu nhiên hoặc theo ID giảm dần
+        $this->db->query('SELECT * FROM posts WHERE id != :id ORDER BY RAND() LIMIT :limit');
+        $this->db->bind(':id', $current_id);
+        $this->db->bind(':limit', $limit);
+        return $this->db->resultSet();
+    }
 }
+
