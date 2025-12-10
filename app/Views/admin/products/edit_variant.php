@@ -97,9 +97,58 @@
 
             <div class="form-group">
                 <label>Ảnh biến thể (Để trống nếu không đổi)</label>
-                <input type="file" name="image" accept="image/*">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="file" name="image" accept="image/*" id="variantImageInput">
+                    <?php if (!empty($variant['image']) && $variant['image'] != 'default-variant.jpg' && $variant['image'] != 'default-variant.png'): ?>
+                        <button type="button" class="btn btn-danger btn-sm" id="btnDeleteImage" title="Xóa ảnh hiện tại">
+                            <i class="fas fa-trash"></i> Xóa ảnh
+                        </button>
+                    <?php endif; ?>
+                </div>
                 <input type="hidden" name="current_image" value="<?php echo $variant['image']; ?>">
-                <img src="<?php echo URLROOT . '/uploads/' . $variant['image']; ?>" alt="" style="width: 80px; margin-top: 10px;">
+                <input type="hidden" name="delete_image" id="deleteImageInput" value="0">
+                
+                <div id="imagePreviewContainer" style="margin-top: 10px;">
+                    <?php 
+                    if (!empty($variant['image'])) {
+                        $imgSrc = URLROOT . '/uploads/' . $variant['image'];
+                         $uploadPath = APPROOT . '/../public/uploads/' . $variant['image'];
+                         if (!file_exists($uploadPath)) {
+                             $imgSrc = URLROOT . '/uploads/default-variant.png';
+                         }
+                        echo '<img src="' . $imgSrc . '" alt="Ảnh biến thể" style="width: 80px; height: auto; border: 1px solid #ddd; padding: 2px;">';
+                    }
+                    ?>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const btnDelete = document.getElementById('btnDeleteImage');
+                        const inputDelete = document.getElementById('deleteImageInput');
+                        const previewContainer = document.getElementById('imagePreviewContainer');
+                        const fileInput = document.getElementById('variantImageInput');
+
+                        if(btnDelete) {
+                            btnDelete.addEventListener('click', function() {
+                                if(confirm('Bạn có chắc muốn xóa ảnh biến thể này không?')) {
+                                    inputDelete.value = '1';
+                                    previewContainer.style.display = 'none';
+                                    btnDelete.style.display = 'none';
+                                    fileInput.value = ''; // Clear file input if any
+                                }
+                            });
+                        }
+
+                        // Nếu chọn file mới thì reset flag delete
+                        fileInput.addEventListener('change', function() {
+                            if (this.files && this.files.length > 0) {
+                                inputDelete.value = '0';
+                                // Có thể hiện lại preview container nếu muốn show ảnh mới (nhưng cần code JS preview ảnh)
+                                // Ở đây đơn giản là nếu user chọn file mới, logic backend sẽ ưu tiên file mới
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
 

@@ -190,7 +190,7 @@ class AdminController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Xử lý upload ảnh
-            $imageName = 'default-variant.jpg';
+            $imageName = 'default-variant.png';
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0 && !empty($_FILES['image']['name'])) {
                 $newImageName = time() . '_' . $_FILES['image']['name'];
                 $uploadPath = APPROOT . '/../public/uploads/' . $newImageName;
@@ -638,17 +638,27 @@ class AdminController extends Controller
     public function editVariant($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Xử lý upload ảnh mới
-            $imageName = trim($_POST['current_image']);
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            // Xử lý upload ảnh mới hoặc xóa ảnh
+            $currentImage = trim($_POST['current_image']);
+            $deleteImage = isset($_POST['delete_image']) && $_POST['delete_image'] == '1';
+            $imageName = $currentImage; // Mặc định giữ ảnh cũ
+
+            // 1. Nếu có upload ảnh mới -> Ưu tiên cao nhất
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0 && !empty($_FILES['image']['name'])) {
                 $newImageName = time() . '_' . $_FILES['image']['name'];
                 $uploadPath = APPROOT . '/../public/uploads/' . $newImageName;
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
                     $imageName = $newImageName;
                 }
+            } 
+            // 2. Nếu không upload mới MÀ có cờ xóa -> Gán về default
+            elseif ($deleteImage) {
+                $imageName = 'default-variant.png';
+                // Tùy chọn: Xóa file ảnh cũ nếu nó không phải là default và không dùng chung (Cần logic phức tạp hơn để check dùng chung)
+                // Hiện tại cứ để file cũ đó cho an toàn or clean up sau.
             }
-
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             $data = [
                 'id' => $id,
                 'name' => trim($_POST['name']),

@@ -103,7 +103,15 @@
                         <?php foreach ($data['variants'] as $variant) : ?>
                             <tr>
                                 <td>
-                                    <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($variant['image']); ?>" alt="" style="width: 48px; height: 48px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                    <?php 
+                                    $imgSrc = URLROOT . '/uploads/' . htmlspecialchars($variant['image']);
+                                    $uploadPath = APPROOT . '/../public/uploads/' . $variant['image'];
+                                    
+                                    if (empty($variant['image']) || !file_exists($uploadPath)) {
+                                        $imgSrc = URLROOT . '/uploads/default-variant.png';
+                                    }
+                                    ?>
+                                    <img src="<?php echo $imgSrc; ?>" alt="" style="width: 48px; height: 48px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
                                 </td>
                                 <td>
                                     <div style="font-weight: 600; color: var(--text-main);"><?php echo htmlspecialchars($variant['name']); ?></div>
