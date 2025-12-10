@@ -51,15 +51,22 @@ class AdminController extends Controller
 
         // 3. [MỚI] Lấy dữ liệu biểu đồ
         $chart_data = $this->orderModel->getRevenueChartData();
+        $order_status_data = $this->orderModel->getOrderStatusDistribution();
+        $top_products = $this->orderModel->getTopSellingProducts();
+        $low_stock_products = $this->productModel->getLowStockProducts();
 
         $data = [
+            'active_menu' => 'dashboard', // [FIX]
             'title' => 'Tổng quan kinh doanh',
             'revenue' => $revenue,
             'total_orders' => $total_orders,
             'total_products' => $total_products,
             'total_users' => $total_users,
             'recent_orders' => $recent_orders,
-            'chart_data' => $chart_data // <-- Truyền biến này sang View
+            'chart_data' => $chart_data,
+            'order_status_data' => $order_status_data, // [MỚI]
+            'top_products' => $top_products,           // [MỚI]
+            'low_stock_products' => $low_stock_products // [MỚI]
         ];
 
         $this->view('admin/index', $data);
@@ -74,6 +81,7 @@ class AdminController extends Controller
     {
         $products = $this->productModel->getAllProducts();
         $data = [
+            'active_menu' => 'products', // [FIX]
             'title' => 'Quản lý Sản phẩm',
             'products' => $products
         ];
@@ -120,6 +128,7 @@ class AdminController extends Controller
             $categories = $this->productCategoryModel->getAllCategories(); // <-- MỚI: Lấy danh mục
 
             $data = [
+                'active_menu' => 'products', // [FIX]
                 'title' => 'Thêm Sản phẩm mới (Bước 1: Thông tin chung)',
                 'brands' => $brands,
                 'categories' => $categories // <-- MỚI: Gửi sang view
@@ -138,6 +147,7 @@ class AdminController extends Controller
         $all_attributes = $this->attributeModel->getAllAttributesWithValues();
 
         $data = [
+            'active_menu' => 'products', // [FIX]
             'title' => 'Sửa sản phẩm & Quản lý Biến thể',
             'product' => $product,
             'variants' => $variants,
@@ -249,6 +259,7 @@ class AdminController extends Controller
     {
         $orders = $this->orderModel->getAllOrders();
         $data = [
+            'active_menu' => 'orders', // [FIX]
             'title' => 'Quản lý Đơn hàng',
             'orders' => $orders
         ];
@@ -274,6 +285,7 @@ class AdminController extends Controller
         }
         $details = $this->orderModel->getOrderDetails($id);
         $data = [
+            'active_menu' => 'orders', // [FIX]
             'title' => 'Chi tiết Đơn hàng #' . $order['id'],
             'order' => $order,
             'details' => $details
@@ -288,6 +300,7 @@ class AdminController extends Controller
     {
         $users = $this->userModel->getAllUsers();
         $data = [
+            'active_menu' => 'users', // [FIX]
             'title' => 'Quản lý Người dùng',
             'users' => $users
         ];
@@ -348,6 +361,7 @@ class AdminController extends Controller
     {
         $vouchers = $this->voucherModel->getAllVouchers();
         $data = [
+            'active_menu' => 'vouchers', // [FIX]
             'title' => 'Quản lý Mã giảm giá (Voucher)',
             'vouchers' => $vouchers
         ];
@@ -395,6 +409,7 @@ class AdminController extends Controller
     {
         $posts = $this->postModel->getAllPosts();
         $data = [
+            'active_menu' => 'brands', // [FIX]
             'title' => 'Quản lý Tin tức',
             'posts' => $posts
         ];
@@ -577,6 +592,7 @@ class AdminController extends Controller
     {
         $categories = $this->categoryModel->getAllCategories();
         $data = [
+            'active_menu' => 'news', // [FIX]
             'title' => 'Quản lý Danh mục Tin tức',
             'categories' => $categories
         ];
@@ -608,6 +624,7 @@ class AdminController extends Controller
     {
         $categories = $this->productCategoryModel->getAllCategories();
         $data = [
+            'active_menu' => 'products', // [FIX]
             'title' => 'Quản lý Danh mục Sản phẩm',
             'categories' => $categories
         ];
@@ -699,6 +716,7 @@ class AdminController extends Controller
     {
         $reviews = $this->reviewModel->getAllReviews();
         $data = [
+            'active_menu' => 'reviews', // [FIX]
             'title' => 'Quản lý Đánh giá sản phẩm',
             'reviews' => $reviews
         ];

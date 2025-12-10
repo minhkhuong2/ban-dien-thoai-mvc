@@ -392,6 +392,20 @@ class ProductModel
         return $row['count'];
     }
 
+    // [MỚI] Lấy sản phẩm sắp hết hàng (<= 10)
+    public function getLowStockProducts($limit = 5) {
+        $this->db->query("
+            SELECT v.stock_quantity, p.name as product_name, v.name as variant_name
+            FROM product_variants v
+            JOIN products p ON v.product_id = p.id
+            WHERE v.stock_quantity <= 10
+            ORDER BY v.stock_quantity ASC
+            LIMIT :limit
+        ");
+        $this->db->bind(':limit', $limit);
+        return $this->db->resultSet();
+    }
+
     // =================================================================
     // PHẦN 3: ĐÁNH GIÁ (REVIEWS)
     // =================================================================

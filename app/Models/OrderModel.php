@@ -145,4 +145,32 @@ class OrderModel
         ");
         return $this->db->resultSet();
     }
+
+    // [MỚI] Thống kê tỷ lệ trạng thái đơn hàng
+    public function getOrderStatusDistribution()
+    {
+        $this->db->query("
+            SELECT status, COUNT(*) as count 
+            FROM orders 
+            GROUP BY status
+        ");
+        return $this->db->resultSet();
+    }
+
+    // [MỚI] Top sản phẩm bán chạy
+    public function getTopSellingProducts($limit = 5) {
+        $this->db->query("
+            SELECT p.name as product_name, SUM(od.quantity) as total_sold
+            FROM order_details od
+            JOIN product_variants v ON od.product_variant_id = v.id
+            JOIN products p ON v.product_id = p.id
+            JOIN orders o ON od.order_id = o.id
+            WHERE o.status = 3 -- Chỉ tính đơn hoàn thành
+            GROUP BY p.id
+            ORDER BY total_sold DESC
+            LIMIT :limit
+        ");
+        $this->db->bind(':limit', $limit);
+        return $this->db->resultSet();
+    }
 }

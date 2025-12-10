@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <!-- Recent Orders -->
+    <!-- Orders -->
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Đơn hàng mới nhất</h4>
@@ -92,6 +92,7 @@
         <?php else: ?>
             <div style="display: flex; flex-direction: column; gap: 16px;">
                 <?php foreach ($data['recent_orders'] as $order): ?>
+                     <!-- ... existing order items ... -->
                     <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
                         <div>
                             <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">#<?php echo $order['id']; ?> - <?php echo htmlspecialchars($order['full_name']); ?></div>
@@ -140,20 +141,49 @@
     </div>
 </div>
 
+<!-- NEW CHARTS ROW -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 24px;">
+    <!-- Order Status Chart -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Tỷ lệ đơn hàng</h4>
+        </div>
+        <div style="height: 300px; padding: 10px;">
+            <canvas id="orderStatusChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Selling Products -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Top 5 Bán chạy</h4>
+        </div>
+        <div style="height: 300px; padding: 10px;">
+            <canvas id="topProductsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Low Stock Alerts -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Sắp hết hàng (<=10)</h4>
+        </div>
+        <div style="height: 300px; padding: 10px;">
+            <canvas id="lowStockChart"></canvas>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Lấy dữ liệu JSON từ PHP
+        // --- 1. BIỂU ĐỒ DOANH THU (CŨ) ---
         const chartData = <?php echo json_encode($data['chart_data']); ?>;
-
-        // Xử lý dữ liệu
         const labels = chartData.map(item => {
             const d = new Date(item.date);
-            return d.getDate() + '/' + (d.getMonth() + 1); // Format ngày/tháng
+            return d.getDate() + '/' + (d.getMonth() + 1);
         });
         const values = chartData.map(item => item.total);
-
         const ctx = document.getElementById('revenueChart').getContext('2d');
-
         // Tạo Gradient màu
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, 'rgba(79, 70, 229, 0.2)'); 
@@ -237,6 +267,101 @@
                         }
                     }
                 }
+            }
+        });
+
+        // --- 2. BIỂU ĐỒ TRẠNG THÁI ĐƠN HÀNG (DOUGHNUT) ---
+        const statusData = <?php echo json_encode($data['order_status_data'] ?? []); ?>;
+        const statusLabels = [];
+        const statusValues = [];
+        const statusColors = [];
+        
+        const statusMap = {
+            0: { label: 'Chờ xử lý', color: '#f59e0b' }, // Warning
+            1: { label: 'Đã xác nhận', color: '#3b82f6' }, // Info
+            2: { label: 'Đang giao', color: '#6366f1' },   // Indigo
+            3: { label: 'Hoàn thành', color: '#10b981' }, // Success
+            4: { label: 'Đã hủy', color: '#ef4444' }      // Danger
+        };
+
+        if (statusData && statusData.length > 0) {
+            statusData.forEach(item => {
+                const s = statusMap[item.status] || { label: 'Khác', color: '#9ca3af' };
+                statusLabels.push(s.label);
+                statusValues.push(item.count);
+                statusColors.push(s.color);
+            });
+        } else {
+             statusLabels.push('Không có dữ liệu');
+             statusValues.push(1);
+             statusColors.push('#e5e7eb');
+        }
+
+        new Chart(document.getElementById('orderStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusValues,
+                    backgroundColor: statusColors,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // --- 3. TOP SẢN PHẨM BÁN CHẠY (BAR) ---
+        const topProducts = <?php echo json_encode($data['top_products'] ?? []); ?>;
+        const topLabels = topProducts.map(p => p.product_name.substring(0, 15) + '...');
+        const topValues = topProducts.map(p => p.total_sold);
+
+        new Chart(document.getElementById('topProductsChart'), {
+            type: 'bar',
+            data: {
+                labels: topLabels,
+                datasets: [{
+                    label: 'Số lượng bán',
+                    data: topValues,
+                    backgroundColor: '#8b5cf6', // Violet
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bar
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true } }
+            }
+        });
+
+        // --- 4. SẢN PHẨM SẮP HẾT HÀNG (BAR) ---
+        const lowStock = <?php echo json_encode($data['low_stock_products'] ?? []); ?>;
+        const lowStockLabels = lowStock.map(p => (p.product_name + ' (' + p.variant_name + ')').substring(0, 15) + '...');
+        const lowStockValues = lowStock.map(p => p.stock_quantity);
+
+        new Chart(document.getElementById('lowStockChart'), {
+            type: 'bar',
+            data: {
+                labels: lowStockLabels,
+                datasets: [{
+                    label: 'Tồn kho',
+                    data: lowStockValues,
+                    backgroundColor: '#ec4899', // Pink
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
             }
         });
     });
