@@ -233,8 +233,23 @@ class AdminController extends Controller
     // Xử lý GET - Xóa Biến thể
     public function deleteVariant($id)
     {
+        // 1. Lấy thông tin biến thể trước khi xóa để lấy tên ảnh
+        $variant = $this->productModel->getVariantById($id);
+
+        // 2. Gọi hàm xóa trong Model (đã sửa ở Bước 1)
         if ($this->productModel->deleteVariant($id)) {
-            header('Location: ' . $_SERVER['HTTP_REFERER']); // Quay lại trang Sửa
+
+            // 3. Xóa file ảnh vật lý trên server (Dọn rác)
+            if ($variant && !empty($variant['image'])) {
+                $imagePath = APPROOT . '/../public/uploads/' . $variant['image'];
+                // Chỉ xóa nếu file tồn tại và không phải ảnh mặc định
+                if (file_exists($imagePath) && $variant['image'] !== 'default-variant.png' && $variant['image'] !== 'default-variant.jpg') {
+                    unlink($imagePath);
+                }
+            }
+
+            // Quay lại trang cũ
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
             exit();
         } else {
             die('Xóa biến thể thất bại');
@@ -669,7 +684,7 @@ class AdminController extends Controller
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
                     $imageName = $newImageName;
                 }
-            } 
+            }
             // 2. Nếu không upload mới MÀ có cờ xóa -> Gán về default
             elseif ($deleteImage) {
                 $imageName = 'default-variant.png';

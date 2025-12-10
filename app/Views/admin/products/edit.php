@@ -43,7 +43,7 @@
                 <label class="form-label">Mô tả sản phẩm</label>
                 <textarea name="description" rows="5" class="form-control"><?php echo htmlspecialchars($product['description']); ?></textarea>
             </div>
-            
+
             <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-color);">
                 <h5 style="margin-bottom: 16px; font-weight: 600; color: var(--text-main);">Thông số kỹ thuật</h5>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
@@ -77,7 +77,7 @@
     <div class="card-header">
         <h4 class="card-title">Bước 2: Quản lý các Biến thể (Dung lượng, Màu sắc, Giá)</h4>
     </div>
-    
+
     <div style="padding: 24px;">
         <h5 style="margin-bottom: 16px; font-weight: 600; color: var(--text-main);">Các biến thể hiện có:</h5>
         <div class="table-container">
@@ -103,10 +103,10 @@
                         <?php foreach ($data['variants'] as $variant) : ?>
                             <tr>
                                 <td>
-                                    <?php 
+                                    <?php
                                     $imgSrc = URLROOT . '/uploads/' . htmlspecialchars($variant['image']);
                                     $uploadPath = APPROOT . '/../public/uploads/' . $variant['image'];
-                                    
+
                                     if (empty($variant['image']) || !file_exists($uploadPath)) {
                                         $imgSrc = URLROOT . '/uploads/default-variant.png';
                                     }
@@ -206,8 +206,8 @@
                         <input type="number" name="stock_quantity" value="0" required class="form-control">
                     </div>
                     <div class="form-group" style="grid-column: span 3;">
-                        <label class="form-label">Ảnh cho Biến thể này <span style="color: var(--danger-color);">*</span></label>
-                        <input type="file" name="image" accept="image/*" required class="form-control" style="padding: 6px;">
+                        <label class="form-label">Ảnh cho Biến thể này (Để trống sẽ dùng ảnh mặc định)</label>
+                        <input type="file" name="image" accept="image/*" class="form-control" style="padding: 6px;">
                     </div>
                 </div>
                 <div style="margin-top: 24px;">

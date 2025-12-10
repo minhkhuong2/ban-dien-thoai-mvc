@@ -181,6 +181,13 @@ class ProductModel
     // Xóa biến thể
     public function deleteVariant($id)
     {
+        // BƯỚC 1: Xóa dữ liệu trong bảng order_details trước
+        // (Lưu ý: Việc này sẽ làm mất thông tin sản phẩm trong các đơn hàng cũ đã mua)
+        $this->db->query("DELETE FROM order_details WHERE product_variant_id = :id");
+        $this->db->bind(':id', $id);
+        $this->db->execute();
+
+        // BƯỚC 2: Xóa chính biến thể đó trong bảng product_variants
         $this->db->query('DELETE FROM product_variants WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->execute();
@@ -393,7 +400,8 @@ class ProductModel
     }
 
     // [MỚI] Lấy sản phẩm sắp hết hàng (<= 10)
-    public function getLowStockProducts($limit = 5) {
+    public function getLowStockProducts($limit = 5)
+    {
         $this->db->query("
             SELECT v.stock_quantity, p.name as product_name, v.name as variant_name
             FROM product_variants v
