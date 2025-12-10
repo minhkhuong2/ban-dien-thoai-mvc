@@ -13,7 +13,7 @@
 }
 
 body {
-  font-family: 'Be Vietnam Pro', sans-serif;
+  font-family: "Be Vietnam Pro", sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
   margin: 0;
@@ -1042,7 +1042,7 @@ body {
 /* 1. BANNER CHÍNH (ẢNH NỀN + KHUNG TRÒN) */
 .new-hero-banner {
   /* Đặt ảnh nền toàn khung */
-  background-image: url("../images/Gemini_Generated_Image_c7qgo3c7qgo3c7qg.png");
+  background-image: url("../images/Gemini_Generated_Image_c7qgo3c7qgo3c7qg.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
