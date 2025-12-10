@@ -6,7 +6,8 @@ class ProductController extends Controller
     private $productModel;
     private $brandModel;
     private $productCategoryModel;
-    private $attributeModel; // <--- ĐÃ THÊM DÒNG NÀY (Sẽ hết báo đỏ)
+    private $attributeModel;
+    private $reviewModel; // [MỚI]
 
     public function __construct()
     {
@@ -15,7 +16,51 @@ class ProductController extends Controller
         $this->brandModel = $this->model('BrandModel');
         $this->productCategoryModel = $this->model('ProductCategoryModel');
         $this->attributeModel = $this->model('AttributeModel');
+        $this->reviewModel = $this->model('ReviewModel'); // [MỚI]
     }
+
+    /**
+     * Xử lý thêm đánh giá
+     */
+    public function addReview()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Kiểm tra đăng nhập
+            if (!isset($_SESSION['user_id'])) {
+                header('Location: ' . URLROOT . '/user/login');
+                exit();
+            }
+
+            // Lọc dữ liệu đầu vào
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'product_id' => trim($_POST['product_id']),
+                'user_id' => $_SESSION['user_id'],
+                'user_name' => $_SESSION['user_name'],
+                'rating' => trim($_POST['rating']),
+                'comment' => trim($_POST['comment'])
+            ];
+
+            // Validate đơn giản
+            if (empty($data['rating']) || empty($data['comment'])) {
+                // Có thể thêm flash message lỗi ở đây nếu cần
+                header('Location: ' . URLROOT . '/product/detail/' . $data['product_id']);
+                exit();
+            }
+
+            // Gọi Model thêm đánh giá
+            if ($this->reviewModel->addReview($data)) {
+                // Success
+                header('Location: ' . URLROOT . '/product/detail/' . $data['product_id']);
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            header('Location: ' . URLROOT);
+        }
+    }
+
 
     /**
      * Hiển thị tất cả sản phẩm (Có lọc)
