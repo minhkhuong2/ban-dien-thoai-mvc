@@ -382,7 +382,8 @@ class ProductModel
         $this->db->query(
             'SELECT 
                 v.id as variant_id, v.price, v.price_sale, v.storage, v.color, v.image,
-                p.id as product_id, p.name as product_name, p.ram, p.cpu, p.brand_id
+                p.id as product_id, p.name as product_name, p.ram, p.cpu, p.brand_id,
+                (SELECT image FROM product_variants WHERE product_id = p.id AND image IS NOT NULL AND image <> "" ORDER BY id DESC LIMIT 1) as fallback_image
             FROM product_variants v
             JOIN products p ON v.product_id = p.id
             WHERE v.stock_quantity > 0 AND v.price_sale IS NOT NULL AND v.price_sale > 0

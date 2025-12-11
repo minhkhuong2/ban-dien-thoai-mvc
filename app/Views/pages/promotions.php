@@ -33,53 +33,7 @@
         <?php endif; ?>
     </div>
 
-    <hr style="margin: 50px 0; border-top: 1px dashed #ddd;">
-
-    <h2 class="section-title" style="text-align: center;">⚡ Deal Sốc Hôm Nay</h2>
-
-    <div class="product-grid">
-        <?php if (empty($data['variants'])) : ?>
-            <p style="text-align: center; grid-column: 1 / -1;">Hiện chưa có sản phẩm khuyến mãi.</p>
-        <?php else : ?>
-            <?php foreach ($data['variants'] as $variant) :
-                // Tái sử dụng style product-card chuẩn
-            ?>
-                <div class="product-card">
-                    <?php
-                    if (isset($variant['price_sale']) && $variant['price_sale'] > 0) {
-                        $discount_percent = round((($variant['price'] - $variant['price_sale']) / $variant['price']) * 100);
-                        echo '<div class="badge-top-left">-' . $discount_percent . '%</div>';
-                    }
-                    ?>
-                    <span class="badge-top-right">Sale</span>
-
-                    <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>">
-                        <img src="<?php echo URLROOT . '/uploads/' . htmlspecialchars($variant['image']); ?>" class="pc-img">
-                    </a>
-
-                    <div class="pc-info">
-                        <div class="pc-name">
-                            <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>">
-                                <?php echo htmlspecialchars($variant['product_name']); ?>
-                                <span style="font-weight: normal; color: #777;">(<?php echo htmlspecialchars($variant['storage']); ?>)</span>
-                            </a>
-                        </div>
-
-                        <div class="pc-price">
-                            <?php echo number_format($variant['price_sale']); ?> ₫
-                            <span class="pc-old-price"><?php echo number_format($variant['price']); ?> ₫</span>
-                        </div>
-                    </div>
-
-                    <div class="pc-btns">
-                        <a href="<?php echo URLROOT; ?>/product/detail/<?php echo $variant['product_id']; ?>" class="pc-btn pc-btn-view" style="width: 100%;">
-                            Xem ngay
-                        </a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
+    <!-- Deal Sốc section removed by user request -->
 
 </div>
 
