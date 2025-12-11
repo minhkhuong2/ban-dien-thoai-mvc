@@ -122,6 +122,30 @@ if (!empty($gallery)) {
                 <button class="thumb-btn next" id="thumb-next"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
+        
+        <!-- [NEW] Policy Box to fill whitespace -->
+        <div class="policy-box">
+            <h4 class="policy-title"><i class="fas fa-shield-alt"></i> Yên tâm mua sắm</h4>
+            <ul class="policy-list">
+                <li>
+                    <i class="fas fa-check-circle policy-icon"></i>
+                    <span>Cam kết 100% chính hãng</span>
+                </li>
+                <li>
+                    <i class="fas fa-shipping-fast policy-icon"></i>
+                    <span>Miễn phí vận chuyển toàn quốc</span>
+                </li>
+                <li>
+                    <i class="fas fa-undo policy-icon"></i>
+                    <span>Đổi trả trong 30 ngày lỗi NSX</span>
+                </li>
+                <li>
+                    <i class="fas fa-crown policy-icon"></i>
+                    <span>Bảo hành chính hãng 12 tháng</span>
+                </li>
+            </ul>
+        </div>
+
     </div>
 
     <div class="detail-right">
