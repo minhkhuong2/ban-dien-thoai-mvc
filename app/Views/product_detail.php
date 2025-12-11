@@ -256,7 +256,7 @@ if (!empty($gallery)) {
         </table>
     </div>
     <div id="tab-review" class="tab-content" style="display:none">
-        
+
         <div class="review-layout">
             <!-- Left: Review Form -->
             <div class="review-form-card">
@@ -264,7 +264,7 @@ if (!empty($gallery)) {
                     <h4 class="form-title">Đánh giá sản phẩm</h4>
                     <form action="<?php echo URLROOT; ?>/product/addReview" method="POST">
                         <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                        
+
                         <div class="form-group">
                             <label class="form-label">Chất lượng sản phẩm:</label>
                             <div class="stars-input-wrapper">
@@ -275,12 +275,12 @@ if (!empty($gallery)) {
                                 <input type="radio" name="rating" value="1" id="s1" title="1 sao"><label for="s1">★</label>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label">Nội dung đánh giá:</label>
                             <textarea name="comment" class="review-textarea" rows="4" required placeholder="Mời bạn chia sẻ cảm nhận về sản phẩm..."></textarea>
                         </div>
-                        
+
                         <button type="submit" class="btn-submit-review">Gửi đánh giá</button>
                     </form>
                 <?php else: ?>
@@ -294,7 +294,7 @@ if (!empty($gallery)) {
             <!-- Right: Review List -->
             <div class="review-list-container">
                 <h4 class="list-title">Khách hàng nhận xét (<?php echo count($reviews); ?>)</h4>
-                
+
                 <?php if (empty($reviews)): ?>
                     <div class="empty-reviews">
                         <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" alt="No reviews" class="empty-icon">
@@ -302,7 +302,7 @@ if (!empty($gallery)) {
                     </div>
                 <?php else: ?>
                     <div class="review-items">
-                        <?php foreach ($reviews as $rv): 
+                        <?php foreach ($reviews as $rv):
                             $initial = strtoupper(substr($rv['user_name'], 0, 1));
                             $bg_colors = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae', '#1890ff'];
                             $bg = $bg_colors[rand(0, 4)];
@@ -317,7 +317,7 @@ if (!empty($gallery)) {
                                         <span class="review-date"><i class="far fa-clock"></i> <?php echo date('d/m/Y', strtotime($rv['created_at'])); ?></span>
                                     </div>
                                     <div class="review-rating">
-                                        <?php for($i=1; $i<=5; $i++): ?>
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
                                             <i class="fas fa-star <?php echo $i <= $rv['rating'] ? 'filled' : ''; ?>"></i>
                                         <?php endfor; ?>
                                     </div>
@@ -334,7 +334,8 @@ if (!empty($gallery)) {
             /* REVIEW TAB STYLES */
             .review-layout {
                 display: grid;
-                grid-template-columns: 1fr 1.5fr; /* Form nhỏ hơn List */
+                grid-template-columns: 1fr 1.5fr;
+                /* Form nhỏ hơn List */
                 gap: 40px;
                 padding: 20px 0;
             }
@@ -354,12 +355,14 @@ if (!empty($gallery)) {
                 padding: 25px;
                 height: fit-content;
             }
+
             .form-title {
                 margin: 0 0 20px 0;
                 font-size: 1.1rem;
                 font-weight: 600;
                 color: #1f2937;
             }
+
             .form-label {
                 display: block;
                 font-size: 0.95rem;
@@ -367,7 +370,7 @@ if (!empty($gallery)) {
                 color: #4b5563;
                 margin-bottom: 8px;
             }
-            
+
             /* Horizontal Stars */
             .stars-input-wrapper {
                 display: flex;
@@ -375,18 +378,25 @@ if (!empty($gallery)) {
                 justify-content: flex-end;
                 gap: 5px;
             }
-            .stars-input-wrapper input { display: none; }
+
+            .stars-input-wrapper input {
+                display: none;
+            }
+
             .stars-input-wrapper label {
                 font-size: 28px;
-                color: #d1d5db; /* Grey */
+                color: #d1d5db;
+                /* Grey */
                 cursor: pointer;
                 transition: color 0.2s;
             }
+
             /* Hover & Checked Logic */
-            .stars-input-wrapper input:checked ~ label,
+            .stars-input-wrapper input:checked~label,
             .stars-input-wrapper label:hover,
-            .stars-input-wrapper label:hover ~ label {
-                color: #fbbf24; /* Amber-400 */
+            .stars-input-wrapper label:hover~label {
+                color: #fbbf24;
+                /* Amber-400 */
                 transform: scale(1.1);
             }
 
@@ -399,9 +409,11 @@ if (!empty($gallery)) {
                 resize: vertical;
                 transition: border-color 0.2s;
             }
+
             .review-textarea:focus {
                 outline: none;
-                border-color: #3b82f6; /* Blue-500 */
+                border-color: #3b82f6;
+                /* Blue-500 */
                 box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
             }
 
@@ -417,6 +429,7 @@ if (!empty($gallery)) {
                 width: 100%;
                 margin-top: 15px;
             }
+
             .btn-submit-review:hover {
                 background-color: #1d4ed8;
             }
@@ -429,6 +442,7 @@ if (!empty($gallery)) {
                 border-radius: 8px;
                 border: 1px dashed #cbd5e1;
             }
+
             .icon-lock {
                 font-size: 2rem;
                 color: #94a3b8;
@@ -442,20 +456,24 @@ if (!empty($gallery)) {
                 padding-bottom: 10px;
                 border-bottom: 2px solid #f3f4f6;
             }
+
             .review-items {
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
             }
+
             .review-item {
                 display: flex;
                 gap: 15px;
                 padding-bottom: 20px;
                 border-bottom: 1px solid #f3f4f6;
             }
+
             .review-item:last-child {
                 border-bottom: none;
             }
+
             .reviewer-avatar {
                 width: 45px;
                 height: 45px;
@@ -468,19 +486,23 @@ if (!empty($gallery)) {
                 font-size: 1.1rem;
                 flex-shrink: 0;
             }
+
             .review-content {
                 flex-grow: 1;
             }
+
             .reviewer-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 5px;
             }
+
             .reviewer-name {
                 font-weight: 600;
                 color: #111827;
             }
+
             .review-date {
                 font-size: 0.85rem;
                 color: #9ca3af;
@@ -488,28 +510,35 @@ if (!empty($gallery)) {
                 align-items: center;
                 gap: 5px;
             }
+
             .review-rating {
                 color: #fbbf24;
                 font-size: 0.9rem;
                 margin-bottom: 8px;
             }
+
             .review-rating .fas.fa-star {
-                color: #e5e7eb; /* Empty star color */
+                color: #e5e7eb;
+                /* Empty star color */
             }
+
             .review-rating .fas.filled {
                 color: #fbbf24;
             }
+
             .review-text {
                 color: #4b5563;
                 line-height: 1.5;
                 font-size: 0.95rem;
                 margin: 0;
             }
+
             .empty-reviews {
                 text-align: center;
                 padding: 40px;
                 color: #6b7280;
             }
+
             .empty-icon {
                 width: 64px;
                 opacity: 0.5;
