@@ -140,4 +140,10 @@ class PageController extends Controller
         // Mặc định chuyển hướng đến trang Bảo hành hoặc tạo một trang tổng quan
         $this->warranty(); // Gọi hàm warranty() để hiển thị trang bảo hành
     }
+
+    public function policy()
+    {
+        $data = ['title' => 'Điều khoản Dịch vụ'];
+        $this->view('pages/policy', $data);
+    }
 }

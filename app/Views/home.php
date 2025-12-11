@@ -85,3 +85,36 @@
         <div class="new-brand-item"><img src="<?php echo URLROOT; ?>/images/brands/realme.png" alt="Realme"></div>
     </div>
 </div>
+
+<!-- ADVERTISEMENT POPUP -->
+<div id="ad-popup" class="ad-popup-overlay" style="display:none;">
+    <div class="ad-popup-content">
+        <span class="ad-close-btn" onclick="closeAdPopup()">&times;</span>
+        <div class="ad-image-container">
+            <img src="<?php echo URLROOT; ?>/uploads/popup-sale.png" alt="Siêu Sale">
+        </div>
+        <div class="ad-text-content">
+            <h3>🔥 SIÊU SALE HÔM NAY 🔥</h3>
+            <p>Giảm giá lên đến <strong>50%</strong> cho các dòng điện thoại Samsung Galaxy S24 Series.</p>
+            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-warning" style="width: 100%; display: block; margin-top: 15px; font-weight: bold;">MUA NGAY</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hiển thị quảng cáo sau 1 giây
+    // Hiển thị quảng cáo ngay khi DOM sẵn sàng (không đợi ảnh load hết)
+    document.addEventListener("DOMContentLoaded", function() {
+        // Tạm thời bỏ check session để bạn test quảng cáo xuất hiện mỗi lần reload
+        // if (!sessionStorage.getItem('adPopupClosed')) {
+            setTimeout(function() {
+                document.getElementById('ad-popup').style.display = 'flex';
+            }, 500); // Giảm thời gian chờ xuống 0.5s hỗ trợ loading nhanh
+        // }
+    });
+
+    function closeAdPopup() {
+        document.getElementById('ad-popup').style.display = 'none';
+        sessionStorage.setItem('adPopupClosed', 'true'); // Lưu trạng thái đã đóng phiên này
+    }
+</script>

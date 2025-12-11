@@ -154,7 +154,8 @@ class CheckoutController extends Controller
                 'cart_data' => $cart_data,
                 'subtotal' => $subtotal,
                 'voucher_discount' => $voucher_discount,
-                'grand_total' => $grand_total
+                'grand_total' => $grand_total,
+                'voucher_code' => $_SESSION['voucher']['code'] ?? null
             ];
             $this->view('checkout/index', $data);
         }

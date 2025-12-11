@@ -97,15 +97,7 @@
                                 </span>
                             </label>
                         </div>
-                        <div class="radio-option">
-                            <label>
-                                <span>
-                                    <input type="radio" name="payment_method" value="wallet">
-                                    <i class="fas fa-wallet" style="margin-right: 5px; color: #d63384;"></i>
-                                    Ví điện tử (Momo / ZaloPay)
-                                </span>
-                            </label>
-                        </div>
+
                     </div>
                 </div>
 
@@ -142,6 +134,16 @@
                         <?php endforeach; ?>
                     </div>
 
+                    <!-- COUPON SECTION -->
+                    <div class="coupon-section" style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                        <span style="display: block; font-size: 0.9rem; margin-bottom: 5px; color: #333;">Mã giảm giá</span>
+                        <div class="coupon-input-group" style="display: flex; gap: 8px;">
+                            <input type="text" id="coupon-code" placeholder="Nhập mã voucher" class="form-control" style="flex: 1; font-size: 0.9rem; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" value="<?php echo htmlspecialchars($data['voucher_code'] ?? ''); ?>">
+                            <button type="button" onclick="applyCoupon()" style="background: #288ad6; color: white; border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">Áp dụng</button>
+                        </div>
+                        <div id="coupon-message" style="font-size: 0.85rem; margin-top: 5px;"></div>
+                    </div>
+
                     <div class="summary-row">
                         <span>Tạm tính:</span>
                         <span id="checkout-subtotal"><?php echo number_format($data['subtotal']); ?> VNĐ</span>
@@ -169,7 +171,7 @@
                     </button>
 
                     <p style="text-align: center; font-size: 0.85rem; color: #777; margin-top: 10px;">
-                        Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý với <a href="#">điều khoản dịch vụ</a> của chúng tôi.
+                        Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý với <a href="<?php echo URLROOT; ?>/page/policy" target="_blank" onclick="if(this.getAttribute('href')=='#'){alert('Chính sách hiện đang được cập nhật!'); return false;}">điều khoản dịch vụ</a> của chúng tôi.
                     </p>
                 </div>
             </div>
@@ -177,3 +179,41 @@
         </div>
     </form>
 </div>
+
+<script>
+    function applyCoupon() {
+        const code = document.getElementById('coupon-code').value.trim();
+        const msg = document.getElementById('coupon-message');
+        
+        if (!code) {
+            msg.innerHTML = '<span style="color: red;">Vui lòng nhập mã!</span>';
+            return;
+        }
+        
+        msg.innerHTML = '<span style="color: blue;">Đang áp dụng...</span>';
+        
+        const formData = new FormData();
+        formData.append('voucher_code', code);
+        
+        fetch('<?php echo URLROOT; ?>/cart/applyVoucher', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                msg.innerHTML = '<span style="color: green;">' + data.message + '</span>';
+                // Reload trang để cập nhật số liệu từ session
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                msg.innerHTML = '<span style="color: red;">' + (data.voucherError || data.message) + '</span>';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            msg.innerHTML = '<span style="color: red;">Có lỗi xảy ra!</span>';
+        });
+    }
+</script>
