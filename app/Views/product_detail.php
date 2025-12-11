@@ -225,8 +225,78 @@ if (!empty($gallery)) {
         <div class="tab-link" onclick="openTab('review')">Đánh giá (<?php echo $review_count; ?>)</div>
     </div>
     <div id="tab-desc" class="tab-content">
-        <div style="line-height: 1.8; color: #333;"><?php echo $product['description']; ?></div>
+        <div class="description-content collapsed" id="desc-content">
+            <?php echo $product['description']; ?>
+            <div class="desc-gradient"></div>
+        </div>
+        <button id="toggle-desc-btn" class="btn-toggle-desc" onclick="toggleDescription()">Đọc thêm</button>
     </div>
+
+    <style>
+        .description-content {
+            position: relative;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .description-content.collapsed {
+            max-height: 300px; /* Chiều cao mặc định khi thu gọn */
+        }
+
+        .desc-gradient {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+        }
+
+        .description-content.collapsed .desc-gradient {
+            display: block;
+        }
+
+        .btn-toggle-desc {
+            display: block;
+            margin: 20px auto 0;
+            background: #fff;
+            border: 1px solid #288ad6;
+            color: #288ad6;
+            padding: 8px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-toggle-desc:hover {
+            background: #288ad6;
+            color: #fff;
+        }
+    </style>
+
+    <script>
+        function toggleDescription() {
+            var content = document.getElementById('desc-content');
+            var btn = document.getElementById('toggle-desc-btn');
+
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.style.maxHeight = content.scrollHeight + "px"; // Mở rộng full chiều cao
+                btn.innerText = 'Thu gọn';
+            } else {
+                content.classList.add('collapsed');
+                content.style.maxHeight = null; // Reset về css style (300px)
+                btn.innerText = 'Đọc thêm';
+                // Scroll nhẹ lên đầu phần mô tả để người mua không bị hụt
+                document.getElementById('tab-desc').scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        }
+    </script>
+
     <div id="tab-spec" class="tab-content" style="display:none">
         <table class="specs-table">
             <tr>

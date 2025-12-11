@@ -67,9 +67,9 @@
             <div class="widget widget-newsletter">
                 <h4 class="widget-title">Đăng ký nhận tin</h4>
                 <p>Nhận thông báo về tin tức và khuyến mãi mới nhất.</p>
-                <form action="#" method="POST" class="newsletter-form">
-                    <input type="email" placeholder="Email của bạn..." required>
-                    <button type="submit">Đăng ký</button>
+                <form action="#" method="POST" class="sidebar-newsletter-form">
+                    <input type="email" placeholder="Nhập email của bạn..." required>
+                    <button type="submit">ĐĂNG KÝ</button>
                 </form>
             </div>
 
@@ -245,7 +245,7 @@
         gap: 15px;
         align-items: center;
     }
-    
+
     .post-meta i {
         margin-right: 4px;
     }
@@ -311,7 +311,7 @@
     .cat-list a:hover {
         color: var(--primary-color);
     }
-    
+
     .cat-list .count {
         background: #f3f4f6;
         padding: 2px 8px;
@@ -323,24 +323,40 @@
     /* Newsletter Widget */
     .newsletter-form input {
         width: 100%;
-        padding: 15px; /* Tăng padding */
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
+        height: 50px;
+        /* Chiều cao cố định */
+        padding: 0 15px;
+        /* Padding ngang */
+        border: 2px solid #e5e7eb;
+        /* Viền dày hơn chút */
+        border-radius: 8px;
+        /* Bo tròn hơn */
         margin-bottom: 12px;
-        font-size: 1rem; /* Tăng font size */
+        font-size: 1rem;
+        box-sizing: border-box;
+        /* Đảm bảo padding không làm vỡ layout */
+        transition: border-color 0.2s;
+    }
+
+    .newsletter-form input:focus {
+        border-color: var(--text-dark);
+        outline: none;
     }
 
     .newsletter-form button {
         width: 100%;
-        padding: 15px; /* Tăng padding */
+        padding: 15px;
+        /* Tăng padding */
         background: var(--text-dark);
         color: white;
         border: none;
         border-radius: 6px;
         cursor: pointer;
-        font-weight: 700; /* Đậm hơn */
+        font-weight: 700;
+        /* Đậm hơn */
         transition: background 0.2s;
-        text-transform: uppercase; /* Chữ hoa cho nút */
+        text-transform: uppercase;
+        /* Chữ hoa cho nút */
         letter-spacing: 0.5px;
     }
 
@@ -396,5 +412,48 @@
     .popular-post-date {
         font-size: 0.8rem;
         color: #9ca3af;
+    }
+
+    .sidebar-newsletter-form {
+        display: block;
+        /* Đảm bảo xếp chồng dọc */
+    }
+
+    .sidebar-newsletter-form input[type="email"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        /* Quan trọng để không bị vỡ khung */
+        background: #f9fafb;
+        color: #333;
+    }
+
+    .sidebar-newsletter-form input[type="email"]:focus {
+        border-color: var(--primary-color);
+        background: #fff;
+        outline: none;
+    }
+
+    .sidebar-newsletter-form button {
+        width: 100%;
+        padding: 12px;
+        background: var(--text-dark);
+        /* Màu đen như thiết kế */
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+        text-transform: uppercase;
+    }
+
+    .sidebar-newsletter-form button:hover {
+        background: black;
     }
 </style>

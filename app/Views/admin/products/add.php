@@ -39,8 +39,22 @@
             </div>
             <div class="form-group" style="margin-top: 24px;">
                 <label class="form-label">Mô tả sản phẩm</label>
-                <textarea name="description" rows="5" class="form-control"></textarea>
+                <textarea name="description" id="pro-desc" rows="5" class="form-control"></textarea>
             </div>
+            <script>
+                tinymce.init({
+                    selector: '#pro-desc',
+                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+                    toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                    height: 400,
+                    setup: function (editor) {
+                        editor.on('change', function () {
+                            editor.save();
+                        });
+                    },
+                    content_style: "body { font-family: 'Be Vietnam Pro', sans-serif; font-size: 14px; color: #333; }"
+                });
+            </script>
         </div>
 
         <div class="card-header" style="border-top: 1px solid var(--border-color);">

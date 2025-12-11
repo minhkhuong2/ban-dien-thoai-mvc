@@ -479,6 +479,7 @@ class AdminController extends Controller
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
             $data = [
                 'id' => $id,
+                'category_id' => (int)$_POST['category_id'],
                 'title' => trim($_POST['title']),
                 'content' => trim($_POST['content']),
                 'image' => $imageName,
