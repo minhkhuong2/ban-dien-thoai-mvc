@@ -3583,3 +3583,62 @@ body {
   from { transform: translateY(-50px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+/* --- HERO SLIDER (CAROUSEL) --- */
+.hero-slider {
+    width: 100%;
+    margin-bottom: 30px;
+    height: 500px; /* Chiều cao cố định cho banner */
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px; /* Bo góc nhẹ */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.slider-wrapper {
+    display: flex; /* Xếp các slide nằm ngang */
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease-in-out; /* Hiệu ứng trượt mượt mà */
+}
+
+.hero-slide {
+    min-width: 100%; /* Mỗi slide chiếm 100% chiều rộng */
+    height: 100%;
+    position: relative;
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo ảnh phủ kín khung */
+    object-position: center;
+}
+
+/* Responsive cho slider */
+@media (max-width: 768px) {
+    .hero-slider {
+        height: 250px; /* Giảm chiều cao trên mobile */
+    }
+}
+
+/* --- VIEW ALL BUTTON --- */
+.view-all-btn {
+    display: inline-block;
+    padding: 12px 40px;
+    background: #fff;
+    color: #288ad6;
+    border: 1px solid #288ad6;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.view-all-btn:hover {
+    background: #288ad6;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(40, 138, 214, 0.3);
+    transform: translateY(-2px);
+}

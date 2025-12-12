@@ -1,14 +1,42 @@
-<div class="new-hero-banner">
-    <div class="new-hero-content">
-        <h1>Siêu Phẩm Công Nghệ<br>Giá Tốt Nhất Hôm Nay</h1>
-        <p>Sở hữu ngay những chiếc điện thoại flagship mới nhất với ưu đãi độc quyền và quà tặng hấp dẫn.</p>
-        <div class="new-hero-buttons">
-            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-yellow">MUA NGAY</a>
-            <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-outline">XEM CHI TIẾT</a>
+<!-- HERO SLIDER SECTION WITH OVERLAY -->
+<div class="hero-wrapper" style="position: relative; height: 500px; margin-bottom: 30px; overflow: hidden; border-radius: 8px;">
+    
+    <!-- 1. SLIDER BACKGROUND -->
+    <div class="hero-slider" id="homeHeroSlider" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+        <div class="slider-wrapper">
+            <!-- Slide 1: iPhone -->
+            <div class="hero-slide"><img src="<?php echo URLROOT; ?>/uploads/banner-iphone.png" alt="iPhone 15 Pro Titanium"></div>
+            <!-- Slide 2: Samsung -->
+            <div class="hero-slide"><img src="<?php echo URLROOT; ?>/uploads/banner-samsung.png" alt="Samsung Galaxy Z Fold 5"></div>
+            <!-- Slide 3: Xiaomi -->
+            <div class="hero-slide"><img src="<?php echo URLROOT; ?>/uploads/banner-xiaomi.png" alt="Xiaomi 14 Ultra"></div>
+            <!-- Slide 4: Sale Popup Banner -->
+            <div class="hero-slide"><img src="<?php echo URLROOT; ?>/uploads/popup-sale.png" alt="Super Sale 50%"></div>
+            <!-- Slide 5: Original Banner -->
+            <div class="hero-slide"><img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Flagship Phones"></div>
         </div>
     </div>
-    <div class="new-hero-image" style="display:none;">
-        <img src="<?php echo URLROOT; ?>/images/hero-phones-banner.jpg" alt="Banner">
+
+    <!-- 2. DARK GRADIENT OVERLAY (For Readability) -->
+    <div class="hero-gradient" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 100%); pointer-events: none;"></div>
+
+    <!-- 3. CONTENT OVERLAY -->
+    <div class="hero-overlay-content" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; display: flex; align-items: center;">
+        <div class="container" style="width: 100%; padding-left: 50px;"> <!-- Padding for clean alignment -->
+            <div class="new-hero-content" style="max-width: 550px; color: #fff; pointer-events: auto;">
+                <h1 style="font-family: 'Segoe UI', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; text-transform: uppercase;">
+                    Siêu Phẩm <br>
+                    <span style="color: #ffc107;">Công Nghệ</span>
+                </h1>
+                <p style="font-size: 1.1rem; margin-bottom: 35px; line-height: 1.6; opacity: 0.95; font-weight: 300; max-width: 480px;">
+                    Giá Tốt Nhất Hôm Nay. Sở hữu ngay những chiếc điện thoại flagship mới nhất với ưu đãi độc quyền và quà tặng hấp dẫn.
+                </p>
+                <div class="new-hero-buttons" style="display: flex; gap: 20px;">
+                    <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-yellow" style="background: #ffc107; color: #000; padding: 14px 40px; border-radius: 4px; font-weight: 700; text-decoration: none; border: none; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);">MUA NGAY</a>
+                    <a href="<?php echo URLROOT; ?>/product/all" class="btn btn-outline" style="background: rgba(255,255,255,0.1); color: #fff; padding: 14px 40px; border-radius: 4px; font-weight: 700; text-decoration: none; border: 1px solid rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.5px; backdrop-filter: blur(5px);">XEM CHI TIẾT</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -69,8 +97,8 @@
         <?php endif; ?>
     </div>
 
-    <div class="view-all-btn-container">
-        <a href="<?php echo URLROOT; ?>/product/all" class="view-all-btn">Xem Tất Cả Sản Phẩm</a>
+    <div class="view-all-btn-container" style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+        <a href="<?php echo URLROOT; ?>/product/all" class="view-all-btn">Xem thêm sản phẩm <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></a>
     </div>
 </div>
 
@@ -117,4 +145,25 @@
         document.getElementById('ad-popup').style.display = 'none';
         sessionStorage.setItem('adPopupClosed', 'true'); // Lưu trạng thái đã đóng phiên này
     }
+
+    // --- SLIDER LOGIC (MỚI) ---
+    document.addEventListener("DOMContentLoaded", function() {
+        const slider = document.querySelector('.slider-wrapper');
+        const slides = document.querySelectorAll('.hero-slide');
+        let slideIndex = 0;
+        const totalSlides = slides.length;
+
+        if (totalSlides > 0) {
+            function autoSlide() {
+                slideIndex++;
+                if (slideIndex >= totalSlides) {
+                    slideIndex = 0;
+                }
+                const offset = slideIndex * 100;
+                slider.style.transform = `translateX(-${offset}%)`;
+            }
+            // Chuyển slide mỗi 3 giây
+            setInterval(autoSlide, 3000);
+        }
+    });
 </script>

@@ -17,14 +17,15 @@ class ProductCategoryModel
         return $this->db->resultSet();
     }
 
-    // [QUAN TRỌNG] Lấy danh mục kèm số lượng BIẾN THỂ (Variants)
-    // Hàm này đã được sửa để đếm từ bảng product_variants
+    // [ĐÃ SỬA LỖI] Lấy danh mục kèm số lượng SẢN PHẨM GỐC (Model máy)
+    // Sửa lỗi: Dùng COUNT(DISTINCT p.id) thay vì COUNT(v.id)
     public function getCategoriesWithCount()
     {
-        $this->db->query('SELECT c.*, COUNT(v.id) as product_count 
+        $this->db->query('SELECT c.*, COUNT(DISTINCT p.id) as product_count 
                           FROM categories c
                           LEFT JOIN products p ON c.id = p.category_id
                           LEFT JOIN product_variants v ON p.id = v.product_id
+                          WHERE v.stock_quantity > 0 OR v.id IS NULL -- Chỉ đếm sản phẩm còn hàng (tùy chọn)
                           GROUP BY c.id');
         return $this->db->resultSet();
     }
