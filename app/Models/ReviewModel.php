@@ -26,16 +26,29 @@ class ReviewModel
 
         return $this->db->execute();
     }
-    public function getAllReviews()
+    public function getAllReviews($limit = null, $offset = 0)
     {
-        $this->db->query("
+        $sql = "
             SELECT r.*, p.name as product_name, u.full_name as user_name
             FROM product_reviews r
             JOIN products p ON r.product_id = p.id
             JOIN users u ON r.user_id = u.id
             ORDER BY r.created_at DESC
-        ");
+        ";
+        
+        if ($limit !== null) {
+            $sql .= ' LIMIT ' . (int)$offset . ', ' . (int)$limit;
+        }
+
+        $this->db->query($sql);
         return $this->db->resultSet();
+    }
+
+    public function countAllReviews()
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM product_reviews');
+        $row = $this->db->single();
+        return $row['count'];
     }
 
     // [ADMIN] Xóa đánh giá

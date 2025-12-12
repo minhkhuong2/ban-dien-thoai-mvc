@@ -21,12 +21,13 @@ class ProductCategoryModel
     // Sửa lỗi: Dùng COUNT(DISTINCT p.id) thay vì COUNT(v.id)
     public function getCategoriesWithCount()
     {
+        // Đếm sản phẩm gốc (DISTINCT p.id) thay vì đếm biến thể
         $this->db->query('SELECT c.*, COUNT(DISTINCT p.id) as product_count 
-                          FROM categories c
-                          LEFT JOIN products p ON c.id = p.category_id
-                          LEFT JOIN product_variants v ON p.id = v.product_id
-                          WHERE v.stock_quantity > 0 OR v.id IS NULL -- Chỉ đếm sản phẩm còn hàng (tùy chọn)
-                          GROUP BY c.id');
+                      FROM categories c
+                      LEFT JOIN products p ON c.id = p.category_id
+                      LEFT JOIN product_variants v ON p.id = v.product_id
+                      WHERE v.stock_quantity > 0 OR v.id IS NULL
+                      GROUP BY c.id');
         return $this->db->resultSet();
     }
 

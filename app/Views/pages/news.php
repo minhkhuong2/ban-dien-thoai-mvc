@@ -40,10 +40,9 @@
             </div>
 
             <!-- Pagination (Giữ nguyên hoặc ẩn nếu chưa cần) -->
-            <div class="pagination" style="display:none"> <!-- Tạm ẩn pagination -->
-                <span class="current">1</span>
-                <a href="#">2</a>
-                <a href="#">&raquo;</a>
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <?php echo $data['pagination']; ?>
             </div>
         </main>
 

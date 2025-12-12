@@ -64,21 +64,39 @@ class PageController extends Controller
     // Trang Tin Tức (MỚI) - Hiển thị danh sách
     public function news()
     {
-        // 1. Lấy danh sách bài viết (hàm này đã được nâng cấp)
-        $posts = $this->postModel->getAllPosts_User();
+        // [MỚI] Pagination Setup
+        require_once APPROOT . '/core/Pagination.php';
+        $limit = 6; // Số bài viết mỗi trang
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        // 1. Lấy danh sách bài viết (Có phân trang)
+        // Lưu ý: PostModel::getAllPosts_User() gọi getAllPosts(), ta sẽ sửa getAllPosts_User để nhận tham số hoặc gọi trực tiếp getAllPosts
+        $posts = $this->postModel->getAllPosts($limit, $offset);
+        $total_posts = $this->postModel->countAllPosts();
+
+        // Xử lý URL Pattern (Giữ lại các query param khác nếu có - ví dụ category)
+        $url_params = $_GET;
+        unset($url_params['url']);
+        unset($url_params['page']);
+        $url_params['page'] = '(:num)';
+        
+        $url_query = http_build_query($url_params);
+        $url_query = str_replace('%28%3Anum%29', '(:num)', $url_query);
+        $pagination = new Pagination($total_posts, $limit, $page, URLROOT . '/page/news?' . $url_query);
 
         // 2. Lấy danh mục (kèm số lượng bài) cho Sidebar
-        // (Chúng ta cần thêm CategoryModel vào __construct)
         $categories = $this->categoryModel->getCategoriesWithCount();
 
-        // 3. Lấy bài viết phổ biến cho Sidebar (theo views)
-        $popular_posts = $this->postModel->getPopularPosts(); // Lấy 3 bài
+        // 3. Lấy bài viết phổ biến
+        $popular_posts = $this->postModel->getPopularPosts();
 
         $data = [
             'title' => 'Tin tức Công nghệ',
             'posts' => $posts,
-            'categories' => $categories,      // <-- GỬI SANG VIEW
-            'popular_posts' => $popular_posts // <-- GỬI SANG VIEW
+            'categories' => $categories,
+            'popular_posts' => $popular_posts,
+            'pagination' => $pagination->render()
         ];
 
         $this->view('pages/news', $data);

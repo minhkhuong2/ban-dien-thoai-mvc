@@ -15,15 +15,28 @@ class ProductModel
     // =================================================================
 
     // Lấy danh sách sản phẩm gốc
-    public function getAllProducts()
+    // Lấy danh sách sản phẩm gốc (Có phân trang)
+    public function getAllProducts($limit = null, $offset = 0)
     {
-        $this->db->query(
-            'SELECT p.*, b.name as brand_name 
+        $sql = 'SELECT p.*, b.name as brand_name 
              FROM products p
              JOIN brands b ON p.brand_id = b.id
-             ORDER BY p.id DESC'
-        );
+             ORDER BY p.id DESC';
+
+        if ($limit !== null) {
+            $sql .= ' LIMIT ' . (int)$offset . ', ' . (int)$limit;
+        }
+
+        $this->db->query($sql);
         return $this->db->resultSet();
+    }
+
+    // Đếm tổng sản phẩm gốc
+    public function countAllBaseProducts()
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM products');
+        $row = $this->db->single();
+        return $row['count'];
     }
 
     // Lấy thông tin 1 sản phẩm gốc
@@ -208,6 +221,8 @@ class ProductModel
                 p.ram, 
                 p.cpu, 
                 p.brand_id,
+                (SELECT IFNULL(AVG(rating), 0) FROM product_reviews WHERE product_id = p.id) as avg_rating,
+                (SELECT COUNT(id) FROM product_reviews WHERE product_id = p.id) as review_count,
                 v.id as default_variant_id,     -- [QUAN TRỌNG] Lấy ID biến thể để thêm giỏ
                 MIN(v.price) as min_price,
                 MAX(v.price) as max_price,
@@ -243,6 +258,8 @@ class ProductModel
         $sql = 'SELECT 
                 v.id as variant_id, v.price, v.price_sale, v.image,
                 p.id as product_id, p.name as product_name,
+                (SELECT IFNULL(AVG(rating), 0) FROM product_reviews WHERE product_id = p.id) as avg_rating,
+                (SELECT COUNT(id) FROM product_reviews WHERE product_id = p.id) as review_count,
                 MIN(v.price) as min_price,      -- Lấy giá thấp nhất
                 MAX(v.price) as max_price,
                 MAX(v.price_sale) as max_sale
@@ -265,6 +282,8 @@ class ProductModel
             $sql_random = 'SELECT 
                         v.id as variant_id, v.price, v.price_sale, v.image,
                         p.id as product_id, p.name as product_name,
+                        (SELECT IFNULL(AVG(rating), 0) FROM product_reviews WHERE product_id = p.id) as avg_rating,
+                        (SELECT COUNT(id) FROM product_reviews WHERE product_id = p.id) as review_count,
                         MIN(v.price) as min_price,
                         MAX(v.price) as max_price,
                         MAX(v.price_sale) as max_sale
@@ -293,6 +312,8 @@ class ProductModel
                     p.ram, 
                     p.cpu, 
                     p.brand_id,
+                    (SELECT IFNULL(AVG(rating), 0) FROM product_reviews WHERE product_id = p.id) as avg_rating,
+                    (SELECT COUNT(id) FROM product_reviews WHERE product_id = p.id) as review_count,
                     MAX(v.id) as default_variant_id, -- <--- QUAN TRỌNG: Lấy ID biến thể để thêm giỏ
                     MIN(v.price) as min_price,      
                     MAX(v.price) as max_price,      
@@ -354,6 +375,11 @@ class ProductModel
             $sql .= ' ORDER BY p.id DESC';
         }
 
+        // [MỚI] Pagination Limit & Offset
+        if (isset($filters['limit']) && isset($filters['offset'])) {
+            $sql .= ' LIMIT ' . (int)$filters['offset'] . ', ' . (int)$filters['limit'];
+        }
+
         $this->db->query($sql);
 
         // Bind giá trị
@@ -368,6 +394,60 @@ class ProductModel
         }
 
         return $this->db->resultSet();
+    }
+
+    // [MỚI] Đếm tổng sản phẩm theo bộ lọc (Để phân trang)
+    public function countFilteredProducts($filters = [])
+    {
+        $sql = 'SELECT COUNT(DISTINCT p.id) as total
+                FROM products p
+                JOIN product_variants v ON p.id = v.product_id
+                WHERE v.stock_quantity > 0';
+
+        // Filters (Giống hệt getFilteredProducts nhưng không Group/Limit)
+        if (!empty($filters['brand_id'])) {
+            $sql .= ' AND p.brand_id = :brand_id';
+        }
+        if (!empty($filters['category_id'])) {
+            $sql .= ' AND p.category_id = :category_id';
+        }
+        if (!empty($filters['search_query'])) {
+            $sql .= ' AND p.name LIKE :search_query';
+        }
+        if (!empty($filters['price_range'])) {
+            switch ($filters['price_range']) {
+                case 1:
+                    $sql .= ' AND v.price < 5000000';
+                    break;
+                case 2:
+                    $sql .= ' AND v.price BETWEEN 5000000 AND 10000000';
+                    break;
+                case 3:
+                    $sql .= ' AND v.price BETWEEN 10000000 AND 20000000';
+                    break;
+                case 4:
+                    $sql .= ' AND v.price BETWEEN 20000000 AND 30000000';
+                    break;
+                case 5:
+                    $sql .= ' AND v.price > 30000000';
+                    break;
+            }
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($filters['brand_id'])) {
+            $this->db->bind(':brand_id', $filters['brand_id']);
+        }
+        if (!empty($filters['category_id'])) {
+            $this->db->bind(':category_id', $filters['category_id']);
+        }
+        if (!empty($filters['search_query'])) {
+            $this->db->bind(':search_query', '%' . $filters['search_query'] . '%');
+        }
+
+        $row = $this->db->single();
+        return $row['total'];
     }
 
     // Tìm kiếm (Gọi lại hàm lọc)

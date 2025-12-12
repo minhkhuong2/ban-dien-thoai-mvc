@@ -87,4 +87,7 @@
             </tbody>
         </table>
     </div>
+    <div class="pagination-container">
+        <?php echo $data['pagination'] ?? ''; ?>
+    </div>
 </div>

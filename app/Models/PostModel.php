@@ -19,14 +19,27 @@ class PostModel
     }
 
     // SỬA: Lấy tất cả bài viết (Kèm tên Tác giả + Danh mục)
-    public function getAllPosts()
+    public function getAllPosts($limit = null, $offset = 0)
     {
-        $this->db->query('SELECT posts.*, users.full_name as author_name, post_categories.name as category_name
+        $sql = 'SELECT posts.*, users.full_name as author_name, post_categories.name as category_name
                          FROM posts
                          JOIN users ON posts.user_id = users.id
                          LEFT JOIN post_categories ON posts.category_id = post_categories.id
-                         ORDER BY posts.created_at DESC');
+                         ORDER BY posts.created_at DESC';
+        
+        if ($limit !== null) {
+            $sql .= ' LIMIT ' . (int)$offset . ', ' . (int)$limit;
+        }
+
+        $this->db->query($sql);
         return $this->db->resultSet();
+    }
+
+    public function countAllPosts()
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM posts');
+        $row = $this->db->single();
+        return $row['count'];
     }
 
     // Tái sử dụng cho trang người dùng

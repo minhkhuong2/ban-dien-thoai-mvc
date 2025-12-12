@@ -69,7 +69,18 @@
                             </a>
                         </div>
                         <div style="font-size: 13px; color: #ff9f00; margin-bottom: 5px;">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <?php
+                            $avg_rating = isset($product['avg_rating']) ? (float)$product['avg_rating'] : 0;
+                            $review_count = isset($product['review_count']) ? (int)$product['review_count'] : 0;
+                            for ($i = 1; $i <= 5; $i++) {
+                                if ($i <= round($avg_rating)) {
+                                    echo '<i class="fas fa-star"></i>';
+                                } else {
+                                    echo '<i class="far fa-star"></i>';
+                                }
+                            }
+                            ?>
+                            <span style="color: #999; margin-left: 5px; font-size: 12px;">(<?php echo $review_count > 0 ? number_format($avg_rating, 1) : '0'; ?>)</span>
                         </div>
                         <div class="pc-price">
                             Từ <?php echo number_format($product['min_price']); ?> ₫

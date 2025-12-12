@@ -100,12 +100,23 @@ class UserModel
 
         return $this->db->execute();
     }
-    public function getAllUsers()
+    public function getAllUsers($limit = null, $offset = 0)
     {
-        $this->db->query('SELECT id, full_name, email, phone, address, is_admin 
+        $sql = 'SELECT id, full_name, email, phone, address, is_admin 
                          FROM users 
-                         ORDER BY id DESC');
+                         ORDER BY id DESC';
+        if ($limit !== null) {
+            $sql .= ' LIMIT ' . (int)$offset . ', ' . (int)$limit;
+        }
+        $this->db->query($sql);
         return $this->db->resultSet();
+    }
+    
+    public function countAllUsers()
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM users');
+        $row = $this->db->single();
+        return $row['count'];
     }
     public function countUsers()
     {

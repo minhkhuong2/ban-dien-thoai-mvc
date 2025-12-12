@@ -90,9 +90,13 @@ class OrderModel
 
     // --- HÀM CHO ADMIN (Giữ nguyên) ---
 
-    public function getAllOrders()
+    public function getAllOrders($limit = null, $offset = 0)
     {
-        $this->db->query('SELECT * FROM orders ORDER BY order_date DESC');
+        $sql = 'SELECT * FROM orders ORDER BY order_date DESC';
+        if ($limit !== null) {
+            $sql .= ' LIMIT ' . (int)$offset . ', ' . (int)$limit;
+        }
+        $this->db->query($sql);
         return $this->db->resultSet();
     }
 

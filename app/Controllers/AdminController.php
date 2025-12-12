@@ -76,14 +76,25 @@ class AdminController extends Controller
     // PHẦN 1: QUẢN LÝ SẢN PHẨM (ĐÃ VIẾT LẠI)
     // ----------------------------------------------------
 
+
     // Trang danh sách sản phẩm (chỉ list sản phẩm GỐC)
     public function products()
     {
-        $products = $this->productModel->getAllProducts();
+        require_once APPROOT . '/core/Pagination.php';
+        $limit = 10;
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $products = $this->productModel->getAllProducts($limit, $offset);
+        $total = $this->productModel->countAllBaseProducts();
+
+        $pagination = new Pagination($total, $limit, $page, URLROOT . '/admin/products?page=(:num)');
+
         $data = [
-            'active_menu' => 'products', // [FIX]
+            'active_menu' => 'products',
             'title' => 'Quản lý Sản phẩm',
-            'products' => $products
+            'products' => $products,
+            'pagination' => $pagination->render()
         ];
         $this->view('admin/products/index', $data);
     }
@@ -272,11 +283,21 @@ class AdminController extends Controller
     // ----------------------------------------------------
     public function orders()
     {
-        $orders = $this->orderModel->getAllOrders();
+        require_once APPROOT . '/core/Pagination.php';
+        $limit = 10;
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $orders = $this->orderModel->getAllOrders($limit, $offset);
+        $total = $this->orderModel->countOrders();
+
+        $pagination = new Pagination($total, $limit, $page, URLROOT . '/admin/orders?page=(:num)');
+
         $data = [
-            'active_menu' => 'orders', // [FIX]
+            'active_menu' => 'orders',
             'title' => 'Quản lý Đơn hàng',
-            'orders' => $orders
+            'orders' => $orders,
+            'pagination' => $pagination->render()
         ];
         $this->view('admin/orders/index', $data);
     }
@@ -313,11 +334,21 @@ class AdminController extends Controller
     // ----------------------------------------------------
     public function users()
     {
-        $users = $this->userModel->getAllUsers();
+        require_once APPROOT . '/core/Pagination.php';
+        $limit = 10;
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $users = $this->userModel->getAllUsers($limit, $offset);
+        $total = $this->userModel->countAllUsers();
+
+        $pagination = new Pagination($total, $limit, $page, URLROOT . '/admin/users?page=(:num)');
+
         $data = [
-            'active_menu' => 'users', // [FIX]
+            'active_menu' => 'users',
             'title' => 'Quản lý Người dùng',
-            'users' => $users
+            'users' => $users,
+            'pagination' => $pagination->render()
         ];
         $this->view('admin/users/index', $data);
     }
@@ -422,11 +453,21 @@ class AdminController extends Controller
     }
     public function posts()
     {
-        $posts = $this->postModel->getAllPosts();
+        require_once APPROOT . '/core/Pagination.php';
+        $limit = 10;
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $posts = $this->postModel->getAllPosts($limit, $offset);
+        $total = $this->postModel->countAllPosts();
+
+        $pagination = new Pagination($total, $limit, $page, URLROOT . '/admin/posts?page=(:num)');
+
         $data = [
-            'active_menu' => 'brands', // [FIX]
+            'active_menu' => 'posts',
             'title' => 'Quản lý Tin tức',
-            'posts' => $posts
+            'posts' => $posts,
+            'pagination' => $pagination->render()
         ];
         $this->view('admin/posts/index', $data);
     }
@@ -730,11 +771,21 @@ class AdminController extends Controller
     }
     public function reviews()
     {
-        $reviews = $this->reviewModel->getAllReviews();
+        require_once APPROOT . '/core/Pagination.php';
+        $limit = 10;
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $reviews = $this->reviewModel->getAllReviews($limit, $offset);
+        $total = $this->reviewModel->countAllReviews();
+
+        $pagination = new Pagination($total, $limit, $page, URLROOT . '/admin/reviews?page=(:num)');
+
         $data = [
-            'active_menu' => 'reviews', // [FIX]
+            'active_menu' => 'reviews',
             'title' => 'Quản lý Đánh giá sản phẩm',
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'pagination' => $pagination->render()
         ];
         $this->view('admin/reviews/index', $data);
     }
@@ -994,4 +1045,6 @@ class AdminController extends Controller
 
         $this->view('admin/settings', $data);
     }
+
+    // Trang danh sách đánh giá
 }

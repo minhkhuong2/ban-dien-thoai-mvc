@@ -75,8 +75,34 @@ class ProductController extends Controller
             'search_query' => $_GET['query'] ?? null
         ];
 
-        // Gọi hàm lọc sản phẩm
+        // [MỚI] Pagination Setup
+        require_once APPROOT . '/core/Pagination.php';
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $limit = 12; // Số sản phẩm mỗi trang
+
+        // Thêm limit/offset vào filters
+        $filters['limit'] = $limit;
+        $filters['offset'] = ($page - 1) * $limit;
+
+        // Gọi hàm lọc sản phẩm (với phân trang)
         $products = $this->productModel->getFilteredProducts($filters);
+        
+        // Đếm tổng số sản phẩm
+        $total_products = $this->productModel->countFilteredProducts($filters);
+
+        // Tạo URL Pattern cho Pagination
+        // Lấy tất cả param hiện tại, trừ 'page'
+        $url_params = $_GET;
+        unset($url_params['url']);
+        unset($url_params['page']);
+        $url_params['page'] = '(:num)';
+        
+        // http_build_query sẽ mã hóa (:num) thành %28%3Anum%29. Ta cần replace lại.
+        $url_query = http_build_query($url_params);
+        $url_query = str_replace('%28%3Anum%29', '(:num)', $url_query);
+        $url_pattern = URLROOT . '/product/all?' . $url_query;
+
+        $pagination = new Pagination($total_products, $limit, $page, $url_pattern);
 
         // Lấy dữ liệu cho Sidebar
         $brands = $this->brandModel->getAllBrands();
@@ -87,7 +113,8 @@ class ProductController extends Controller
             'products' => $products,
             'brands' => $brands,
             'categories' => $categories,
-            'filters' => $filters
+            'filters' => $filters,
+            'pagination' => $pagination->render() // HTML phân trang
         ];
 
         $this->view('product_all', $data);
