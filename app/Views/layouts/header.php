@@ -52,7 +52,15 @@
 
                 <?php if (isset($_SESSION['user_id'])) : ?>
                     <div class="user-profile">
-                        <div class="avatar"><?php echo htmlspecialchars(strtoupper(substr($_SESSION['user_name'], 0, 1))); ?></div>
+                        <div class="avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <?php 
+                                $headerAvatar = URLROOT . '/images/default-user.png';
+                                if (!empty($_SESSION['user_avatar'])) {
+                                    $headerAvatar = URLROOT . '/uploads/avatars/' . $_SESSION['user_avatar'];
+                                }
+                            ?>
+                            <img src="<?php echo $headerAvatar; ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
                         <div class="dropdown-menu">
                             <div class="user-info">
                                 <span><?php echo $_SESSION['user_name']; ?></span>

@@ -93,11 +93,35 @@ class UserModel
 
         $this->db->bind(':id', $data['user_id']);
         $this->db->bind(':full_name', $data['full_name']);
+        $this->db->bind(':full_name', $data['full_name']);
         $this->db->bind(':phone', $data['phone']);
         $this->db->bind(':address', $data['address']);
 
-        // (Chúng ta sẽ thêm hàm đổi mật khẩu sau)
+        // [MỚI] Cập nhật Avatar nếu có
+        if (isset($data['avatar']) && !empty($data['avatar'])) {
+             $this->db->query('UPDATE users SET 
+                        full_name = :full_name, 
+                        phone = :phone, 
+                        address = :address,
+                        avatar = :avatar
+                     WHERE id = :id');
+             $this->db->bind(':avatar', $data['avatar']);
+             // Bind lại các tham số khác vì query mới
+             $this->db->bind(':id', $data['user_id']);
+             $this->db->bind(':full_name', $data['full_name']);
+             $this->db->bind(':phone', $data['phone']);
+             $this->db->bind(':address', $data['address']);
+        }
 
+        return $this->db->execute();
+    }
+    
+    // Cập nhật Avatar riêng (Optional helper)
+    public function updateAvatarOnly($userId, $filename)
+    {
+        $this->db->query('UPDATE users SET avatar = :avatar WHERE id = :id');
+        $this->db->bind(':avatar', $filename);
+        $this->db->bind(':id', $userId);
         return $this->db->execute();
     }
     public function getAllUsers($limit = null, $offset = 0)

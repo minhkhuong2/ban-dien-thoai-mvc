@@ -56,12 +56,25 @@ class OrderModel
         }
     }
 
-    // Lấy tất cả đơn hàng của 1 user
-    public function getOrdersByUserId($user_id)
+    // Lấy tất cả đơn hàng của 1 user (có phân trang)
+    public function getOrdersByUserId($user_id, $limit = null, $offset = 0)
     {
-        $this->db->query('SELECT * FROM orders WHERE user_id = :user_id ORDER BY order_date DESC');
+        $sql = 'SELECT * FROM orders WHERE user_id = :user_id ORDER BY order_date DESC';
+        if ($limit !== null) {
+            $sql .= ' LIMIT ' . (int)$offset . ', ' . (int)$limit;
+        }
+        $this->db->query($sql);
         $this->db->bind(':user_id', $user_id);
         return $this->db->resultSet();
+    }
+
+    // Đếm tổng số đơn hàng của user (cho phân trang)
+    public function countOrdersByUserId($user_id)
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM orders WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $user_id);
+        $row = $this->db->single();
+        return $row['count'];
     }
 
     // Lấy thông tin 1 đơn hàng (cho user)

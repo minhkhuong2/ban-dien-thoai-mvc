@@ -43,7 +43,27 @@
         </div>
     <?php endif; ?>
 
-    <form action="<?php echo URLROOT; ?>/user/profile" method="POST">
+    <form action="<?php echo URLROOT; ?>/user/profile" method="POST" enctype="multipart/form-data">
+        <!-- AVATAR UPLOAD -->
+        <div class="form-group" style="text-align: center; margin-bottom: 30px;">
+            <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 15px; border: 3px solid #ddd; position: relative;">
+                <?php 
+                    // Logic hiển thị avatar
+                    $avatarPath = URLROOT . '/images/default-user.png'; // Mặc định placeholder mới
+                    
+                    if (!empty($data['user']['avatar'])) {
+                        // Nếu có avatar => hiển thị từ folder uploads
+                        $avatarPath = URLROOT . '/uploads/avatars/' . $data['user']['avatar'];
+                    }
+                ?>
+                <img src="<?php echo $avatarPath; ?>" alt="Avatar" id="avatarPreview" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <label for="avatar" style="cursor: pointer; display: inline-block; background: #eee; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem;">
+                <i class="fas fa-camera"></i> Đổi ảnh đại diện
+            </label>
+            <input type="file" name="avatar" id="avatar" accept="image/*" style="display: none;" onchange="previewImage(this)">
+        </div>
+
         <div class="form-group">
             <label for="email">Email (Không thể thay đổi)</label>
             <input type="email" name="email" id="email"
@@ -76,3 +96,15 @@
         </div>
     </form>
 </div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

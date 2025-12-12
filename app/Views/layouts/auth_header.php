@@ -169,15 +169,29 @@
 
         .terms {
             text-align: center;
-            font-size: 0.8rem;
-            color: #777;
+            font-size: 0.85rem;
+            color: #8898aa; /* Lighter, more premium gray */
             margin-top: 30px;
-            padding: 0 10px;
-            line-height: 1.5;
+            padding: 0 20px;
+            line-height: 1.6;
+            display: block;
+            width: 100%;
+            max-width: 400px; /* Limit width for better wrapping */
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
         }
 
         .terms a {
-            color: #555;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline;
+            transition: color 0.2s;
+        }
+        
+        .terms a:hover {
+            color: #0056b3;
             text-decoration: underline;
         }
     </style>

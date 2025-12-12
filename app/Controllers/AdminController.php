@@ -1004,11 +1004,37 @@ class AdminController extends Controller
                     'user_id' => $_SESSION['user_id'],
                     'full_name' => trim($_POST['full_name']),
                     'phone' => trim($_POST['phone']),
-                    'address' => trim($_POST['address'])
+                    'address' => trim($_POST['address']),
+                    'avatar' => ''
                 ];
+
+                // [MỚI] Xử lý Upload Avatar
+                if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+                    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                    $filename = $_FILES['avatar']['name'];
+                    $filesize = $_FILES['avatar']['size'];
+                    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                    if (in_array($ext, $allowed) && $filesize < 5000000) {
+                        $newFilename = 'avatar_' . $_SESSION['user_id'] . '_' . time() . '.' . $ext;
+                        $uploadDir = APPROOT . '/../public/uploads/avatars/';
+                        if (!file_exists($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
+                        }
+                        if (move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadDir . $newFilename)) {
+                            $updateData['avatar'] = $newFilename;
+                        }
+                    }
+                }
 
                 if ($this->userModel->updateProfile($updateData)) {
                     $_SESSION['user_name'] = $updateData['full_name']; // Cập nhật lại Session tên
+                    
+                    // [MỚI] Cập nhật lại Session Avatar
+                    if (!empty($updateData['avatar'])) {
+                        $_SESSION['user_avatar'] = $updateData['avatar'];
+                    }
+
                     $data['success'] = 'Đã cập nhật thông tin thành công!';
                     // Refresh lại dữ liệu user để hiển thị
                     $data['user'] = $this->userModel->getUserById($_SESSION['user_id']);

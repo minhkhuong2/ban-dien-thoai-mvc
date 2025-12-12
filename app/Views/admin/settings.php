@@ -20,7 +20,24 @@
         <div class="card-header">
             <h4 class="card-title"><i class="fas fa-user-edit"></i> Thông tin chung</h4>
         </div>
-        <form action="" method="POST" style="padding: 24px;">
+        <form action="" method="POST" enctype="multipart/form-data" style="padding: 24px;">
+            <!-- AVATAR UPLOAD -->
+            <div class="form-group" style="text-align: center; margin-bottom: 20px;">
+                <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 10px; border: 2px solid #cbd5e1; position: relative; background: #f1f5f9;">
+                    <?php 
+                        $avatarPath = URLROOT . '/images/default-user.png';
+                        if (!empty($data['user']['avatar'])) {
+                            $avatarPath = URLROOT . '/uploads/avatars/' . $data['user']['avatar'];
+                        }
+                    ?>
+                    <img src="<?php echo $avatarPath; ?>" id="adminAvatarPreview" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <label for="adminAvatar" class="btn btn-sm" style="background: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; margin-top: 5px; cursor: pointer;">
+                    <i class="fas fa-camera"></i> Đổi ảnh
+                </label>
+                <input type="file" name="avatar" id="adminAvatar" accept="image/*" style="display: none;" onchange="previewAdminAvatar(this)">
+            </div>
+
             <div class="form-group">
                 <label class="form-label">Email (Tài khoản)</label>
                 <input type="text" value="<?php echo htmlspecialchars($data['user']['email']); ?>" class="form-control" disabled style="background: #f1f5f9;">
@@ -42,6 +59,18 @@
                 <button type="submit" name="update_info" class="btn btn-primary">Cập nhật thông tin</button>
             </div>
         </form>
+        
+        <script>
+        function previewAdminAvatar(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('adminAvatarPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        </script>
     </div>
 
     <div class="card">

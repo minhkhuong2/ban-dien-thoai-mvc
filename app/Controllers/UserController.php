@@ -140,6 +140,7 @@ class UserController extends Controller
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_name'] = $user['full_name'];
         $_SESSION['is_admin'] = $user['is_admin'];
+        $_SESSION['user_avatar'] = $user['avatar'] ?? null; // [MỚI]
 
         // --- SỬA ĐOẠN NÀY ---
         // Kiểm tra: Nếu là Admin thì chuyển thẳng vào trang quản trị
@@ -177,10 +178,35 @@ class UserController extends Controller
             header('Location: ' . URLROOT . '/user/login');
             exit();
         }
-        $orders = $this->orderModel->getOrdersByUserId($_SESSION['user_id']);
+
+        require_once APPROOT . '/core/Pagination.php';
+
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $limit = 5; // Số đơn hàng mỗi trang
+        $offset = ($page - 1) * $limit;
+
+        $total_orders = $this->orderModel->countOrdersByUserId($_SESSION['user_id']);
+        $orders = $this->orderModel->getOrdersByUserId($_SESSION['user_id'], $limit, $offset);
+
+        // Tạo link phân trang
+        // URL pattern: /user/orders?page=(:num)
+        $url_pattern = URLROOT . '/user/orders?page=(:num)';
+        $url_query = http_build_query($_GET);
+        // Loại bỏ page hiện tại khỏi query để tránh trùng
+        $queryParams = $_GET;
+        unset($queryParams['page']);
+        $url_query = http_build_query($queryParams);
+        
+        $url_pattern = URLROOT . '/user/orders?' . ($url_query ? $url_query . '&' : '') . 'page=(:num)';
+        
+        // $pagination = new Pagination($totalItems, $itemsPerPage, $currentPage, $urlPattern);
+        $pagination = new Pagination($total_orders, $limit, $page, $url_pattern);
+        $pagination_html = $pagination->render();
+
         $data = [
             'title' => 'Lịch sử đơn hàng của bạn',
-            'orders' => $orders
+            'orders' => $orders,
+            'pagination' => $pagination_html
         ];
         $this->view('user_orders', $data);
     }
@@ -225,14 +251,49 @@ class UserController extends Controller
                 'full_name' => trim($_POST['full_name']),
                 'phone' => trim($_POST['phone']),
                 'address' => trim($_POST['address']),
-                'success_message' => ''
-                // (Thêm validation lỗi sau nếu cần)
+                'success_message' => '',
+                'avatar' => '' // Mặc định rỗng
             ];
+
+            // [MỚI] Xử lý Upload Avatar
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+                $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                $filename = $_FILES['avatar']['name'];
+                $filetype = $_FILES['avatar']['type'];
+                $filesize = $_FILES['avatar']['size'];
+                
+                $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                if (in_array($ext, $allowed)) {
+                    if ($filesize < 5000000) { // < 5MB
+                        $newFilename = 'avatar_' . $_SESSION['user_id'] . '_' . time() . '.' . $ext;
+                        // Tạo thư mục nếu chưa có
+                        $uploadDir = APPROOT . '/../public/uploads/avatars/';
+                        if (!file_exists($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
+                        }
+                        
+                        if (move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadDir . $newFilename)) {
+                            $data['avatar'] = $newFilename; // Gán tên file để Model lưu
+                            
+                            // (Optional) Xóa avatar cũ nếu cần
+                        }
+                    } else {
+                        // $data['error'] = 'File quá lớn';
+                    }
+                } else {
+                     // $data['error'] = 'Định dạng không hỗ trợ';
+                }
+            }
 
             // Gọi Model để cập nhật
             if ($this->userModel->updateProfile($data)) {
                 // Cập nhật thành công, cập nhật lại Session
                 $_SESSION['user_name'] = $data['full_name'];
+                
+                // [MỚI] Nếu có avatar mới, cập nhật session avatar (nếu lưu trong session)
+                if (!empty($data['avatar'])) {
+                    $_SESSION['user_avatar'] = $data['avatar'];
+                }
 
                 // Gửi thông báo thành công
                 $data['success_message'] = 'Cập nhật thông tin thành công!';
@@ -250,7 +311,12 @@ class UserController extends Controller
             // 3. XỬ LÝ GET (Hiển thị form)
 
             // Lấy thông tin user hiện tại
-            $user = $this->userModel->getUserById($_SESSION['user_id']); // Hàm này đã có
+            $user = $this->userModel->getUserById($_SESSION['user_id']); 
+
+            // Cập nhật session avatar nếu chưa có (lần đầu login chưa có avatar)
+            if (isset($user['avatar'])) {
+                $_SESSION['user_avatar'] = $user['avatar'];
+            }
 
             $data = [
                 'title' => 'Thông tin cá nhân',

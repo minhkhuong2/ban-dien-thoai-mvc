@@ -129,8 +129,14 @@
                 </a>
 
                 <div class="user-profile">
-                    <div class="user-avatar">
-                        <?php echo isset($_SESSION['user_name']) ? strtoupper(substr($_SESSION['user_name'], 0, 1)) : 'A'; ?>
+                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <?php 
+                            $adminAvatar = URLROOT . '/images/default-user.png';
+                            if (isset($_SESSION['user_avatar']) && !empty($_SESSION['user_avatar'])) {
+                                $adminAvatar = URLROOT . '/uploads/avatars/' . $_SESSION['user_avatar'];
+                            }
+                        ?>
+                        <img src="<?php echo $adminAvatar; ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <div class="user-info">
                         <span class="user-name"><?php echo $_SESSION['user_name'] ?? 'Admin'; ?></span>

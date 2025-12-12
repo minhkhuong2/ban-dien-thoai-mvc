@@ -164,4 +164,16 @@ class PageController extends Controller
         $data = ['title' => 'Điều khoản Dịch vụ'];
         $this->view('pages/policy', $data);
     }
+    
+    public function terms()
+    {
+        $data = ['title' => 'Điều khoản sử dụng'];
+        $this->view('pages/terms', $data);
+    }
+
+    public function privacy()
+    {
+        $data = ['title' => 'Chính sách bảo mật'];
+        $this->view('pages/privacy', $data);
+    }
 }

@@ -81,6 +81,13 @@
                 </table>
             </div>
         <?php endif; ?>
+        
+        <!-- Pagination -->
+        <?php if (!empty($data['pagination'])): ?>
+            <div style="padding: 20px; border-top: 1px solid #e5e7eb;">
+                <?php echo $data['pagination']; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
