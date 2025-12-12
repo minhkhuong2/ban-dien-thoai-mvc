@@ -36,17 +36,20 @@ body {
 }
 
 /* --- SIDEBAR --- */
+/* --- SIDEBAR --- */
 .admin-sidebar {
     width: var(--sidebar-width);
     background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
     color: var(--text-light);
-    height: 100vh;
+    height: 100vh; /* Fallback */
+    height: 100dvh; /* Dynamic CSS Viewport Height */
     position: fixed;
     left: 0;
     top: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
-    z-index: 100;
+    z-index: 9999; /* Increased Z-Index to stay above everything */
     transition: all 0.3s ease;
     box-shadow: 4px 0 10px rgba(0,0,0,0.1);
 }
@@ -515,4 +518,85 @@ tr:hover td {
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+/* --- MOBILE RESPONSIVENESS (Admin) --- */
+/* Sidebar Overlay */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 95; /* Below sidebar (100) but above header (90) */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Toggle Button */
+#sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-main);
+    cursor: pointer;
+    margin-right: 15px;
+    padding: 5px;
+}
+
+@media (max-width: 992px) {
+    /* Hide Sidebar by default on mobile */
+    .admin-sidebar {
+        left: -100%; /* Fully hide */
+        width: 280px; /* Force width */
+        box-shadow: none;
+    }
+    
+    /* Show Sidebar when active */
+    .admin-sidebar.active {
+        left: 0;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+    }
+    
+    /* Full width content on mobile */
+    .admin-main {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    /* Show Toggle Button */
+    #sidebar-toggle {
+        display: block;
+    }
+    
+    /* Adjust Header Padding */
+    .admin-header {
+        padding: 0 16px;
+    }
+    
+    .header-right {
+        gap: 10px;
+    }
+    
+    /* Hide user info text on very small screens */
+    .user-info {
+        display: none; /* Icon avatar remains */
+    }
+    .user-profile {
+        padding: 6px;
+        border: none;
+        background: transparent;
+    }
+    .user-profile:hover {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
 }

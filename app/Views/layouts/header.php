@@ -91,26 +91,33 @@
     <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
     <div class="mobile-menu-container" id="mobile-menu-container">
         <div class="mobile-menu-header">
-            <span class="logo-text">PhoneStore</span>
-            <button id="close-mobile-menu" class="close-btn">&times;</button>
+            <a href="<?php echo URLROOT; ?>/" class="mobile-logo-link">
+                <img src="<?php echo URLROOT; ?>/images/Logo.png" alt="PhoneStore" class="mobile-logo">
+            </a>
+            <button id="close-mobile-menu" class="close-btn"><i class="fas fa-times"></i></button>
         </div>
 
         <div class="mobile-search">
             <form action="<?php echo URLROOT; ?>/product/search" method="GET">
-                <input type="text" name="query" placeholder="Tìm kiếm điện thoại...">
+                <input type="text" name="query" placeholder="Tìm kiếm sản phẩm...">
+                <button type="submit"><i class="fas fa-search"></i></button>
             </form>
         </div>
 
         <div class="mobile-nav-links">
-            <a href="<?php echo URLROOT; ?>/">Trang chủ</a>
-            <a href="<?php echo URLROOT; ?>/page/about">Giới thiệu</a>
-            <a href="<?php echo URLROOT; ?>/product/all">Sản phẩm</a>
-            <a href="<?php echo URLROOT; ?>/product/brand">Thương hiệu</a>
-            <a href="<?php echo URLROOT; ?>/page/support">Hỗ trợ</a>
-            <a href="<?php echo URLROOT; ?>/page/contact">Liên hệ</a>
+            <a href="<?php echo URLROOT; ?>/" class="m-link active"><i class="fas fa-home"></i> Trang chủ</a>
+            <a href="<?php echo URLROOT; ?>/page/about" class="m-link"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+            <a href="<?php echo URLROOT; ?>/product/all" class="m-link"><i class="fas fa-mobile-alt"></i> Sản phẩm</a>
+            <a href="<?php echo URLROOT; ?>/page/promotions" class="m-link"><i class="fas fa-tags"></i> Khuyến mãi</a>
+            <a href="<?php echo URLROOT; ?>/page/news" class="m-link"><i class="fas fa-newspaper"></i> Tin tức</a>
+            <a href="<?php echo URLROOT; ?>/page/support" class="m-link"><i class="fas fa-headset"></i> Hỗ trợ</a>
+            <a href="<?php echo URLROOT; ?>/page/contact" class="m-link"><i class="fas fa-envelope"></i> Liên hệ</a>
 
             <?php if (!isset($_SESSION['user_id'])) : ?>
-                <a href="<?php echo URLROOT; ?>/user/login">Đăng nhập</a>
+                <div class="mobile-auth-links">
+                    <a href="<?php echo URLROOT; ?>/user/login" class="btn btn-primary-mobile">Đăng nhập</a>
+                    <a href="<?php echo URLROOT; ?>/user/register" class="btn btn-outline-mobile">Đăng ký</a>
+                </div>
             <?php endif; ?>
         </div>
     </div>

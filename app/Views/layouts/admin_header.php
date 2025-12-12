@@ -108,12 +108,18 @@
         </li>
     </aside>
 
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
     <!-- MAIN CONTENT WRAPPER -->
     <div class="admin-main">
 
         <!-- HEADER -->
         <header class="admin-header">
-            <div class="header-left">
+            <div class="header-left" style="display: flex; align-items: center;">
+                <button id="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <h2><?php echo $data['title'] ?? 'Dashboard'; ?></h2>
             </div>
 
@@ -142,6 +148,13 @@
         <main class="admin-content">
 
             <script>
+                function toggleSidebar() {
+                    const sidebar = document.querySelector('.admin-sidebar');
+                    const overlay = document.getElementById('sidebar-overlay');
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                }
+
                 function toggleSubmenu(element) {
                     const submenu = element.nextElementSibling;
                     const isActive = element.classList.contains('active');

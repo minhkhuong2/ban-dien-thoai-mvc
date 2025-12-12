@@ -3642,3 +3642,127 @@ body {
     box-shadow: 0 4px 10px rgba(40, 138, 214, 0.3);
     transform: translateY(-2px);
 }
+
+/* FIX: Prevent Product Card Stretching (Auto-fill instead of Auto-fit) */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+/* --- MOBILE MENU PREMIUM STYLES --- */
+.mobile-menu-container {
+    background: #fff;
+    width: 300px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #f9f9f9;
+}
+
+.mobile-logo {
+    height: 40px; /* Adjust logo size */
+    width: auto;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.mobile-search {
+    padding: 20px;
+}
+.mobile-search form {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.mobile-search input {
+    flex: 1;
+    border: none;
+    padding: 10px 15px;
+    outline: none;
+    font-size: 14px;
+}
+.mobile-search button {
+    background: #288ad6;
+    color: #fff;
+    border: none;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    overflow-y: auto;
+}
+
+.m-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.m-link i {
+    width: 25px;
+    margin-right: 15px;
+    color: #888;
+    text-align: center;
+}
+
+.m-link:hover, .m-link.active {
+    background: #f0f8ff;
+    color: #288ad6;
+    border-left-color: #288ad6;
+}
+.m-link:hover i, .m-link.active i {
+    color: #288ad6;
+}
+
+.mobile-auth-links {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary-mobile, .btn-outline-mobile {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+}
+.btn-primary-mobile {
+    background: #288ad6;
+    color: #fff;
+}
+.btn-outline-mobile {
+    border: 1px solid #288ad6;
+    color: #288ad6;
+}
