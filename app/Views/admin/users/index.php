@@ -21,9 +21,15 @@
                         <td>#<?php echo $user['id']; ?></td>
                         <td>
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <div style="width: 36px; height: 36px; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem;">
-                                    <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
-                                </div>
+                                <?php if (!empty($user['avatar'])): ?>
+                                    <img src="<?php echo URLROOT . '/uploads/avatars/' . $user['avatar']; ?>" 
+                                         alt="<?php echo htmlspecialchars($user['full_name']); ?>"
+                                         style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+                                <?php else: ?>
+                                    <div style="width: 36px; height: 36px; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem;">
+                                        <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div style="font-weight: 600; color: var(--text-main);"><?php echo htmlspecialchars($user['full_name']); ?></div>
                             </div>
                         </td>

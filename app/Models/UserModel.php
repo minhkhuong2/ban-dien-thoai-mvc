@@ -126,7 +126,7 @@ class UserModel
     }
     public function getAllUsers($limit = null, $offset = 0)
     {
-        $sql = 'SELECT id, full_name, email, phone, address, is_admin 
+        $sql = 'SELECT id, full_name, email, phone, address, is_admin, avatar 
                          FROM users 
                          ORDER BY id DESC';
         if ($limit !== null) {

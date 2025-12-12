@@ -402,9 +402,18 @@ if (!empty($gallery)) {
                             $bg = $bg_colors[rand(0, 4)];
                         ?>
                             <div class="review-item">
-                                <div class="reviewer-avatar" style="background-color: <?php echo $bg; ?>;">
-                                    <?php echo $initial; ?>
-                                </div>
+                                <?php 
+                                    $avatarPath = !empty($rv['avatar']) ? URLROOT . '/uploads/avatars/' . $rv['avatar'] : '';
+                                ?>
+                                <?php if ($avatarPath): ?>
+                                    <img src="<?php echo $avatarPath; ?>" alt="<?php echo htmlspecialchars($rv['user_name']); ?>" 
+                                         class="reviewer-avatar" 
+                                         style="object-fit: cover; background: none;"> 
+                                <?php else: ?>
+                                    <div class="reviewer-avatar" style="background-color: <?php echo $bg; ?>;">
+                                        <?php echo $initial; ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="review-content">
                                     <div class="reviewer-header">
                                         <span class="reviewer-name"><?php echo htmlspecialchars($rv['user_name']); ?></span>

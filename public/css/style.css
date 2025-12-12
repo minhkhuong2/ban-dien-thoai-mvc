@@ -1648,12 +1648,23 @@ body {
   color: var(--primary-color);
 }
 
+/* FIX: Pagination Overlap */
+.pagination-container {
+  grid-column: 1 / -1; /* Make it span full width if in grid */
+  clear: both; /* Clear floats if any */
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
 .pagination {
   text-align: center;
-  margin-top: 30px;
   padding-top: 20px;
   border-top: 1px solid var(--border-color);
+  width: 100%;
 }
+
 .pagination a,
 .pagination span {
   margin: 0 5px;

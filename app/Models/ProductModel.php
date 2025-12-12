@@ -501,7 +501,11 @@ class ProductModel
 
     public function getReviewsByProductId($product_id)
     {
-        $this->db->query('SELECT * FROM product_reviews WHERE product_id = :product_id ORDER BY created_at DESC');
+        $this->db->query('SELECT r.*, u.avatar, u.full_name as user_name_real 
+                          FROM product_reviews r 
+                          LEFT JOIN users u ON r.user_id = u.id 
+                          WHERE r.product_id = :product_id 
+                          ORDER BY r.created_at DESC');
         $this->db->bind(':product_id', $product_id);
         return $this->db->resultSet();
     }
