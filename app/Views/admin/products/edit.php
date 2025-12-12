@@ -1,5 +1,8 @@
-<div class="mb-4">
-    <h2 class="card-title" style="font-size: 1.5rem;"><?php echo $data['title']; ?></h2>
+<div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 class="card-title" style="font-size: 1.5rem; margin: 0;"><?php echo $data['title']; ?></h2>
+    <a href="<?php echo URLROOT; ?>/admin/products" class="btn" style="background-color: #6c757d; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">
+        <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
 </div>
 
 <?php $product = $data['product']; ?>
