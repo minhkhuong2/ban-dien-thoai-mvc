@@ -6,10 +6,10 @@
             <h4 style="font-size: 1.5em; color: var(--white-color); margin-bottom: 10px;">MobileStore</h4>
             <p>Cửa hàng điện thoại di động uy tín với hơn 10 năm kinh nghiệm. Chúng tôi cam kết mang đến những sản phẩm chất lượng nhất.</p>
             <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.facebook.com/mobilestore.pt/about"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/mobilestoresa/"><i class="fab fa-instagram"></i></a>
+                <a href="https://youtube.com/@v.nmobilestore4038?si=PVHoiuY7Vxqym37k"><i class="fab fa-youtube"></i></a>
+                <a href="https://x.com/MobileStoreSA?s=20"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
         <div class="footer-column">

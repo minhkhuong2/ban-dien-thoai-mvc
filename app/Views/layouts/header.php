@@ -25,10 +25,10 @@
 
             <div class="main-nav">
                 <a href="<?php echo URLROOT; ?>/" class="active">Trang Chủ</a>
-                <a href="<?php echo URLROOT; ?>/page/about">Giới thiệu</a>
                 <a href="<?php echo URLROOT; ?>/product/all">Sản Phẩm</a>
                 <a href="<?php echo URLROOT; ?>/page/promotions">Khuyến Mãi</a>
                 <a href="<?php echo URLROOT; ?>/page/news">Tin Tức</a>
+                <a href="<?php echo URLROOT; ?>/page/about">Giới thiệu</a>
                 <a href="<?php echo URLROOT; ?>/page/support">Hỗ Trợ</a>
             </div>
 
@@ -53,11 +53,11 @@
                 <?php if (isset($_SESSION['user_id'])) : ?>
                     <div class="user-profile">
                         <div class="avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                            <?php 
-                                $headerAvatar = URLROOT . '/images/default-user.png';
-                                if (!empty($_SESSION['user_avatar'])) {
-                                    $headerAvatar = URLROOT . '/uploads/avatars/' . $_SESSION['user_avatar'];
-                                }
+                            <?php
+                            $headerAvatar = URLROOT . '/images/default-user.png';
+                            if (!empty($_SESSION['user_avatar'])) {
+                                $headerAvatar = URLROOT . '/uploads/avatars/' . $_SESSION['user_avatar'];
+                            }
                             ?>
                             <img src="<?php echo $headerAvatar; ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
