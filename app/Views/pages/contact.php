@@ -26,7 +26,7 @@
                     <polyline points="22,6 12,13 2,6"></polyline>
                 </svg></div>
             <h4>Email</h4>
-            <p>info@mobilestore.test</p>
+            <p>info@phonestore.test</p>
             <p>Phản hồi trong 24 giờ</p>
         </div>
         <div class="contact-info-box">

@@ -3,7 +3,7 @@
     <div class="footer-container">
 
         <div class="footer-column">
-            <h4 style="font-size: 1.5em; color: var(--white-color); margin-bottom: 10px;">MobileStore</h4>
+            <h4 style="font-size: 1.5em; color: var(--white-color); margin-bottom: 10px;">PhoneStore</h4>
             <p>Cửa hàng điện thoại di động uy tín với hơn 10 năm kinh nghiệm. Chúng tôi cam kết mang đến những sản phẩm chất lượng nhất.</p>
             <div class="social-icons">
                 <a href="https://www.facebook.com/mobilestore.pt/about"><i class="fab fa-facebook-f"></i></a>
@@ -54,7 +54,7 @@
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
-                    info@mobilestore.test
+                    info@phonestore.test
                 </span>
                 <span>
                     <svg viewBox="0 0 24 24" class="contact-info-icon">
