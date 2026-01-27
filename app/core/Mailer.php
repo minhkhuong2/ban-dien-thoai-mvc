@@ -20,7 +20,7 @@ class Mailer
         try {
             // Cấu hình Server gửi mail (Sử dụng Gmail)
             $this->mail->isSMTP();
-            $this->mail->Host       = 'smtp.gmail.com';
+            $this->mail->Host       = '...gmail.com';
             $this->mail->SMTPAuth   = true;
 
             // --- THAY ĐỔI THÔNG TIN CỦA BẠN Ở ĐÂY ---
@@ -29,7 +29,7 @@ class Mailer
             // ----------------------------------------
 
             $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $this->mail->Port       = 587;
+            $this->mail->Port       = ...;
             $this->mail->CharSet    = 'UTF-8'; // Hỗ trợ tiếng Việt
 
             // Người gửi mặc định
