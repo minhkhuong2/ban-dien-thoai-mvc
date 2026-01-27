@@ -24,8 +24,8 @@ class Mailer
             $this->mail->SMTPAuth   = true;
 
             // --- THAY ĐỔI THÔNG TIN CỦA BẠN Ở ĐÂY ---
-            $this->mail->Username   = 'khuongbuivan826@gmail.com'; // Email của bạn
-            $this->mail->Password   = 'yhkr hpid eirm smna'; // Mật khẩu ứng dụng (Không phải pass đăng nhập)
+            $this->mail->Username   = '@gmail.com'; // Email của bạn
+            $this->mail->Password   = '...'; // Mật khẩu ứng dụng (Không phải pass đăng nhập)
             // ----------------------------------------
 
             $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
