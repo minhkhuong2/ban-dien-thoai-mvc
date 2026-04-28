@@ -106,4 +106,77 @@ class Mailer
             return false;
         }
     }
+
+    public function sendContactConfirmation($toEmail, $customerName)
+    {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->addAddress($toEmail, $customerName);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = "Xác nhận liên hệ - PhoneStore";
+
+            $body = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e9ecef; border-radius: 8px; overflow: hidden;'>
+                <div style='background-color: #3f6ad8; padding: 20px; text-align: center;'>
+                    <h2 style='color: white; margin: 0;'>Xác nhận liên hệ</h2>
+                </div>
+                <div style='padding: 30px; background-color: #ffffff; color: #333;'>
+                    <h3 style='margin-top: 0;'>Chào " . htmlspecialchars($customerName) . ",</h3>
+                    <p style='line-height: 1.6;'>Cảm ơn bạn đã liên hệ với <strong>PhoneStore</strong>. Chúng tôi đã nhận được tin nhắn của bạn và sẽ phản hồi trong thời gian sớm nhất qua email này hoặc số điện thoại bạn đã cung cấp.</p>
+                    <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+                    <p style='margin-bottom: 0; color: #666;'>Trân trọng,<br><strong>Đội ngũ PhoneStore</strong></p>
+                </div>
+                <div style='background-color: #f8f9fa; padding: 15px; text-align: center; font-size: 12px; color: #999;'>
+                    Đây là email tự động, vui lòng không trả lời.
+                </div>
+            </div>";
+
+            $this->mail->Body = $body;
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function sendContactReply($toEmail, $customerName, $subject, $replyMessage, $originalMessage)
+    {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->addAddress($toEmail, $customerName);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = "Phản hồi liên hệ: " . $subject;
+
+            $body = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e9ecef; border-radius: 8px; overflow: hidden;'>
+                <div style='background-color: #3ac47d; padding: 20px; text-align: center;'>
+                    <h2 style='color: white; margin: 0;'>Phản hồi từ PhoneStore</h2>
+                </div>
+                <div style='padding: 30px; background-color: #ffffff; color: #333;'>
+                    <h3 style='margin-top: 0;'>Chào " . htmlspecialchars($customerName) . ",</h3>
+                    <p style='line-height: 1.6;'>Cảm ơn bạn đã liên hệ với PhoneStore. Dưới đây là phản hồi cho tin nhắn của bạn:</p>
+                    
+                    <div style='background: #eef2ff; border-left: 4px solid #3f6ad8; padding: 15px; margin: 20px 0; border-radius: 0 4px 4px 0;'>
+                        <p style='margin: 0; font-size: 15px; line-height: 1.6;'>" . nl2br(htmlspecialchars($replyMessage)) . "</p>
+                    </div>
+                    
+                    <h4 style='color: #666; margin-bottom: 10px; font-size: 14px;'>Tin nhắn gốc của bạn:</h4>
+                    <div style='background: #f8f9fa; border-left: 4px solid #ced4da; padding: 10px 15px; margin-bottom: 25px; color: #666; font-size: 13px; font-style: italic; border-radius: 0 4px 4px 0;'>
+                        " . nl2br(htmlspecialchars($originalMessage)) . "
+                    </div>
+                    
+                    <p style='margin-bottom: 0; color: #666;'>Trân trọng,<br><strong>Đội ngũ PhoneStore</strong></p>
+                </div>
+                <div style='background-color: #f8f9fa; padding: 15px; text-align: center; font-size: 12px; color: #999;'>
+                    PhoneStore - Uy tín làm nên thương hiệu
+                </div>
+            </div>";
+
+            $this->mail->Body = $body;
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

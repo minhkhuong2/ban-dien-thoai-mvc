@@ -50,6 +50,11 @@
                     <?php echo $data['success_message']; ?>
                 </div>
             <?php endif; ?>
+            <?php if (!empty($data['error_message'])) : ?>
+                <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <?php echo $data['error_message']; ?>
+                </div>
+            <?php endif; ?>
 
             <form action="<?php echo URLROOT; ?>/page/contact" method="POST">
                 <div class="form-grid-half">

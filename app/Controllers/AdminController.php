@@ -14,6 +14,7 @@ class AdminController extends Controller
     private $categoryModel;
     private $productCategoryModel;
     private $reviewModel;
+    private $contactModel;
 
     public function __construct()
     {
@@ -35,6 +36,7 @@ class AdminController extends Controller
         $this->categoryModel = $this->model('CategoryModel');
         $this->productCategoryModel = $this->model('ProductCategoryModel');
         $this->reviewModel = $this->model('ReviewModel');
+        $this->contactModel = $this->model('ContactModel');
     }
 
     // Trang Dashboard chính
@@ -574,6 +576,67 @@ class AdminController extends Controller
         } else {
             die('Admin Footer view does not exist');
         }
+    }
+
+    // ----------------------------------------------------
+    // QUẢN LÝ LIÊN HỆ
+    // ----------------------------------------------------
+    public function contacts()
+    {
+        require_once APPROOT . '/core/Pagination.php';
+        $limit = 10;
+        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $contacts = $this->contactModel->getAllContacts($limit, $offset);
+        $total = $this->contactModel->countAllContacts();
+
+        $pagination = new Pagination($total, $limit, $page, URLROOT . '/admin/contacts?page=(:num)');
+
+        $data = [
+            'active_menu' => 'contacts',
+            'title' => 'Quản lý Liên hệ',
+            'contacts' => $contacts,
+            'pagination' => $pagination->render()
+        ];
+        $this->view('admin/contacts/index', $data);
+    }
+
+    public function replyContact($id)
+    {
+        $contact = $this->contactModel->getContactById($id);
+        if (!$contact) {
+            header('Location: ' . URLROOT . '/admin/contacts');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $replyMessage = trim($_POST['reply_message']);
+            
+            require_once APPROOT . '/core/Mailer.php';
+            $mailer = new Mailer();
+            if ($mailer->sendContactReply($contact['email'], $contact['name'], $contact['subject'], $replyMessage, $contact['message'])) {
+                $this->contactModel->updateContactStatus($id, 1);
+                header('Location: ' . URLROOT . '/admin/contacts?success=1');
+                exit();
+            } else {
+                $data['error'] = 'Lỗi gửi email.';
+            }
+        }
+
+        $data = [
+            'active_menu' => 'contacts',
+            'title' => 'Phản hồi Liên hệ',
+            'contact' => $contact
+        ];
+        $this->view('admin/contacts/reply', $data);
+    }
+
+    public function deleteContact($id)
+    {
+        $this->contactModel->deleteContact($id);
+        header('Location: ' . URLROOT . '/admin/contacts');
+        exit();
     }
     // ----------------------------------------------------
     // HÀM QUẢN LÝ THUỘC TÍNH (MỚI)

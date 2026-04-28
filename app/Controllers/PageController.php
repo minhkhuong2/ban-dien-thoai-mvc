@@ -7,12 +7,15 @@ class PageController extends Controller
     private $postModel;
     private $categoryModel;
     private $voucherModel;
+    private $contactModel;
+    
     public function __construct()
     {
         $this->productModel = $this->model('ProductModel');
         $this->postModel = $this->model('PostModel');
         $this->categoryModel = $this->model('CategoryModel');
         $this->voucherModel = $this->model('VoucherModel');
+        $this->contactModel = $this->model('ContactModel');
     }
 
     // Trang Liên hệ
@@ -24,10 +27,26 @@ class PageController extends Controller
 
         // Xử lý khi người dùng gửi form
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // (Thêm code xử lý gửi email sau)
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            
+            $data_post = [
+                'name' => trim($_POST['name']),
+                'phone' => trim($_POST['phone']),
+                'email' => trim($_POST['email']),
+                'subject' => trim($_POST['subject']),
+                'message' => trim($_POST['message'])
+            ];
 
-            // Tạm thời chỉ báo thành công
-            $data['success_message'] = 'Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.';
+            if ($this->contactModel->createContact($data_post)) {
+                // Gửi email xác nhận
+                require_once APPROOT . '/core/Mailer.php';
+                $mailer = new Mailer();
+                $mailer->sendContactConfirmation($data_post['email'], $data_post['name']);
+
+                $data['success_message'] = 'Cảm ơn bạn đã liên hệ! Chúng tôi đã nhận được tin nhắn và gửi email xác nhận cho bạn.';
+            } else {
+                $data['error_message'] = 'Có lỗi xảy ra, vui lòng thử lại sau.';
+            }
             $this->view('pages/contact', $data);
         } else {
             // Hiển thị form
