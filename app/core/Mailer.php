@@ -20,16 +20,16 @@ class Mailer
         try {
             // Cấu hình Server gửi mail (Sử dụng Gmail)
             $this->mail->isSMTP();
-            $this->mail->Host       = '...gmail.com';
+            $this->mail->Host       = 'smtp.gmail.com';
             $this->mail->SMTPAuth   = true;
 
             // --- THAY ĐỔI THÔNG TIN CỦA BẠN Ở ĐÂY ---
-            $this->mail->Username   = '@gmail.com'; // Email của bạn
-            $this->mail->Password   = '...'; // Mật khẩu ứng dụng (Không phải pass đăng nhập)
+            $this->mail->Username   = 'khuongbuivan826@gmail.com'; // Email của bạn
+            $this->mail->Password   = 'fhto okta vdde imqu'; // Mật khẩu ứng dụng (Không phải pass đăng nhập)
             // ----------------------------------------
 
             $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $this->mail->Port       = ...;
+            $this->mail->Port       = 587;
             $this->mail->CharSet    = 'UTF-8'; // Hỗ trợ tiếng Việt
 
             // Người gửi mặc định
@@ -43,6 +43,7 @@ class Mailer
     {
         try {
             // Người nhận
+            $this->mail->clearAddresses();
             $this->mail->addAddress($toEmail, $customerName);
 
             // Tiêu đề

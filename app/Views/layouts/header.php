@@ -8,11 +8,12 @@
     <script>
         var URLROOT = '<?php echo URLROOT; ?>';
     </script>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css?v=<?php echo time(); ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="<?php echo URLROOT; ?>/js/theme.js"></script>
 </head>
 
 <body>
@@ -37,6 +38,8 @@
                     <input type="text" name="query" placeholder="Tìm kiếm...">
                     <button type="submit">Tìm</button>
                 </form>
+
+                <button id="theme-toggle" style="background: none; border: none; cursor: pointer; color: var(--text-color); display: flex; align-items: center; justify-content: center; width: 35px; height: 35px;" title="Chế độ Tối/Sáng"></button>
 
                 <a href="<?php echo URLROOT; ?>/cart" class="cart-icon">
                     <svg viewBox="0 0 24 24" class="icon icon-bag">

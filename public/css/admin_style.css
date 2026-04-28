@@ -25,6 +25,10 @@
     --font-family: 'Inter', sans-serif;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: var(--font-family);
     background-color: var(--bg-color);
@@ -643,4 +647,110 @@ tr:hover td {
     color: #cbd5e1;
     pointer-events: none;
     border-color: #e2e8f0;
+}
+
+/* --- DARK MODE ADMIN --- */
+html.dark-mode {
+    --text-main: #e2e8f0;
+    --text-light: #94a3b8;
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --border-color: #334155;
+    --text-white: #ffffff;
+}
+
+html.dark-mode body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+}
+
+html.dark-mode .admin-header {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .header-left h2,
+html.dark-mode .card-title,
+html.dark-mode .user-name {
+    color: var(--text-main);
+}
+
+html.dark-mode .btn-icon {
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .btn-icon:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+html.dark-mode .user-profile {
+    background-color: transparent;
+    border-color: var(--border-color);
+}
+
+html.dark-mode .card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .card-header {
+    border-color: var(--border-color);
+}
+
+html.dark-mode table,
+html.dark-mode th {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+html.dark-mode tr:hover td {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+html.dark-mode td {
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+html.dark-mode .form-control {
+    background-color: var(--bg-color);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+html.dark-mode .form-control:focus {
+    background-color: var(--card-bg);
+}
+
+html.dark-mode .form-label {
+    color: var(--text-main);
+}
+
+html.dark-mode .btn-secondary {
+    background-color: transparent;
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .btn-secondary:hover {
+    background-color: var(--bg-color);
+}
+
+html.dark-mode .page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+html.dark-mode .page-link:hover {
+    background-color: var(--bg-color);
+}
+
+html.dark-mode .page-item.disabled .page-link {
+    background-color: var(--bg-color);
+    color: #475569;
+    border-color: var(--border-color);
 }

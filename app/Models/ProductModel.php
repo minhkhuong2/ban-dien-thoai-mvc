@@ -20,7 +20,7 @@ class ProductModel
     {
         $sql = 'SELECT p.*, b.name as brand_name 
              FROM products p
-             JOIN brands b ON p.brand_id = b.id
+             LEFT JOIN brands b ON p.brand_id = b.id
              ORDER BY p.id DESC';
 
         if ($limit !== null) {
@@ -245,7 +245,7 @@ class ProductModel
     {
         $this->db->query('SELECT p.*, b.name as brand_name 
                          FROM products p 
-                         JOIN brands b ON p.brand_id = b.id
+                         LEFT JOIN brands b ON p.brand_id = b.id
                          WHERE p.id = :id');
         $this->db->bind(':id', $product_id);
         return $this->db->single();

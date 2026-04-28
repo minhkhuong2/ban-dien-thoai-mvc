@@ -15,10 +15,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Custom Admin CSS -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin_style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin_style.css?v=<?php echo time(); ?>">
 
     <!-- TinyMCE -->
     <script src="https://cdn.tiny.cloud/1/f5ki7g32fbz5dvwyewmebby06c18z1eictmhgmftkwkhehmi/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="<?php echo URLROOT; ?>/js/theme.js"></script>
 </head>
 
 <body>
@@ -124,6 +125,9 @@
             </div>
 
             <div class="header-right">
+                <button id="theme-toggle" class="btn-icon admin-toggle" title="Chế độ Tối/Sáng">
+                </button>
+
                 <a href="<?php echo URLROOT; ?>/" target="_blank" class="btn-icon" title="Xem website">
                     <i class="fas fa-globe"></i>
                 </a>
